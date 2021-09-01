@@ -1,0 +1,46 @@
+<?= $this->extend('template') ?>
+
+<?= $this->section('content') ?>
+
+    <main role="main" class="py-5">
+        <div class="container">
+            <div class="row">
+                <?php
+                $items = [
+                    ['Computers', 'computer.png', 'computers.php'],
+                    ['Groups', 'groups.png', 'groups.php'],
+                    ['Buildings', 'apartment-building.png', 'buildings.php'],
+                    ['Rooms', 'saladeestar.png', 'rooms.php'],
+                    ['OS Images', 'boot_menu.png', 'os-images.php'],
+                    ['Configurations', 'template.png', 'configurations.php'],
+                ];
+
+                for ($i = 0; $i <= count($items) - 1; $i++) {
+                    if ($i % 2 === 0) {
+                        echo '<div class="col-xs-12 col-md-4"><ul class="list-group h-100">';
+                    } ?>
+                    <li class="card m-4 square h-50">
+                        <a href="<?= $items[$i][2]; ?>" class="text-dark text-decoration-none box-shadow">
+                            <div class="row h-75 justify-content-center align-items-center">
+                                <div class="col">
+                                    <img class="card-img-top img-fluid w-50" alt="Thumbnail <?= $items[$i][0]; ?>" src="<?php echo base_url(); ?>/assets/img/<?= $items[$i][1]; ?>">
+                                </div>
+                            </div>
+                            <div class="row h-25 justify-content-center align-items-center">
+                                <div class="col">
+                                    <div class="card-body d-flex flex-column">
+                                        <h3 style="float: none; text-align: center;">
+                                            <?= $items[$i][0]; ?>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <?= ($i % 2 === 1) ? '</ul> </div>' : '';
+                } ?>
+            </div>
+        </div>
+    </main>
+
+<?= $this->endSection() ?>

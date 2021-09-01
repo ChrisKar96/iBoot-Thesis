@@ -1,0 +1,58 @@
+{
+    "name": "chriskar96/iboot",
+    "type": "project",
+    "description": "iBoot application for my thesis",
+    "homepage": "https://github.com/ChrisKar96/iBoot-Thesis",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christos Karamolegkos",
+            "email": "iboot@christoskaramo.tk"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/ChrisKar96/iBoot-Thesis",
+        "issues": "https://github.com/ChrisKar96/iBoot-Thesis/issues"
+    },
+    "keywords": [
+        "DHCP",
+        "BOOTP",
+        "TFTP",
+        "IPXE",
+        "PXE",
+        "network boot"
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "codeigniter4/framework": "^4"
+    },
+    "require-dev": {
+        "mikey179/vfsstream": "^1.6",
+        "phpunit/phpunit": "^9.1",
+        "friendsofphp/php-cs-fixer": "*",
+        "codeigniter/coding-standard": "^1.1",
+        "roave/security-advisories": "dev-latest",
+        "ext-xdebug": "*"
+    },
+    "suggest": {
+        "ext-fileinfo": "Improves mime type detection for files"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app",
+            "Config\\": "app/Config"
+        },
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Support\\": "tests/_support"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
