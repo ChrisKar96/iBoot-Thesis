@@ -12,10 +12,7 @@
 <?= $this->include('partials/footer') ?>
 
 <!-- Bootstrap JS -->
-<script src="<?= base_url(); ?>/assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
-
-<!-- Tabulator JS -->
-<!-- <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 
 </body>
 </html>

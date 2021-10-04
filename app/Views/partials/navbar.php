@@ -4,58 +4,107 @@ if (! isset($title)) {
     $title = 'Dashboard';
 }
 ?>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?= site_url(); ?>">iBoot</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="<?= lang('Text.toggle_navigation_bar'); ?>">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <?php
-        if (session()->get('isLoggedIn')) : ?>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link <?= ($title === 'Computers') ? ' active' : ''; ?>"
-                       aria-current="page" href="<?= site_url('computers'); ?>">Computers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= ($title === 'Groups') ? ' active' : ''; ?>" aria-current="page"
-                       href="<?= site_url('groups'); ?>">Groups</a>
-                </li>
+            <?php
+            if (session()->get('isLoggedIn')) : ?>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($title === 'Computers') ? ' active' : ''; ?>"
+                           aria-current="page" href="<?= site_url('computers'); ?>"><?= lang('Text.computers'); ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($title === 'Groups') ? ' active' : ''; ?>" aria-current="page"
+                           href="<?= site_url('groups'); ?>"><?= lang('Text.groups'); ?></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle <?= ($title === 'Buildings' || $title === 'Rooms') ? ' active' : ''; ?>"
+                           href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false"><?= lang('Text.locations'); ?></a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item <?= ($title === 'Buildings') ? ' active' : ''; ?>"
+                                   href="<?= site_url('buildings'); ?>"><?= lang('Text.buildings'); ?></a></li>
+                            <li><a class="dropdown-item <?= ($title === 'Rooms') ? ' active' : ''; ?>"
+                                   href="<?= site_url('rooms'); ?>"><?= lang('Text.rooms'); ?></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle <?= ($title === 'OS Images' || $title === 'Configurations') ? ' active' : ''; ?>"
+                           href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?= lang('Text.boot_menu_options'); ?>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item <?= ($title === 'OS Images') ? ' active' : ''; ?>"
+                                   href="<?= site_url('os-images'); ?>"><?= lang('Text.os_images'); ?></a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item <?= ($title === 'Configurations') ? ' active' : ''; ?>"
+                                   href="<?= site_url('configurations'); ?>"><?= lang('Text.configurations'); ?></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            <?php
+            endif; ?>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 settings-menu">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= ($title === 'Buildings' || $title === 'Rooms') ? ' active' : ''; ?>"
-                       href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Locations</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-lg fa-language"></i>
+                    </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item <?= ($title === 'Buildings') ? ' active' : ''; ?>"
-                               href="<?= site_url('buildings'); ?>">Buildings</a></li>
-                        <li><a class="dropdown-item <?= ($title === 'Rooms') ? ' active' : ''; ?>"
-                               href="<?= site_url('rooms'); ?>">Rooms</a></li>
+                        <li>
+                            <a class="dropdown-item <?= (session()->get('lang') === 'el') ? 'active' : ''; ?>"
+                               href="<?= site_url('lang/el'); ?>">
+                                Ελληνικά
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item <?= (session()->get('lang') === 'en') ? 'active' : ''; ?>"
+                               href="<?= site_url('lang/en'); ?>">
+                                English
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= ($title === 'OS Images' || $title === 'Configurations') ? ' active' : ''; ?>"
-                       href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Boot Menu Options
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item <?= ($title === 'OS Images') ? ' active' : ''; ?>"
-                               href="<?= site_url('os-images'); ?>">OS Images</a></li>
-                        <li><a class="dropdown-item <?= ($title === 'Configurations') ? ' active' : ''; ?>"
-                               href="<?= site_url('configurations'); ?>">Configurations</a></li>
+                        <?php
+                        if (session()->get('isLoggedIn')): ?>
+                            <li><a class="dropdown-item" href="<?= site_url('profile') ?>"><i
+                                            class="fas fa-sliders-h fa-fw"></i> <?= lang('Text.profile'); ?></a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="<?= site_url('logout') ?>"><i
+                                            class="fas fa-sign-out-alt fa-fw"></i> <?= lang('Text.log_out'); ?></a></li>
+                        <?php
+                        else: ?>
+                            <li><a class="dropdown-item <?= ($title === 'Log In') ? ' active' : ''; ?>"
+                                   href="<?= site_url('login') ?>"><?= lang('Text.log_in'); ?></a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item <?= ($title === 'Register') ? ' active' : ''; ?>"
+                                   href="<?= site_url('register') ?>"><?= lang('Text.register'); ?></a></li>
+                        <?php
+                        endif; ?>
                     </ul>
                 </li>
             </ul>
-            <a class="btn btn-light m-sm-2" href="<?= site_url('profile') ?>">Profile</a>
-            <a class="btn btn-danger m-sm-2" href="<?= site_url('logout') ?>">Log Out</a>
-            <?php
-            elseif ($title === 'Log In'): ?>
-                <a class="btn btn-light my-2 my-sm-0" href="<?= site_url('register') ?>">Register</a>
-            <?php
-            elseif ($title === 'Register'): ?>
-                <a class="btn btn-light my-2 my-sm-0" href="<?= site_url('login') ?>">Log In</a>
-            <?php
-            endif; ?>
         </div>
     </div>
 </nav>

@@ -7,12 +7,12 @@
             <div class="row">
                 <?php
                 $items = [
-                    ['Computers', 'computer.png', 'computers.php'],
-                    ['Groups', 'groups.png', 'groups.php'],
-                    ['Buildings', 'apartment-building.png', 'buildings.php'],
-                    ['Rooms', 'saladeestar.png', 'rooms.php'],
-                    ['OS Images', 'boot_menu.png', 'os-images.php'],
-                    ['Configurations', 'template.png', 'configurations.php'],
+                    [lang('Text.computers'), 'computer.png', 'computers'],
+                    [lang('Text.groups'), 'groups.png', 'groups'],
+                    [lang('Text.buildings'), 'apartment-building.png', 'buildings'],
+                    [lang('Text.rooms'), 'saladeestar.png', 'rooms'],
+                    [lang('Text.os_images'), 'boot_menu.png', 'os-images'],
+                    [lang('Text.configurations'), 'template.png', 'configurations'],
                 ];
 
                 for ($i = 0; $i <= count($items) - 1; $i++) {
@@ -23,7 +23,7 @@
                         <a href="<?= $items[$i][2]; ?>" class="text-dark text-decoration-none box-shadow">
                             <div class="row h-75 justify-content-center align-items-center">
                                 <div class="col">
-                                    <img class="card-img-top img-fluid w-50" alt="Thumbnail <?= $items[$i][0]; ?>" src="<?php echo base_url(); ?>/assets/img/<?= $items[$i][1]; ?>">
+                                    <img class="card-img-top img-fluid w-50" alt="Thumbnail <?= $items[$i][0]; ?>" src="<?= base_url('/assets/img/' . $items[$i][1]); ?>">
                                 </div>
                             </div>
                             <div class="row h-25 justify-content-center align-items-center">

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>404 Page Not Found</title>
+	<title><?= lang('Text.404_page_not_found'); ?></title>
 
 	<style>
 		div.logo {

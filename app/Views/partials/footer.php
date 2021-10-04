@@ -7,10 +7,7 @@
             }
             echo date('Y');
             ?>
-            Design and Development:
-            <a class="text-white text-decoration-none" title="Christos Karamolegkos" href="https://www.christoskaramo.tk" target="_blank" rel="author noopener">
-                Christos Karamolegkos
-            </a>
+            <?= lang('Text.design_and_development_christos_karamolegkos'); ?>
         </span>
     </div>
 </footer>
