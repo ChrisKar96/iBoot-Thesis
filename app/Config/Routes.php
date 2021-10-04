@@ -37,6 +37,7 @@ $routes->match(['get', 'post'], 'register', 'User::register', ['filter' => 'noau
 $routes->match(['get', 'post'], 'login', 'User::login', ['filter' => 'noauth']);
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
+$routes->get('computers', 'Computers::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout');
 
 /*
@@ -52,6 +53,9 @@ $routes->get('logout', 'User::logout');
  * You will have access to the $routes object within that file without
  * needing to reload it.
  */
+
+$routes->resource('api/computer');
+
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
