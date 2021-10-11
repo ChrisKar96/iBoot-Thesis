@@ -74,8 +74,8 @@ class Group extends ResourceController
         $Group = new GroupModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'boot_menu'  => $this->request->getVar('boot_menu'),
+            'name'      => $this->request->getVar('name'),
+            'boot_menu' => $this->request->getVar('boot_menu'),
         ];
 
         $Group->insert($data);
@@ -112,8 +112,8 @@ class Group extends ResourceController
         $Group = new GroupModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'boot_menu'  => $this->request->getVar('boot_menu'),
+            'name'      => $this->request->getVar('name'),
+            'boot_menu' => $this->request->getVar('boot_menu'),
         ];
 
         $Group->update($id, $data);

@@ -74,9 +74,9 @@ class Room extends ResourceController
         $Room = new RoomModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'building'  => $this->request->getVar('building'),
-            'phone' => $this->request->getVar('phone'),
+            'name'     => $this->request->getVar('name'),
+            'building' => $this->request->getVar('building'),
+            'phone'    => $this->request->getVar('phone'),
         ];
 
         $Room->insert($data);
@@ -113,9 +113,9 @@ class Room extends ResourceController
         $Room = new RoomModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'building'  => $this->request->getVar('building'),
-            'phone' => $this->request->getVar('phone'),
+            'name'     => $this->request->getVar('name'),
+            'building' => $this->request->getVar('building'),
+            'phone'    => $this->request->getVar('phone'),
         ];
 
         $Room->update($id, $data);

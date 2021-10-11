@@ -23,7 +23,8 @@
                         <a href="<?= $items[$i][2]; ?>" class="text-dark text-decoration-none box-shadow">
                             <div class="row h-75 justify-content-center align-items-center">
                                 <div class="col">
-                                    <img class="card-img-top img-fluid w-50" alt="Thumbnail <?= $items[$i][0]; ?>" src="<?= base_url('/assets/img/' . $items[$i][1]); ?>">
+                                    <img class="card-img-top img-fluid w-50" alt="Thumbnail <?= $items[$i][0]; ?>"
+                                         src="<?= base_url('/assets/img/' . $items[$i][1]); ?>">
                                 </div>
                             </div>
                             <div class="row h-25 justify-content-center align-items-center">
