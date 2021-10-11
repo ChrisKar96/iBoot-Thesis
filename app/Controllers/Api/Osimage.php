@@ -74,8 +74,8 @@ class Osimage extends ResourceController
         $OSImage = new OSImageModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'tftppath'  => $this->request->getVar('tftppath'),
+            'name'     => $this->request->getVar('name'),
+            'tftppath' => $this->request->getVar('tftppath'),
         ];
 
         $OSImage->insert($data);
@@ -112,8 +112,8 @@ class Osimage extends ResourceController
         $OSImage = new OSImageModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'tftppath'  => $this->request->getVar('tftppath'),
+            'name'     => $this->request->getVar('name'),
+            'tftppath' => $this->request->getVar('tftppath'),
         ];
 
         $OSImage->update($id, $data);

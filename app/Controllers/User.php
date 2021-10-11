@@ -70,6 +70,7 @@ class User extends BaseController
 
             if (! $this->validate($rules)) {
                 $data['validation'] = $this->validator;
+
                 return view('register', [
                     'validation' => $this->validator,
                 ]);

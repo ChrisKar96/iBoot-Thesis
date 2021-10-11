@@ -74,9 +74,9 @@ class Building extends ResourceController
         $Building = new BuildingModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'address'  => $this->request->getVar('address'),
-            'phone' => $this->request->getVar('phone'),
+            'name'    => $this->request->getVar('name'),
+            'address' => $this->request->getVar('address'),
+            'phone'   => $this->request->getVar('phone'),
         ];
 
         $Building->insert($data);
@@ -113,9 +113,9 @@ class Building extends ResourceController
         $Building = new BuildingModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'address'  => $this->request->getVar('address'),
-            'phone' => $this->request->getVar('phone'),
+            'name'    => $this->request->getVar('name'),
+            'address' => $this->request->getVar('address'),
+            'phone'   => $this->request->getVar('phone'),
         ];
 
         $Building->update($id, $data);
