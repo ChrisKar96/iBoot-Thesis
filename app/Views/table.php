@@ -10,16 +10,23 @@
                 <script>
                     let table = new Tabulator("#table", {
                         index: "id",
-                        layout:"fitColumns",
-                        responsiveLayout:"hide",
-                        width:"100%",
-                        columns:[
-                            {title:"id", field:"id", visible:false},
+                        layout: "fitColumns",
+                        responsiveLayout: "hide",
+                        width: "100%",
+                        columns: [
+                            {title: "id", field: "id", visible: false},
                             <?= $columns ?>
-                            {title:"Delete", formatter:"buttonCross", hozAlign:"center", cellClick:function(e, cell){cell.getRow().delete();}},
+                            {
+                                title: "Delete",
+                                formatter: "buttonCross",
+                                hozAlign: "center",
+                                cellClick: function (e, cell) {
+                                    cell.getRow().delete();
+                                }
+                            },
                         ],
                         ajaxURL: "<?= $apiTarget ?>",
-                        ajaxResponse:function(url, params, response){
+                        ajaxResponse: function (url, params, response) {
                             return response.data;
                         },
                     });

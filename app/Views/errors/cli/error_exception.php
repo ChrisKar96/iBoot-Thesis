@@ -41,21 +41,24 @@ if (defined('SHOW_DEBUG_BACKTRACE') && SHOW_DEBUG_BACKTRACE) {
             $function .= $padClass . $error['function'];
         }
 
-        $args = implode(', ', array_map(static function ($value) {
-            switch (true) {
-                case is_object($value):
-                    return 'Object(' . get_class($value) . ')';
+        $args = implode(
+            ', ',
+            array_map(static function ($value) {
+                switch (true) {
+                    case is_object($value):
+                        return 'Object(' . get_class($value) . ')';
 
-                case is_array($value):
-                    return count($value) ? '[...]' : '[]';
+                    case is_array($value):
+                        return count($value) ? '[...]' : '[]';
 
-                case $value === null:
-                    return 'null'; // return the lowercased version
+                    case $value === null:
+                        return 'null'; // return the lowercased version
 
-                default:
-                    return var_export($value, true);
-            }
-        }, array_values($error['args'] ?? [])));
+                    default:
+                        return var_export($value, true);
+                }
+            }, array_values($error['args'] ?? []))
+        );
 
         $function .= '(' . $args . ')';
 

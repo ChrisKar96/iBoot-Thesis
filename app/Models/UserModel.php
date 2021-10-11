@@ -46,6 +46,13 @@ class UserModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    public function logout()
+    {
+        session()->destroy();
+
+        return redirect()->to('login');
+    }
+
     protected function beforeInsert(array $data)
     {
         return $this->passwordHash($data);
@@ -58,12 +65,5 @@ class UserModel extends Model
         }
 
         return $data;
-    }
-
-    public function logout()
-    {
-        session()->destroy();
-
-        return redirect()->to('login');
     }
 }
