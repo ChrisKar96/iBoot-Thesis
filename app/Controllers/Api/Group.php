@@ -2,10 +2,10 @@
 
 namespace App\Controllers\Api;
 
-use App\Models\Api\ComputerModel;
+use App\Models\Api\GroupModel;
 use CodeIgniter\RESTful\ResourceController;
 
-class Computer extends ResourceController
+class Group extends ResourceController
 {
     /**
      * Return an array of resource objects, themselves in array format
@@ -14,14 +14,14 @@ class Computer extends ResourceController
      */
     public function index()
     {
-        $computer = new ComputerModel();
+        $Group = new GroupModel();
 
-        $data = $computer->findAll();
+        $data = $Group->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' Computers Found',
+            'messages' => count($data) . ' Groups Found',
             'data'     => $data,
         ];
 
@@ -37,22 +37,22 @@ class Computer extends ResourceController
      */
     public function show($id = null)
     {
-        $computer = new ComputerModel();
+        $Group = new GroupModel();
 
-        $data = $computer->where(['id' => $id])->first();
+        $data = $Group->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Found',
+                'messages' => 'Group Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No Computer Found with id ' . $id);
+        return $this->failNotFound('No Group Found with id ' . $id);
     }
 
     /**
@@ -71,22 +71,19 @@ class Computer extends ResourceController
      */
     public function create()
     {
-        $computer = new ComputerModel();
+        $Group = new GroupModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
-            'room' => $this->request->getVar('room'),
+            'boot_menu'  => $this->request->getVar('boot_menu'),
         ];
 
-        $computer->insert($data);
+        $Group->insert($data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Saved',
+            'messages' => 'Group Saved',
         ];
 
         return $this->respondCreated($response);
@@ -112,22 +109,19 @@ class Computer extends ResourceController
      */
     public function update($id = null)
     {
-        $computer = new ComputerModel();
+        $Group = new GroupModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
-            'room' => $this->request->getVar('room'),
+            'boot_menu'  => $this->request->getVar('boot_menu'),
         ];
 
-        $computer->update($id, $data);
+        $Group->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Updated',
+            'messages' => 'Group Updated',
         ];
 
         return $this->respond($response);
@@ -142,22 +136,22 @@ class Computer extends ResourceController
      */
     public function delete($id = null)
     {
-        $computer = new ComputerModel();
+        $Group = new GroupModel();
 
-        $data = $computer->find($id);
+        $data = $Group->find($id);
 
         if ($data) {
-            $computer->delete($id);
+            $Group->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Deleted',
+                'messages' => 'Group Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No Computer Found with id ' . $id);
+        return $this->failNotFound('No Group Found with id ' . $id);
     }
 }

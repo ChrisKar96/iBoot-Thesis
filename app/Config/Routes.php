@@ -38,6 +38,11 @@ $routes->match(['get', 'post'], 'login', 'User::login', ['filter' => 'noauth']);
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('computers', 'Computers::index', ['filter' => 'auth']);
+$routes->get('groups', 'Groups::index', ['filter' => 'auth']);
+$routes->get('buildings', 'Buildings::index', ['filter' => 'auth']);
+$routes->get('rooms', 'Rooms::index', ['filter' => 'auth']);
+$routes->get('os-images', 'Osimages::index', ['filter' => 'auth']);
+$routes->get('configurations', 'Configurations::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout');
 
 /*
@@ -54,7 +59,18 @@ $routes->get('logout', 'User::logout');
  * needing to reload it.
  */
 
+/*
+ * --------------------------------------------------------------------
+ * API
+ * --------------------------------------------------------------------
+ */
+
 $routes->resource('api/computer');
+$routes->resource('api/group');
+$routes->resource('api/building');
+$routes->resource('api/room');
+$routes->resource('api/osimage');
+$routes->resource('api/configuration');
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';

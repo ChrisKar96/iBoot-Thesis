@@ -2,10 +2,10 @@
 
 namespace App\Controllers\Api;
 
-use App\Models\Api\ComputerModel;
+use App\Models\Api\BuildingModel;
 use CodeIgniter\RESTful\ResourceController;
 
-class Computer extends ResourceController
+class Building extends ResourceController
 {
     /**
      * Return an array of resource objects, themselves in array format
@@ -14,14 +14,14 @@ class Computer extends ResourceController
      */
     public function index()
     {
-        $computer = new ComputerModel();
+        $Building = new BuildingModel();
 
-        $data = $computer->findAll();
+        $data = $Building->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' Computers Found',
+            'messages' => count($data) . ' Buildings Found',
             'data'     => $data,
         ];
 
@@ -37,22 +37,22 @@ class Computer extends ResourceController
      */
     public function show($id = null)
     {
-        $computer = new ComputerModel();
+        $Building = new BuildingModel();
 
-        $data = $computer->where(['id' => $id])->first();
+        $data = $Building->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Found',
+                'messages' => 'Building Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No Computer Found with id ' . $id);
+        return $this->failNotFound('No Building Found with id ' . $id);
     }
 
     /**
@@ -71,22 +71,20 @@ class Computer extends ResourceController
      */
     public function create()
     {
-        $computer = new ComputerModel();
+        $Building = new BuildingModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
-            'room' => $this->request->getVar('room'),
+            'address'  => $this->request->getVar('address'),
+            'phone' => $this->request->getVar('phone'),
         ];
 
-        $computer->insert($data);
+        $Building->insert($data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Saved',
+            'messages' => 'Building Saved',
         ];
 
         return $this->respondCreated($response);
@@ -112,22 +110,20 @@ class Computer extends ResourceController
      */
     public function update($id = null)
     {
-        $computer = new ComputerModel();
+        $Building = new BuildingModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
-            'room' => $this->request->getVar('room'),
+            'address'  => $this->request->getVar('address'),
+            'phone' => $this->request->getVar('phone'),
         ];
 
-        $computer->update($id, $data);
+        $Building->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Updated',
+            'messages' => 'Building Updated',
         ];
 
         return $this->respond($response);
@@ -142,22 +138,22 @@ class Computer extends ResourceController
      */
     public function delete($id = null)
     {
-        $computer = new ComputerModel();
+        $Building = new BuildingModel();
 
-        $data = $computer->find($id);
+        $data = $Building->find($id);
 
         if ($data) {
-            $computer->delete($id);
+            $Building->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Deleted',
+                'messages' => 'Building Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No Computer Found with id ' . $id);
+        return $this->failNotFound('No Building Found with id ' . $id);
     }
 }

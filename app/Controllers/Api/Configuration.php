@@ -2,10 +2,10 @@
 
 namespace App\Controllers\Api;
 
-use App\Models\Api\ComputerModel;
+use App\Models\Api\ConfigurationModel;
 use CodeIgniter\RESTful\ResourceController;
 
-class Computer extends ResourceController
+class Configuration extends ResourceController
 {
     /**
      * Return an array of resource objects, themselves in array format
@@ -14,14 +14,14 @@ class Computer extends ResourceController
      */
     public function index()
     {
-        $computer = new ComputerModel();
+        $Configuration = new ConfigurationModel();
 
-        $data = $computer->findAll();
+        $data = $Configuration->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' Computers Found',
+            'messages' => count($data) . ' Configurations Found',
             'data'     => $data,
         ];
 
@@ -37,22 +37,22 @@ class Computer extends ResourceController
      */
     public function show($id = null)
     {
-        $computer = new ComputerModel();
+        $Configuration = new ConfigurationModel();
 
-        $data = $computer->where(['id' => $id])->first();
+        $data = $Configuration->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Found',
+                'messages' => 'Configuration Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No Computer Found with id ' . $id);
+        return $this->failNotFound('No Configuration Found with id ' . $id);
     }
 
     /**
@@ -71,22 +71,18 @@ class Computer extends ResourceController
      */
     public function create()
     {
-        $computer = new ComputerModel();
+        $Configuration = new ConfigurationModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
-            'room' => $this->request->getVar('room'),
         ];
 
-        $computer->insert($data);
+        $Configuration->insert($data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Saved',
+            'messages' => 'Configuration Saved',
         ];
 
         return $this->respondCreated($response);
@@ -112,22 +108,18 @@ class Computer extends ResourceController
      */
     public function update($id = null)
     {
-        $computer = new ComputerModel();
+        $Configuration = new ConfigurationModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
-            'room' => $this->request->getVar('room'),
         ];
 
-        $computer->update($id, $data);
+        $Configuration->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Updated',
+            'messages' => 'Configuration Updated',
         ];
 
         return $this->respond($response);
@@ -142,22 +134,22 @@ class Computer extends ResourceController
      */
     public function delete($id = null)
     {
-        $computer = new ComputerModel();
+        $Configuration = new ConfigurationModel();
 
-        $data = $computer->find($id);
+        $data = $Configuration->find($id);
 
         if ($data) {
-            $computer->delete($id);
+            $Configuration->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Deleted',
+                'messages' => 'Configuration Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No Computer Found with id ' . $id);
+        return $this->failNotFound('No Configuration Found with id ' . $id);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Controllers\Api;
 
-use App\Models\Api\ComputerModel;
+use App\Models\Api\OSImageModel;
 use CodeIgniter\RESTful\ResourceController;
 
-class Computer extends ResourceController
+class Osimage extends ResourceController
 {
     /**
      * Return an array of resource objects, themselves in array format
@@ -14,14 +14,14 @@ class Computer extends ResourceController
      */
     public function index()
     {
-        $computer = new ComputerModel();
+        $OSImage = new OSImageModel();
 
-        $data = $computer->findAll();
+        $data = $OSImage->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' Computers Found',
+            'messages' => count($data) . ' OSImages Found',
             'data'     => $data,
         ];
 
@@ -37,22 +37,22 @@ class Computer extends ResourceController
      */
     public function show($id = null)
     {
-        $computer = new ComputerModel();
+        $OSImage = new OSImageModel();
 
-        $data = $computer->where(['id' => $id])->first();
+        $data = $OSImage->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Found',
+                'messages' => 'OSImage Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No Computer Found with id ' . $id);
+        return $this->failNotFound('No OSImage Found with id ' . $id);
     }
 
     /**
@@ -71,22 +71,19 @@ class Computer extends ResourceController
      */
     public function create()
     {
-        $computer = new ComputerModel();
+        $OSImage = new OSImageModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
-            'room' => $this->request->getVar('room'),
+            'tftppath'  => $this->request->getVar('tftppath'),
         ];
 
-        $computer->insert($data);
+        $OSImage->insert($data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Saved',
+            'messages' => 'OSImage Saved',
         ];
 
         return $this->respondCreated($response);
@@ -112,22 +109,19 @@ class Computer extends ResourceController
      */
     public function update($id = null)
     {
-        $computer = new ComputerModel();
+        $OSImage = new OSImageModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
-            'room' => $this->request->getVar('room'),
+            'tftppath'  => $this->request->getVar('tftppath'),
         ];
 
-        $computer->update($id, $data);
+        $OSImage->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Updated',
+            'messages' => 'OSImage Updated',
         ];
 
         return $this->respond($response);
@@ -142,22 +136,22 @@ class Computer extends ResourceController
      */
     public function delete($id = null)
     {
-        $computer = new ComputerModel();
+        $OSImage = new OSImageModel();
 
-        $data = $computer->find($id);
+        $data = $OSImage->find($id);
 
         if ($data) {
-            $computer->delete($id);
+            $OSImage->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Deleted',
+                'messages' => 'OSImage Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No Computer Found with id ' . $id);
+        return $this->failNotFound('No OSImage Found with id ' . $id);
     }
 }

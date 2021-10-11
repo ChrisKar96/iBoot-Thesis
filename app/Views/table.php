@@ -14,6 +14,7 @@
                         responsiveLayout:"hide",
                         width:"100%",
                         columns:[
+                            {title:"id", field:"id", visible:false},
                             <?= $columns ?>
                             {title:"Delete", formatter:"buttonCross", hozAlign:"center", cellClick:function(e, cell){cell.getRow().delete();}},
                         ],
