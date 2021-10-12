@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?= lang('Text.404_page_not_found'); ?></title>
+    <title><?= lang('Error.404_page_not_found'); ?></title>
 
     <style>
         div.logo {
@@ -78,7 +78,7 @@
 </head>
 <body>
 <div class="wrap">
-    <h1>404 - File Not Found</h1>
+    <h1><?= lang('Error.404_page_not_found'); ?></h1>
 
     <p>
         <?php
@@ -86,7 +86,7 @@
             <?= nl2br(esc($message)) ?>
         <?php
         else : ?>
-            Sorry! Cannot seem to find the page you were looking for.
+            <?= lang('Error.cannot_find_page'); ?>
         <?php
         endif ?>
     </p>

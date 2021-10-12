@@ -2,6 +2,9 @@
 
 <?= $this->section('content') ?>
 
+<?php
+if (isset($columns, $apiTarget)): ?>
+
     <main role="main" class="py-5">
         <div class="container">
             <div class="row">
@@ -17,7 +20,7 @@
                             {title: "id", field: "id", visible: false},
                             <?= $columns ?>
                             {
-                                title: "Delete",
+                                title: "<?= lang('Text.delete') ?>",
                                 formatter: "buttonCross",
                                 hozAlign: "center",
                                 cellClick: function (e, cell) {
@@ -35,5 +38,8 @@
             </div>
         </div>
     </main>
+
+<?php
+endif; ?>
 
 <?= $this->endSection() ?>

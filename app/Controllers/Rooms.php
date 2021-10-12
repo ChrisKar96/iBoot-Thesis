@@ -9,12 +9,12 @@ class Rooms extends BaseController
         return view(
             'table',
             [
-                'title'     => 'Rooms',
+                'title'     => lang('Text.rooms'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/room'),
-                'columns'   => '{title:"Name", field:"name", sorter:"string"},
-                                {title:"Building", field:"building", sorter:"number"},
-                                {title:"Phone", field:"phone", sorter:"string"},',
+                'columns'   => '{title:"' . lang('Text.room') . '", field:"name", sorter:"string"},
+                                {title:"' . lang('Text.building') . '", field:"building", sorter:"number"},
+                                {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string"},',
             ]
         );
     }

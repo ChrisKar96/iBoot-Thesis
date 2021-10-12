@@ -9,10 +9,10 @@ class Groups extends BaseController
         return view(
             'table',
             [
-                'title'     => 'Groups',
+                'title'     => lang('Text.groups'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/group'),
-                'columns'   => '{title:"Name", field:"name", sorter:"string"},
+                'columns'   => '{title:"' . lang('Text.group') . '", field:"name", sorter:"string"},
                                 {title:"Boot Menu", field:"boot_menu", sorter:"number"},',
             ]
         );

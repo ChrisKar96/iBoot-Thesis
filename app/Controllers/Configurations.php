@@ -9,10 +9,10 @@ class Configurations extends BaseController
         return view(
             'table',
             [
-                'title'     => 'Configurations',
+                'title'     => lang('Text.configurations'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/configuration'),
-                'columns'   => '{title:"Name", field:"name", sorter:"string"},',
+                'columns'   => '{title:"' . lang('Text.configuration') . '", field:"name", sorter:"string"},',
             ]
         );
     }

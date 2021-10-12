@@ -1,7 +1,7 @@
 <?php
 
 if (! isset($title)) {
-    $title = 'Dashboard';
+    $title = lang('Text.dashboard');
 }
 ?>
 
@@ -18,26 +18,26 @@ if (! isset($title)) {
             if (session()->get('isLoggedIn')) : ?>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link <?= ($title === 'Computers') ? ' active' : ''; ?>"
+                        <a class="nav-link <?= ($title === lang('Text.computers')) ? ' active' : ''; ?>"
                            aria-current="page" href="<?= site_url('computers'); ?>"><?= lang('Text.computers'); ?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= ($title === 'Groups') ? ' active' : ''; ?>" aria-current="page"
+                        <a class="nav-link <?= ($title === lang('Text.groups')) ? ' active' : ''; ?>" aria-current="page"
                            href="<?= site_url('groups'); ?>"><?= lang('Text.groups'); ?></a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle <?= ($title === 'Buildings' || $title === 'Rooms') ? ' active' : ''; ?>"
+                        <a class="nav-link dropdown-toggle <?= ($title === lang('Text.buildings') || $title === lang('Text.rooms')) ? ' active' : ''; ?>"
                            href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false"><?= lang('Text.locations'); ?></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item <?= ($title === 'Buildings') ? ' active' : ''; ?>"
+                            <li><a class="dropdown-item <?= ($title === lang('Text.buildings')) ? ' active' : ''; ?>"
                                    href="<?= site_url('buildings'); ?>"><?= lang('Text.buildings'); ?></a></li>
-                            <li><a class="dropdown-item <?= ($title === 'Rooms') ? ' active' : ''; ?>"
+                            <li><a class="dropdown-item <?= ($title === lang('Text.rooms')) ? ' active' : ''; ?>"
                                    href="<?= site_url('rooms'); ?>"><?= lang('Text.rooms'); ?></a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle <?= ($title === 'OS Images' || $title === 'Configurations') ? ' active' : ''; ?>"
+                        <a class="nav-link dropdown-toggle <?= ($title === lang('Text.os_images') || $title === lang('Text.configurations')) ? ' active' : ''; ?>"
                            href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <?= lang('Text.boot_menu_options'); ?>
                         </a>
@@ -47,7 +47,7 @@ if (! isset($title)) {
                                    href="<?= site_url('os-images'); ?>"><?= lang('Text.os_images'); ?></a>
                             </li>
                             <li>
-                                <a class="dropdown-item <?= ($title === 'Configurations') ? ' active' : ''; ?>"
+                                <a class="dropdown-item <?= ($title === lang('Text.configurations')) ? ' active' : ''; ?>"
                                    href="<?= site_url('configurations'); ?>"><?= lang('Text.configurations'); ?></a>
                             </li>
                         </ul>
@@ -63,13 +63,13 @@ if (! isset($title)) {
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li>
-                            <a class="dropdown-item <?= (session()->get('lang') === 'el') ? 'active' : ''; ?>"
+                            <a class="dropdown-item <?= (service('request')->getLocale() === 'el') ? 'active' : ''; ?>"
                                href="<?= site_url('lang/el'); ?>">
                                 Ελληνικά
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item <?= (session()->get('lang') === 'en') ? 'active' : ''; ?>"
+                            <a class="dropdown-item <?= (service('request')->getLocale() === 'en') ? 'active' : ''; ?>"
                                href="<?= site_url('lang/en'); ?>">
                                 English
                             </a>
@@ -84,22 +84,28 @@ if (! isset($title)) {
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <?php
                         if (session()->get('isLoggedIn')): ?>
-                            <li><a class="dropdown-item" href="<?= site_url('profile') ?>"><i
-                                            class="fas fa-sliders-h fa-fw"></i> <?= lang('Text.profile'); ?></a></li>
+                            <li>
+                                <a class="dropdown-item" href="<?= site_url('profile') ?>">
+                                    <i class="fas fa-sliders-h fa-fw"></i> <?= lang('Text.profile'); ?>
+                                </a>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="<?= site_url('logout') ?>"><i
-                                            class="fas fa-sign-out-alt fa-fw"></i> <?= lang('Text.log_out'); ?></a></li>
+                            <li>
+                                <a class="dropdown-item" href="<?= site_url('logout') ?>">
+                                    <i class="fas fa-sign-out-alt fa-fw"></i> <?= lang('Text.log_out'); ?>
+                                </a>
+                            </li>
                         <?php
                         else: ?>
-                            <li><a class="dropdown-item <?= ($title === 'Log In') ? ' active' : ''; ?>"
+                            <li><a class="dropdown-item <?= ($title === lang('Text.log_in')) ? ' active' : ''; ?>"
                                    href="<?= site_url('login') ?>"><?= lang('Text.log_in'); ?></a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item <?= ($title === 'Register') ? ' active' : ''; ?>"
-                                   href="<?= site_url('register') ?>"><?= lang('Text.register'); ?></a></li>
+                            <li><a class="dropdown-item <?= ($title === lang('Text.sign_up')) ? ' active' : ''; ?>"
+                                   href="<?= site_url('signup') ?>"><?= lang('Text.sign_up'); ?></a></li>
                         <?php
                         endif; ?>
                     </ul>

@@ -7,7 +7,13 @@
             }
             echo date('Y');
             ?>
-            <?= lang('Text.design_and_development_christos_karamolegkos'); ?>
+            <?= lang('Text.design_and_development'); ?>:
+            <a class="text-white text-decoration-none"
+               title="<?= lang('Text.christos_karamolegkos'); ?>"
+               href="<?= lang('Text.christoskaramo_website'); ?>"
+               target="_blank" rel="author noopener">
+                <?= lang('Text.christos_karamolegkos'); ?>
+            </a>
         </span>
     </div>
 </footer>

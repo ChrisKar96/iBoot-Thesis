@@ -9,10 +9,10 @@ class Osimages extends BaseController
         return view(
             'table',
             [
-                'title'     => 'OS Images',
+                'title'     => lang('Text.os_images'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/osimage'),
-                'columns'   => '{title:"Name", field:"name", sorter:"string"},
+                'columns'   => '{title:"' . lang('Text.os_image') . '", field:"name", sorter:"string"},
                                 {title:"TFTP Path", field:"tftppath", sorter:"string"},',
             ]
         );

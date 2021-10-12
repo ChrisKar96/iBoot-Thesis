@@ -9,12 +9,12 @@ class Buildings extends BaseController
         return view(
             'table',
             [
-                'title'     => 'Buildings',
+                'title'     => lang('Text.buildings'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/building'),
-                'columns'   => '{title:"Name", field:"name", sorter:"string"},
-                                {title:"Address", field:"address", sorter:"string"},
-                                {title:"Phone", field:"phone", sorter:"string"},',
+                'columns'   => '{title:"' . lang('Text.building') . '", field:"name", sorter:"string"},
+                                {title:"' . lang('Text.address') . '", field:"address", sorter:"string"},
+                                {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string"},',
             ]
         );
     }

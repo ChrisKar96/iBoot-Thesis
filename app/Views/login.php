@@ -11,7 +11,14 @@
                             <?= session()->getFlashdata('msg') ?>
                         </div>
                     <?php
-                    endif; ?>
+                    endif;
+                    if (isset($validation)): ?>
+                        <div class="alert alert-warning">
+                            <?= $validation->listErrors(); ?>
+                        </div>
+                    <?php
+                    endif;
+                    ?>
                     <form action="<?= base_url('login'); ?>" method="post">
                         <h2 class="text-center"><?= lang('Text.log_in'); ?></h2>
                         <div class="illustration">

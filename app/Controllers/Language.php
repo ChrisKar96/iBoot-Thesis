@@ -11,6 +11,6 @@ class Language extends BaseController
         $session->remove('lang');
         $session->set('lang', $locale);
 
-        return redirect()->to(base_url());
+        return redirect()->to($this->request->getUserAgent()->getReferrer());
     }
 }

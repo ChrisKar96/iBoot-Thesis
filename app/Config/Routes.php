@@ -33,7 +33,7 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('lang/{locale}', 'Language::index');
-$routes->match(['get', 'post'], 'register', 'User::register', ['filter' => 'noauth']);
+$routes->match(['get', 'post'], 'signup', 'User::signup', ['filter' => 'noauth']);
 $routes->match(['get', 'post'], 'login', 'User::login', ['filter' => 'noauth']);
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);

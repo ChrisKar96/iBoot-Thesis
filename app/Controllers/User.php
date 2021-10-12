@@ -8,9 +8,11 @@ class User extends BaseController
 {
     public function login()
     {
-        $data = ['title' => 'Log In'];
+        $data = ['title' => lang('Text.log_in')];
 
         if ($this->request->getMethod() === 'post') {
+            helper('form');
+
             $rules = [
                 'username' => 'required|min_length[3]|max_length[255]',
                 'password' => 'required|min_length[5]|max_length[255]|validateUser[username,password]',
@@ -18,14 +20,14 @@ class User extends BaseController
 
             $errors = [
                 'password' => [
-                    'validateUser' => "Username or Password don't match",
+                    'validateUser' => lang('Validation.username_or_password_dont_match'),
                 ],
             ];
 
             if (! $this->validate($rules, $errors)) {
                 return view('login', [
                     'validation' => $this->validator,
-                    'title'      => 'Log In',
+                    'title'      => lang('Text.log_in'),
                 ]);
             }
             $model = new UserModel();
@@ -54,12 +56,13 @@ class User extends BaseController
         session()->set($data);
     }
 
-    public function register()
+    public function signup()
     {
-        $data = ['title' => 'Register'];
+        $data = ['title' => lang('Text.sign_up')];
 
         if ($this->request->getMethod() === 'post') {
-            //let's do the validation here
+            helper('form');
+
             $rules = [
                 'name'             => 'required|min_length[3]|max_length[255]',
                 'phone'            => 'max_length[15]',
@@ -71,8 +74,9 @@ class User extends BaseController
             if (! $this->validate($rules)) {
                 $data['validation'] = $this->validator;
 
-                return view('register', [
+                return view('signup', [
                     'validation' => $this->validator,
+                    'title'      => lang('Text.sign_up'),
                 ]);
             }
             $model = new UserModel();
@@ -90,12 +94,12 @@ class User extends BaseController
             return redirect()->to(base_url('login'));
         }
 
-        return view('register', $data);
+        return view('signup', $data);
     }
 
     public function profile()
     {
-        $data  = ['title' => 'Profile'];
+        $data  = ['title' => lang('Text.profile')];
         $model = new UserModel();
 
         $data['user'] = $model->where('id', session()->get('id'))->first();
