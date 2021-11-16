@@ -65,12 +65,12 @@ $routes->get('logout', 'User::logout');
  * --------------------------------------------------------------------
  */
 
-$routes->resource('api/computer');
-$routes->resource('api/group');
-$routes->resource('api/building');
-$routes->resource('api/room');
-$routes->resource('api/osimage');
-$routes->resource('api/configuration');
+$routes->resource('api/computer', ['except' => 'new,edit']);
+$routes->resource('api/group', ['except' => 'new,edit']);
+$routes->resource('api/building', ['except' => 'new,edit']);
+$routes->resource('api/room', ['except' => 'new,edit']);
+$routes->resource('api/osimage', ['except' => 'new,edit']);
+$routes->resource('api/configuration', ['except' => 'new,edit']);
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
