@@ -63,14 +63,14 @@ if (! isset($title)) {
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li>
-                            <a class="dropdown-item <?= (service('request')->getLocale() === 'el') ? 'active' : ''; ?>"
-                               href="<?= site_url('lang/el'); ?>">
+                            <a class="dropdown-item <?= (session()->get('locale') === 'el') ? 'active' : ''; ?>"
+                               href="<?= site_url('locale/el'); ?>">
                                 Ελληνικά
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item <?= (service('request')->getLocale() === 'en') ? 'active' : ''; ?>"
-                               href="<?= site_url('lang/en'); ?>">
+                            <a class="dropdown-item <?= (session()->get('locale') === 'en') ? 'active' : ''; ?>"
+                               href="<?= site_url('locale/en'); ?>">
                                 English
                             </a>
                         </li>

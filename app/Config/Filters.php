@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Filters\Auth;
+use App\Filters\Locale;
 use App\Filters\Noauth;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
@@ -23,6 +24,7 @@ class Filters extends BaseConfig
         'honeypot' => Honeypot::class,
         'auth'     => Auth::class,
         'noauth'   => Noauth::class,
+        'locale'   => Locale::class,
     ];
 
     /**
@@ -35,6 +37,7 @@ class Filters extends BaseConfig
         'before' => [
             // 'honeypot',
             'csrf',
+            'locale',
         ],
         'after' => [
             'toolbar',
