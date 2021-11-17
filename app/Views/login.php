@@ -20,6 +20,7 @@
                     endif;
                     ?>
                     <form action="<?= base_url('login'); ?>" method="post">
+                        <?= csrf_field() ?>
                         <h2 class="text-center"><?= lang('Text.log_in'); ?></h2>
                         <div class="illustration">
                             <img alt="iboot logo" class="img-responsive"
