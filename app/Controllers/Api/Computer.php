@@ -15,8 +15,17 @@ class Computer extends ResourceController
     public function index()
     {
         $computer = new ComputerModel();
+        $computer->builder()->select('computers.*, GROUP_CONCAT(DISTINCT(`groups`.`id`)) as groups');
+        $computer->builder()->join('computer_groups', 'computers.id = computer_groups.computer_id');
+        $computer->builder()->join('groups', 'groups.id = computer_groups.group_id');
+        $computer->builder()->groupBy('computers.id');
 
         $data = $computer->findAll();
+
+        // Explode groups as json array
+        for ($i = 0; $i < count($data); $i++) {
+            $data[$i]['groups'] = explode(',', $data[$i]['groups']);
+        }
 
         $response = [
             'status'   => 200,
@@ -38,8 +47,13 @@ class Computer extends ResourceController
     public function show($id = null)
     {
         $computer = new ComputerModel();
+        $computer->builder()->select('computers.*, GROUP_CONCAT(DISTINCT(`groups`.`id`)) as groups');
+        $computer->builder()->join('computer_groups', 'computers.id = computer_groups.computer_id');
+        $computer->builder()->join('groups', 'groups.id = computer_groups.group_id');
+        $data = $computer->where(['computers.id' => $id])->first();
 
-        $data = $computer->where(['id' => $id])->first();
+        // Explode groups as json array
+        $data['groups'] = explode(',', $data['groups']);
 
         if ($data) {
             $response = [
