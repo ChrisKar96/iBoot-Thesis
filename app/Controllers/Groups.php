@@ -14,6 +14,7 @@ class Groups extends BaseController
                 'apiTarget' => base_url('/api/group'),
                 'columns'   => '{title:"' . lang('Text.group') . '", field:"name", sorter:"string"},
                                 {title:"Boot Menu", field:"boot_menu", sorter:"number"},',
+                'moreJS' => '',
             ]
         );
     }

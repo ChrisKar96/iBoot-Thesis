@@ -14,6 +14,7 @@ class Osimages extends BaseController
                 'apiTarget' => base_url('/api/osimage'),
                 'columns'   => '{title:"' . lang('Text.os_image') . '", field:"name", sorter:"string"},
                                 {title:"TFTP Path", field:"tftppath", sorter:"string"},',
+                'moreJS' => '',
             ]
         );
     }

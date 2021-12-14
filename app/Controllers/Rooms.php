@@ -15,6 +15,7 @@ class Rooms extends BaseController
                 'columns'   => '{title:"' . lang('Text.room') . '", field:"name", sorter:"string"},
                                 {title:"' . lang('Text.building') . '", field:"building", sorter:"number"},
                                 {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string"},',
+                'moreJS' => '',
             ]
         );
     }
