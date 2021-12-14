@@ -17,6 +17,7 @@ class Computers extends BaseController
                                 {title:"IPv4", field:"ipv4", sorter:"string"},
                                 {title:"IPv6", field:"ipv6", sorter:"string"},
                                 {title:"' . lang('Text.room') . '", field:"room", sorter:"number"},',
+                'moreJS' => '',
             ]
         );
     }

@@ -3,13 +3,15 @@
 <?= $this->section('content') ?>
 
 <?php
-if (isset($columns, $apiTarget)): ?>
+if (isset($columns, $apiTarget, $moreJS)): ?>
 
     <main role="main" class="py-5">
         <div class="container">
             <div id="table"></div>
 
             <script>
+                <?= $moreJS ?>
+
                 let table = new Tabulator("#table", {
                     index: "id",
                     layout: "fitColumns",
