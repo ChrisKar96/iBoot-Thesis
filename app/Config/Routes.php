@@ -42,6 +42,7 @@ $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
 $routes->get('buildings', 'Buildings::index', ['filter' => 'auth']);
 $routes->get('rooms', 'Rooms::index', ['filter' => 'auth']);
 $routes->get('os-images', 'Osimages::index', ['filter' => 'auth']);
+$routes->get('os-image-archs', 'Osimagearchs::index', ['filter' => 'auth']);
 $routes->get('configurations', 'Configurations::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout');
 
@@ -70,6 +71,7 @@ $routes->resource('api/group', ['except' => 'new,edit']);
 $routes->resource('api/building', ['except' => 'new,edit']);
 $routes->resource('api/room', ['except' => 'new,edit']);
 $routes->resource('api/osimage', ['except' => 'new,edit']);
+$routes->resource('api/osimagearch', ['except' => 'new,edit']);
 $routes->resource('api/configuration', ['except' => 'new,edit']);
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
