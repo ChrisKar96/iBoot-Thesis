@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use App\Models\Api\GroupModel;
 use CodeIgniter\RESTful\ResourceController;
+use ReflectionException;
 
 class Group extends ResourceController
 {
@@ -68,6 +69,7 @@ class Group extends ResourceController
      * Create a new resource object, from "posted" parameters
      *
      * @return mixed
+     * @throws ReflectionException
      */
     public function create()
     {
@@ -106,6 +108,7 @@ class Group extends ResourceController
      * @param mixed|null $id
      *
      * @return mixed
+     * @throws ReflectionException
      */
     public function update($id = null)
     {
