@@ -43,4 +43,6 @@ return [
     'reset_table'            => 'Reset Table',
     'save_table'             => 'Save Table',
     'confirm_delete'         => 'Do you really want to delete this item?',
+    'configure_your_dhcp'    => 'Please configure your DHCP server to point to this page.',
+    'add_to_your_dhcpd'      => 'Add the following code snippet to the dhcpd.conf file of your existing ISC installation.',
 ];
