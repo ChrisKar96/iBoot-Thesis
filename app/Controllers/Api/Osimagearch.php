@@ -24,7 +24,6 @@ class Osimagearch extends ResourceController
             'error'    => null,
             'messages' => count($data) . ' OS Image Archs Found',
             'data'     => $data,
-            'sql'      => $OSImageArch->db->showLastQuery(),
         ];
 
         return $this->respond($response);
@@ -49,7 +48,6 @@ class Osimagearch extends ResourceController
                 'error'    => null,
                 'messages' => 'OS Image Arch Found',
                 'data'     => $data,
-                'sql'      => $OSImageArch->db->showLastQuery(),
             ];
 
             return $this->respond($response);

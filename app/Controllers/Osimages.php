@@ -15,6 +15,7 @@ class Osimages extends BaseController
                 'columns'   => '{title:"' . lang('Text.os_image') . '", field:"name", sorter:"string"},
                                 {title:"arch", field:"arch", sorter:"string", tooltip:true},
                                 {title:"ipxe_entry", field:"ipxe_entry", sorter:"string"},',
+                'moreJS' => '',
             ]
         );
     }
