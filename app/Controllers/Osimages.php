@@ -13,7 +13,8 @@ class Osimages extends BaseController
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/osimage'),
                 'columns'   => '{title:"' . lang('Text.os_image') . '", field:"name", sorter:"string"},
-                                {title:"TFTP Path", field:"tftppath", sorter:"string"},',
+                                {title:"arch", field:"arch", sorter:"string", tooltip:true},
+                                {title:"ipxe_entry", field:"ipxe_entry", sorter:"string"},',
             ]
         );
     }

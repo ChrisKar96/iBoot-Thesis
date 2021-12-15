@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Api;
 
-use App\Models\Api\OSImageModel;
+use App\Models\Api\OsimageModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class Osimage extends ResourceController
@@ -14,14 +14,14 @@ class Osimage extends ResourceController
      */
     public function index()
     {
-        $OSImage = new OSImageModel();
+        $OSImage = new OsimageModel();
 
         $data = $OSImage->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' OSImages Found',
+            'messages' => count($data) . ' OS Images Found',
             'data'     => $data,
         ];
 
@@ -37,7 +37,7 @@ class Osimage extends ResourceController
      */
     public function show($id = null)
     {
-        $OSImage = new OSImageModel();
+        $OSImage = new OsimageModel();
 
         $data = $OSImage->where(['id' => $id])->first();
 
@@ -45,14 +45,14 @@ class Osimage extends ResourceController
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OSImage Found',
+                'messages' => 'OS Image Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No OSImage Found with id ' . $id);
+        return $this->failNotFound('No OS Image Found with id ' . $id);
     }
 
     /**
@@ -71,11 +71,11 @@ class Osimage extends ResourceController
      */
     public function create()
     {
-        $OSImage = new OSImageModel();
+        $OSImage = new OsimageModel();
 
         $data = [
-            'name'     => $this->request->getVar('name'),
-            'tftppath' => $this->request->getVar('tftppath'),
+            'name'       => $this->request->getVar('name'),
+            'ipxe_entry' => $this->request->getVar('ipxe_entry'),
         ];
 
         $OSImage->insert($data);
@@ -83,7 +83,7 @@ class Osimage extends ResourceController
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OSImage Saved',
+            'messages' => 'OS Image Saved',
         ];
 
         return $this->respondCreated($response);
@@ -109,11 +109,11 @@ class Osimage extends ResourceController
      */
     public function update($id = null)
     {
-        $OSImage = new OSImageModel();
+        $OSImage = new OsimageModel();
 
         $data = [
-            'name'     => $this->request->getVar('name'),
-            'tftppath' => $this->request->getVar('tftppath'),
+            'name'       => $this->request->getVar('name'),
+            'ipxe_entry' => $this->request->getVar('ipxe_entry'),
         ];
 
         $OSImage->update($id, $data);
@@ -121,7 +121,7 @@ class Osimage extends ResourceController
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OSImage Updated',
+            'messages' => 'OS Image Updated',
         ];
 
         return $this->respond($response);
@@ -136,7 +136,7 @@ class Osimage extends ResourceController
      */
     public function delete($id = null)
     {
-        $OSImage = new OSImageModel();
+        $OSImage = new OsimageModel();
 
         $data = $OSImage->find($id);
 
@@ -146,12 +146,12 @@ class Osimage extends ResourceController
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OSImage Deleted',
+                'messages' => 'OS Image Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No OSImage Found with id ' . $id);
+        return $this->failNotFound('No OS Image Found with id ' . $id);
     }
 }

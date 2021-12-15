@@ -4,7 +4,7 @@ namespace App\Models\Api;
 
 use CodeIgniter\Model;
 
-class OSImageModel extends Model
+class OsimageModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'os_images';
@@ -14,7 +14,7 @@ class OSImageModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'tftppath'];
+    protected $allowedFields    = ['name', 'arch', 'ipxe_entry'];
 
     // Dates
     protected $useTimestamps = false;
