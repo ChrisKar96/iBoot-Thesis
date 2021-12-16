@@ -18,7 +18,7 @@ class Locale extends Controller
             session()->set('locale', $locale);
 
             // Reload page
-            return redirect()->back();
+            return redirect()->to($_SERVER['HTTP_REFERER']);
         }
 
         throw new \CodeIgniter\Exceptions\PageNotFoundException(esc($locale) . ' is not a supported language');
