@@ -37,28 +37,32 @@ class Groups extends BaseController
                                 },',
                 'moreJS'    => 'let computers = {};
 
-                                let getJSON = function(url) {
-                                  return new Promise(function(resolve, reject) {
-                                    var xhr = new XMLHttpRequest();
-                                    xhr.open(\'get\', url, true);
-                                    xhr.responseType = \'json\';
-                                    xhr.onload = function() {
-                                      var status = xhr.status;
-                                     if (status == 200) {
-                                        resolve(xhr.response);
-                                      } else {
-                                        reject(status);
-                                      }
-                                    };
-                                    xhr.send();
-                                  });
+                                function getJSON(url) {
+                                    return new Promise(function(resolve, reject) {
+                                        var xhr = new XMLHttpRequest();
+                                        xhr.open(\'get\', url, true);
+                                        xhr.responseType = \'json\';
+                                        xhr.onload = function() {
+                                            var status = xhr.status;
+                                            if (status == 200) {
+                                                resolve(xhr.response);
+                                            } else {
+                                                reject(status);
+                                            }
+                                        };
+                                        xhr.send();
+                                    });
                                 };
 
-                                getJSON("' . base_url('/api/computer') . '").then(function(response) {
-                                    for (i = 0; i < response.data.length; ++i) {
-                                        computers[response.data[i].id] = response.data[i].name;
-                                    }
-                                });',
+                                async function getComputers(){
+                                    await getJSON("' . base_url('/api/computer') . '").then(function(response) {
+                                        for (i = 0; i < response.data.length; ++i) {
+                                            computers[response.data[i].id] = response.data[i].name;
+                                        }
+                                    });
+                                }
+
+                                getComputers();',
             ]
         );
     }
