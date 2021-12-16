@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use App\Models\Api\GroupModel;
 use CodeIgniter\RESTful\ResourceController;
+use ReflectionException;
 
 class Group extends ResourceController
 {
@@ -15,8 +16,16 @@ class Group extends ResourceController
     public function index()
     {
         $Group = new GroupModel();
+        $Group->builder()->select('groups.*, GROUP_CONCAT(DISTINCT(`computer_groups`.`computer_id`)) as computers');
+        $Group->builder()->join('computer_groups', 'groups.id = computer_groups.group_id');
+        $Group->builder()->groupBy('groups.id');
 
         $data = $Group->findAll();
+
+        // Explode groups as json array
+        for ($i = 0; $i < count($data); $i++) {
+            $data[$i]['computers'] = explode(',', $data[$i]['computers']);
+        }
 
         $response = [
             'status'   => 200,
@@ -38,8 +47,14 @@ class Group extends ResourceController
     public function show($id = null)
     {
         $Group = new GroupModel();
-
+        $Group->builder()->select('groups.*, GROUP_CONCAT(DISTINCT(`computer_groups`.`computer_id`)) as computers');
+        $Group->builder()->join('computer_groups', 'groups.id = computer_groups.group_id');
+        $Group->builder()->groupBy('groups.id');
         $data = $Group->where(['id' => $id])->first();
+
+        if ($data) {
+            $data['computers'] = explode(',', $data['computers']);
+        }
 
         if ($data) {
             $response = [
@@ -66,6 +81,8 @@ class Group extends ResourceController
 
     /**
      * Create a new resource object, from "posted" parameters
+     *
+     * @throws ReflectionException
      *
      * @return mixed
      */
@@ -104,6 +121,8 @@ class Group extends ResourceController
      * Add or update a model resource, from "posted" properties
      *
      * @param mixed|null $id
+     *
+     * @throws ReflectionException
      *
      * @return mixed
      */

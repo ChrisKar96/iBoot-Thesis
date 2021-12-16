@@ -14,6 +14,9 @@ return [
     'configurations'         => 'Configurations',
     'os_image'               => 'OS Image',
     'os_images'              => 'OS Images',
+    'os_image_arch'          => 'OS Image Architecture',
+    'os_image_archs'         => 'OS Image Architectures',
+    'arch'                   => 'Architecture',
     'boot_menu_options'      => 'Boot Menu Options',
     'room'                   => 'Room',
     'rooms'                  => 'Rooms',
@@ -32,4 +35,6 @@ return [
     'retype_password'        => 'Retype Password',
     'address'                => 'Address',
     'delete'                 => 'Delete',
+    'description'            => 'Description',
+    'ipxe_entry'             => 'iPXE Menu Entry',
 ];

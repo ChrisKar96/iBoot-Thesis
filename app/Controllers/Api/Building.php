@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use App\Models\Api\BuildingModel;
 use CodeIgniter\RESTful\ResourceController;
+use ReflectionException;
 
 class Building extends ResourceController
 {
@@ -67,6 +68,8 @@ class Building extends ResourceController
     /**
      * Create a new resource object, from "posted" parameters
      *
+     * @throws ReflectionException
+     *
      * @return mixed
      */
     public function create()
@@ -105,6 +108,8 @@ class Building extends ResourceController
      * Add or update a model resource, from "posted" properties
      *
      * @param mixed|null $id
+     *
+     * @throws ReflectionException
      *
      * @return mixed
      */

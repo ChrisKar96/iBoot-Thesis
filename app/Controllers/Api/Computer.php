@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use App\Models\Api\ComputerModel;
 use CodeIgniter\RESTful\ResourceController;
+use ReflectionException;
 
 class Computer extends ResourceController
 {
@@ -15,8 +16,16 @@ class Computer extends ResourceController
     public function index()
     {
         $computer = new ComputerModel();
+        $computer->builder()->select('computers.*, GROUP_CONCAT(DISTINCT(`computer_groups`.`group_id`)) as groups');
+        $computer->builder()->join('computer_groups', 'computers.id = computer_groups.computer_id');
+        $computer->builder()->groupBy('computers.id');
 
         $data = $computer->findAll();
+
+        // Explode groups as json array
+        for ($i = 0; $i < count($data); $i++) {
+            $data[$i]['groups'] = explode(',', $data[$i]['groups']);
+        }
 
         $response = [
             'status'   => 200,
@@ -38,8 +47,15 @@ class Computer extends ResourceController
     public function show($id = null)
     {
         $computer = new ComputerModel();
+        $computer->builder()->select('computers.*, GROUP_CONCAT(DISTINCT(`computer_groups`.`group_id`)) as groups');
+        $computer->builder()->join('computer_groups', 'computers.id = computer_groups.computer_id');
+        $computer->groupBy('computers.id');
+        $data = $computer->where(['computers.id' => $id])->first();
 
-        $data = $computer->where(['id' => $id])->first();
+        // Explode groups as json array
+        if ($data) {
+            $data['groups'] = explode(',', $data['groups']);
+        }
 
         if ($data) {
             $response = [
@@ -66,6 +82,8 @@ class Computer extends ResourceController
 
     /**
      * Create a new resource object, from "posted" parameters
+     *
+     * @throws ReflectionException
      *
      * @return mixed
      */
@@ -107,6 +125,8 @@ class Computer extends ResourceController
      * Add or update a model resource, from "posted" properties
      *
      * @param mixed|null $id
+     *
+     * @throws ReflectionException
      *
      * @return mixed
      */

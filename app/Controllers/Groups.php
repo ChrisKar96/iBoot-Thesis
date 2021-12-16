@@ -13,7 +13,56 @@ class Groups extends BaseController
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/group'),
                 'columns'   => '{title:"' . lang('Text.group') . '", field:"name", sorter:"string"},
-                                {title:"Boot Menu", field:"boot_menu", sorter:"number"},',
+                                {title:"' . lang('Text.computers') . '", field:"computers", editor:"select",
+                                    editorParams:{
+                                        multiselect:true,
+                                        values:computers
+                                    },
+                                    formatter:function (cell, formatterParams, onRendered) {
+                                        let value = cell.getValue();
+                                        values = value.toString().split(",");
+                                        let formatted = "";
+                                        for(i = 0; i < values.length; ++i) {
+                                            if(typeof formatterParams[values[i]] === "undefined") {
+                                                console.warn(\'Missing display value for \' + values[i]);
+                                                return values[i];
+                                            }
+                                            formatted += formatterParams[values[i]];
+                                            if(i < values.length - 1)
+                                                formatted += ", ";
+                                        }
+                                        return formatted;
+                                    },
+                                    formatterParams: computers,
+                                },',
+                'moreJS'    => 'let computers = {};
+
+                                function getJSON(url) {
+                                    return new Promise(function(resolve, reject) {
+                                        var xhr = new XMLHttpRequest();
+                                        xhr.open(\'get\', url, true);
+                                        xhr.responseType = \'json\';
+                                        xhr.onload = function() {
+                                            var status = xhr.status;
+                                            if (status == 200) {
+                                                resolve(xhr.response);
+                                            } else {
+                                                reject(status);
+                                            }
+                                        };
+                                        xhr.send();
+                                    });
+                                };
+
+                                async function getComputers(){
+                                    await getJSON("' . base_url('/api/computer') . '").then(function(response) {
+                                        for (i = 0; i < response.data.length; ++i) {
+                                            computers[response.data[i].id] = response.data[i].name;
+                                        }
+                                    });
+                                }
+
+                                getComputers();',
             ]
         );
     }

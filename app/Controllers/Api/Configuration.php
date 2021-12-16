@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use App\Models\Api\ConfigurationModel;
 use CodeIgniter\RESTful\ResourceController;
+use ReflectionException;
 
 class Configuration extends ResourceController
 {
@@ -67,6 +68,8 @@ class Configuration extends ResourceController
     /**
      * Create a new resource object, from "posted" parameters
      *
+     * @throws ReflectionException
+     *
      * @return mixed
      */
     public function create()
@@ -103,6 +106,8 @@ class Configuration extends ResourceController
      * Add or update a model resource, from "posted" properties
      *
      * @param mixed|null $id
+     *
+     * @throws ReflectionException
      *
      * @return mixed
      */

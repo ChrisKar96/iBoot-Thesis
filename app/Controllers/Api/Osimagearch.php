@@ -2,11 +2,11 @@
 
 namespace App\Controllers\Api;
 
-use App\Models\Api\OsimageModel;
+use App\Models\Api\OsimagearchModel;
 use CodeIgniter\RESTful\ResourceController;
 use ReflectionException;
 
-class Osimage extends ResourceController
+class Osimagearch extends ResourceController
 {
     /**
      * Return an array of resource objects, themselves in array format
@@ -15,14 +15,14 @@ class Osimage extends ResourceController
      */
     public function index()
     {
-        $OSImage = new OsimageModel();
+        $OSImageArch = new OsimagearchModel();
 
-        $data = $OSImage->findAll();
+        $data = $OSImageArch->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' OS Images Found',
+            'messages' => count($data) . ' OS Image Archs Found',
             'data'     => $data,
         ];
 
@@ -38,22 +38,22 @@ class Osimage extends ResourceController
      */
     public function show($id = null)
     {
-        $OSImage = new OsimageModel();
+        $OSImageArch = new OsimagearchModel();
 
-        $data = $OSImage->where(['id' => $id])->first();
+        $data = $OSImageArch->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OS Image Found',
+                'messages' => 'OS Image Arch Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No OS Image Found with id ' . $id);
+        return $this->failNotFound('No OS Image Arch Found with id ' . $id);
     }
 
     /**
@@ -74,19 +74,19 @@ class Osimage extends ResourceController
      */
     public function create()
     {
-        $OSImage = new OsimageModel();
+        $OSImageArch = new OsimagearchModel();
 
         $data = [
-            'name'       => $this->request->getVar('name'),
-            'ipxe_entry' => $this->request->getVar('ipxe_entry'),
+            'name'        => $this->request->getVar('name'),
+            'description' => $this->request->getVar('description'),
         ];
 
-        $OSImage->insert($data);
+        $OSImageArch->insert($data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OS Image Saved',
+            'messages' => 'OS Image Arch Saved',
         ];
 
         return $this->respondCreated($response);
@@ -114,19 +114,19 @@ class Osimage extends ResourceController
      */
     public function update($id = null)
     {
-        $OSImage = new OsimageModel();
+        $OSImageArch = new OsimagearchModel();
 
         $data = [
-            'name'       => $this->request->getVar('name'),
-            'ipxe_entry' => $this->request->getVar('ipxe_entry'),
+            'name'        => $this->request->getVar('name'),
+            'description' => $this->request->getVar('description'),
         ];
 
-        $OSImage->update($id, $data);
+        $OSImageArch->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OS Image Updated',
+            'messages' => 'OS Image Arch Updated',
         ];
 
         return $this->respond($response);
@@ -141,22 +141,22 @@ class Osimage extends ResourceController
      */
     public function delete($id = null)
     {
-        $OSImage = new OsimageModel();
+        $OSImageArch = new OsimagearchModel();
 
-        $data = $OSImage->find($id);
+        $data = $OSImageArch->find($id);
 
         if ($data) {
-            $OSImage->delete($id);
+            $OSImageArch->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OS Image Deleted',
+                'messages' => 'OS Image Arch Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No OS Image Found with id ' . $id);
+        return $this->failNotFound('No OS Image Arch Found with id ' . $id);
     }
 }
