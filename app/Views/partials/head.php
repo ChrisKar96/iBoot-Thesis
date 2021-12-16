@@ -19,7 +19,7 @@
     <?php
     if (isset($tabulator) && $tabulator) : ?>
         <!-- Tabulator CSS -->
-        <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@5.0.7/dist/css/tabulator.min.css"
+        <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@5.0.7/dist/css/tabulator.min.css">
         <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.0.7/dist/js/tabulator.min.js"></script>
     <?php
     endif; ?>
