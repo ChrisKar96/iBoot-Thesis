@@ -35,7 +35,7 @@ class Osimages extends BaseController
                                         }
                                     },
                                 },
-                                {title:"ipxe_entry", field:"ipxe_entry", formatter:"textarea"},',
+                                {title:"' . lang('Text.ipxe_entry') . '", field:"ipxe_entry", formatter:"textarea"},',
                 'moreJS' => 'let archs = {};
 
                                 let getJSON = function(url) {

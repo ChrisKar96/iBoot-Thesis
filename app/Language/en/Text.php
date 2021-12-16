@@ -36,4 +36,5 @@ return [
     'address'                => 'Address',
     'delete'                 => 'Delete',
     'description'            => 'Description',
+    'ipxe_entry'             => 'iPXE Menu Entry',
 ];

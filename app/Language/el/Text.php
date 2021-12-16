@@ -36,4 +36,5 @@ return [
     'address'                => 'Διεύθυνση',
     'delete'                 => 'Διαγραφή',
     'description'            => 'Περιγραφή',
+    'ipxe_entry'             => 'Καταχώρηση Μενού iPXE',
 ];
