@@ -25,6 +25,7 @@ return [
     'location'               => 'Location',
     'locations'              => 'Locations',
     'groups'                 => 'Groups',
+    'group'                  => 'Group',
     'computer'               => 'Computer',
     'computers'              => 'Computers',
     'toggle_navigation_bar'  => 'Toggle navigation bar',

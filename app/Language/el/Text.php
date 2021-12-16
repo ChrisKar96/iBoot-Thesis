@@ -25,6 +25,7 @@ return [
     'location'               => 'Τοποθεσία',
     'locations'              => 'Τοποθεσίες',
     'groups'                 => 'Ομάδες',
+    'group'                  => 'Ομάδα',
     'computer'               => 'Υπολογιστής',
     'computers'              => 'Υπολογιστές',
     'toggle_navigation_bar'  => 'Εναλλαγή μπάρας πλοήγησης',
