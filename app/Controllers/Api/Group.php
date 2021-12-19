@@ -15,12 +15,17 @@ class Group extends ResourceController
      */
     public function index()
     {
-        $Group = new GroupModel();
-        $Group->builder()->select('groups.*, GROUP_CONCAT(DISTINCT(`computer_groups`.`computer_id`)) as computers');
-        $Group->builder()->join('computer_groups', 'groups.id = computer_groups.group_id');
-        $Group->builder()->groupBy('groups.id');
+        $group = new GroupModel();
+        $group->builder()->select(
+            $group->db->DBPrefix . 'groups.*, GROUP_CONCAT(DISTINCT(`' . $group->db->DBPrefix . 'computer_groups`.`computer_id`)) as computers'
+        );
+        $group->builder()->join(
+            $group->db->DBPrefix . 'computer_groups',
+            $group->db->DBPrefix . 'groups.id = ' . $group->db->DBPrefix . 'computer_groups.group_id'
+        );
+        $group->builder()->groupBy($group->db->DBPrefix . 'groups.id');
 
-        $data = $Group->findAll();
+        $data = $group->findAll();
 
         // Explode groups as json array
         for ($i = 0; $i < count($data); $i++) {
@@ -46,11 +51,16 @@ class Group extends ResourceController
      */
     public function show($id = null)
     {
-        $Group = new GroupModel();
-        $Group->builder()->select('groups.*, GROUP_CONCAT(DISTINCT(`computer_groups`.`computer_id`)) as computers');
-        $Group->builder()->join('computer_groups', 'groups.id = computer_groups.group_id');
-        $Group->builder()->groupBy('groups.id');
-        $data = $Group->where(['id' => $id])->first();
+        $group = new GroupModel();
+        $group->builder()->select(
+            $group->db->DBPrefix . 'groups.*, GROUP_CONCAT(DISTINCT(`' . $group->db->DBPrefix . 'computer_groups`.`computer_id`)) as computers'
+        );
+        $group->builder()->join(
+            $group->db->DBPrefix . 'computer_groups',
+            $group->db->DBPrefix . 'groups.id = ' . $group->db->DBPrefix . 'computer_groups.group_id'
+        );
+        $group->builder()->groupBy($group->db->DBPrefix . 'groups.id');
+        $data = $group->where(['id' => $id])->first();
 
         if ($data) {
             $data['computers'] = explode(',', $data['computers']);
@@ -88,14 +98,14 @@ class Group extends ResourceController
      */
     public function create()
     {
-        $Group = new GroupModel();
+        $group = new GroupModel();
 
         $data = [
             'name'      => $this->request->getVar('name'),
             'boot_menu' => $this->request->getVar('boot_menu'),
         ];
 
-        $Group->insert($data);
+        $group->insert($data);
 
         $response = [
             'status'   => 200,
@@ -128,14 +138,14 @@ class Group extends ResourceController
      */
     public function update($id = null)
     {
-        $Group = new GroupModel();
+        $group = new GroupModel();
 
         $data = [
             'name'      => $this->request->getVar('name'),
             'boot_menu' => $this->request->getVar('boot_menu'),
         ];
 
-        $Group->update($id, $data);
+        $group->update($id, $data);
 
         $response = [
             'status'   => 200,
@@ -155,12 +165,12 @@ class Group extends ResourceController
      */
     public function delete($id = null)
     {
-        $Group = new GroupModel();
+        $group = new GroupModel();
 
-        $data = $Group->find($id);
+        $data = $group->find($id);
 
         if ($data) {
-            $Group->delete($id);
+            $group->delete($id);
 
             $response = [
                 'status'   => 200,

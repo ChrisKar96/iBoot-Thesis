@@ -16,9 +16,14 @@ class Computer extends ResourceController
     public function index()
     {
         $computer = new ComputerModel();
-        $computer->builder()->select('computers.*, GROUP_CONCAT(DISTINCT(`computer_groups`.`group_id`)) as groups');
-        $computer->builder()->join('computer_groups', 'computers.id = computer_groups.computer_id');
-        $computer->builder()->groupBy('computers.id');
+        $computer->builder()->select(
+            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(`' . $computer->db->DBPrefix . 'computer_groups`.`group_id`)) as groups'
+        );
+        $computer->builder()->join(
+            $computer->db->DBPrefix . 'computer_groups',
+            $computer->db->DBPrefix . 'computers.id = ' . $computer->db->DBPrefix . 'computer_groups.computer_id'
+        );
+        $computer->builder()->groupBy($computer->db->DBPrefix . 'computers.id');
 
         $data = $computer->findAll();
 
@@ -47,10 +52,15 @@ class Computer extends ResourceController
     public function show($id = null)
     {
         $computer = new ComputerModel();
-        $computer->builder()->select('computers.*, GROUP_CONCAT(DISTINCT(`computer_groups`.`group_id`)) as groups');
-        $computer->builder()->join('computer_groups', 'computers.id = computer_groups.computer_id');
-        $computer->groupBy('computers.id');
-        $data = $computer->where(['computers.id' => $id])->first();
+        $computer->builder()->select(
+            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(`' . $computer->db->DBPrefix . 'computer_groups`.`group_id`)) as groups'
+        );
+        $computer->builder()->join(
+            $computer->db->DBPrefix . 'computer_groups',
+            $computer->db->DBPrefix . 'computers.id = ' . $computer->db->DBPrefix . 'computer_groups.computer_id'
+        );
+        $computer->groupBy($computer->db->DBPrefix . 'computers.id');
+        $data = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
 
         // Explode groups as json array
         if ($data) {
