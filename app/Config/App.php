@@ -162,7 +162,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $sessionCookieName = 'session';
+    public $sessionCookieName = 'iBoot-session';
 
     /**
      * --------------------------------------------------------------------------
