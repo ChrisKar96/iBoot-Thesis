@@ -131,3 +131,5 @@ nb-configuration.xml
 service-start.sh
 
 iboot.sql
+
+app/Database/Seeds/UserSeeder.php
