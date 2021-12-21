@@ -11,20 +11,25 @@ if (isset($columns, $apiTarget, $moreJS)): ?>
 
             <script>
 
-                function api_call(url, method) {
+                function api_call(url, method, data) {
                     return new Promise(function(resolve, reject) {
                         let xhr = new XMLHttpRequest();
                         xhr.open(method, url, true);
+                        xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
                         xhr.responseType = 'json';
                         xhr.onload = function() {
-                            let status = xhr.status;
-                            if (status == 200) {
+                            if (xhr.status === 200) {
                                 resolve(xhr.response);
                             } else {
-                                reject(status);
+                                reject(xhr.status);
                             }
                         };
-                        xhr.send();
+                        if(typeof data !== "undefined") {
+                            xhr.send(JSON.stringify(data));
+                        }
+                        else{
+                            xhr.send();
+                        }
                     });
                 }
                 <?= $moreJS ?>
