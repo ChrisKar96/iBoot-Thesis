@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <?php
-if (isset($columns, $apiTarget, $JS_before_table)): ?>
+if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
 
     <main role="main" class="py-5">
         <div class="container">
@@ -33,6 +33,10 @@ if (isset($columns, $apiTarget, $JS_before_table)): ?>
                     });
                 }
 
+                function deleteRow(id){
+                    api_call("<?= $apiTarget ?>/" + id + "/delete", "POST");
+                }
+
                 <?= $JS_bef_tb ?>
 
                 let table = new Tabulator("#table", {
@@ -48,7 +52,16 @@ if (isset($columns, $apiTarget, $JS_before_table)): ?>
                             formatter: "buttonCross",
                             hozAlign: "center",
                             cellClick: function (e, cell) {
-                                cell.getRow().delete();
+                                let cell_previous_bg = cell.getRow().getElement().style.backgroundColor;
+                                cell.getRow().getElement().style.backgroundColor = "indianred";
+                                if(confirm('<?= lang('Text.confirm_delete'); ?>') && typeof cell.getRow().getIndex() !== "undefined") {
+                                    cell.getRow().delete();
+                                    table.redraw();
+                                    deleteRow(cell.getRow().getIndex());
+                                }
+                                else {
+                                    cell.getRow().getElement().style.backgroundColor = cell_previous_bg;
+                                }
                             },
                             width:140
                         },

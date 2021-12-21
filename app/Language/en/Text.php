@@ -39,4 +39,5 @@ return [
     'delete'                 => 'Delete',
     'description'            => 'Description',
     'ipxe_entry'             => 'iPXE Menu Entry',
+    'confirm_delete'         => 'Do you really want to delete this item?',
 ];
