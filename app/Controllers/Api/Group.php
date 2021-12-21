@@ -70,7 +70,7 @@ class Group extends ResourceController
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Group Found',
+                'messages' => 'Group with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
@@ -107,10 +107,12 @@ class Group extends ResourceController
 
         $group->insert($data);
 
+        $id = $group->getInsertID();
+
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Group Saved',
+            'messages' => 'Group Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -150,10 +152,10 @@ class Group extends ResourceController
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Group Updated',
+            'messages' => 'Group with id ' . $id . ' Updated',
         ];
 
-        return $this->respond($response);
+        return $this->respondUpdated($response);
     }
 
     /**
@@ -175,7 +177,7 @@ class Group extends ResourceController
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Group Deleted',
+                'messages' => 'Group with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);

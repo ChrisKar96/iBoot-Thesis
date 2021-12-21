@@ -15,9 +15,9 @@ class Building extends ResourceController
      */
     public function index()
     {
-        $Building = new BuildingModel();
+        $building = new BuildingModel();
 
-        $data = $Building->findAll();
+        $data = $building->findAll();
 
         $response = [
             'status'   => 200,
@@ -38,15 +38,15 @@ class Building extends ResourceController
      */
     public function show($id = null)
     {
-        $Building = new BuildingModel();
+        $building = new BuildingModel();
 
-        $data = $Building->where(['id' => $id])->first();
+        $data = $building->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Building Found',
+                'messages' => 'Building with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
@@ -74,7 +74,7 @@ class Building extends ResourceController
      */
     public function create()
     {
-        $Building = new BuildingModel();
+        $building = new BuildingModel();
 
         $data = [
             'name'    => $this->request->getVar('name'),
@@ -82,12 +82,14 @@ class Building extends ResourceController
             'phone'   => $this->request->getVar('phone'),
         ];
 
-        $Building->insert($data);
+        $building->insert($data);
+
+        $id = $building->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Building Saved',
+            'messages' => 'Building Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -115,7 +117,7 @@ class Building extends ResourceController
      */
     public function update($id = null)
     {
-        $Building = new BuildingModel();
+        $building = new BuildingModel();
 
         $data = [
             'name'    => $this->request->getVar('name'),
@@ -123,15 +125,15 @@ class Building extends ResourceController
             'phone'   => $this->request->getVar('phone'),
         ];
 
-        $Building->update($id, $data);
+        $building->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Building Updated',
+            'messages' => 'Building with id ' . $id . ' Updated',
         ];
 
-        return $this->respond($response);
+        return $this->respondUpdated($response);
     }
 
     /**
@@ -143,17 +145,17 @@ class Building extends ResourceController
      */
     public function delete($id = null)
     {
-        $Building = new BuildingModel();
+        $building = new BuildingModel();
 
-        $data = $Building->find($id);
+        $data = $building->find($id);
 
         if ($data) {
-            $Building->delete($id);
+            $building->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Building Deleted',
+                'messages' => 'Building with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);

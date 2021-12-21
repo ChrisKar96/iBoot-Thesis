@@ -15,9 +15,9 @@ class Room extends ResourceController
      */
     public function index()
     {
-        $Room = new RoomModel();
+        $room = new RoomModel();
 
-        $data = $Room->findAll();
+        $data = $room->findAll();
 
         $response = [
             'status'   => 200,
@@ -38,15 +38,15 @@ class Room extends ResourceController
      */
     public function show($id = null)
     {
-        $Room = new RoomModel();
+        $room = new RoomModel();
 
-        $data = $Room->where(['id' => $id])->first();
+        $data = $room->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Room Found',
+                'messages' => 'Room with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
@@ -74,7 +74,7 @@ class Room extends ResourceController
      */
     public function create()
     {
-        $Room = new RoomModel();
+        $room = new RoomModel();
 
         $data = [
             'name'     => $this->request->getVar('name'),
@@ -82,12 +82,14 @@ class Room extends ResourceController
             'phone'    => $this->request->getVar('phone'),
         ];
 
-        $Room->insert($data);
+        $room->insert($data);
+
+		$id = $room->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Room Saved',
+            'messages' => 'Room Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -115,7 +117,7 @@ class Room extends ResourceController
      */
     public function update($id = null)
     {
-        $Room = new RoomModel();
+        $room = new RoomModel();
 
         $data = [
             'name'     => $this->request->getVar('name'),
@@ -123,15 +125,15 @@ class Room extends ResourceController
             'phone'    => $this->request->getVar('phone'),
         ];
 
-        $Room->update($id, $data);
+        $room->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Room Updated',
+            'messages' => 'Room with id ' . $id . ' Updated',
         ];
 
-        return $this->respond($response);
+        return $this->respondUpdated($response);
     }
 
     /**
@@ -143,17 +145,17 @@ class Room extends ResourceController
      */
     public function delete($id = null)
     {
-        $Room = new RoomModel();
+        $room = new RoomModel();
 
-        $data = $Room->find($id);
+        $data = $room->find($id);
 
         if ($data) {
-            $Room->delete($id);
+            $room->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Room Deleted',
+                'messages' => 'Room with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);

@@ -15,9 +15,9 @@ class Osimagearch extends ResourceController
      */
     public function index()
     {
-        $OSImageArch = new OsimagearchModel();
+        $os_image_arch = new OsimagearchModel();
 
-        $data = $OSImageArch->findAll();
+        $data = $os_image_arch->findAll();
 
         $response = [
             'status'   => 200,
@@ -38,15 +38,15 @@ class Osimagearch extends ResourceController
      */
     public function show($id = null)
     {
-        $OSImageArch = new OsimagearchModel();
+        $os_image_arch = new OsimagearchModel();
 
-        $data = $OSImageArch->where(['id' => $id])->first();
+        $data = $os_image_arch->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OS Image Arch Found',
+                'messages' => 'OS Image Arch with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
@@ -74,19 +74,21 @@ class Osimagearch extends ResourceController
      */
     public function create()
     {
-        $OSImageArch = new OsimagearchModel();
+        $os_image_arch = new OsimagearchModel();
 
         $data = [
             'name'        => $this->request->getVar('name'),
             'description' => $this->request->getVar('description'),
         ];
 
-        $OSImageArch->insert($data);
+        $os_image_arch->insert($data);
+
+		$id = $os_image_arch->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OS Image Arch Saved',
+            'messages' => 'OS Image Arch Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -114,22 +116,22 @@ class Osimagearch extends ResourceController
      */
     public function update($id = null)
     {
-        $OSImageArch = new OsimagearchModel();
+        $os_image_arch = new OsimagearchModel();
 
         $data = [
             'name'        => $this->request->getVar('name'),
             'description' => $this->request->getVar('description'),
         ];
 
-        $OSImageArch->update($id, $data);
+        $os_image_arch->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OS Image Arch Updated',
+            'messages' => 'OS Image Arch with id ' . $id . ' Updated',
         ];
 
-        return $this->respond($response);
+        return $this->respondUpdated($response);
     }
 
     /**
@@ -141,17 +143,17 @@ class Osimagearch extends ResourceController
      */
     public function delete($id = null)
     {
-        $OSImageArch = new OsimagearchModel();
+        $os_image_arch = new OsimagearchModel();
 
-        $data = $OSImageArch->find($id);
+        $data = $os_image_arch->find($id);
 
         if ($data) {
-            $OSImageArch->delete($id);
+            $os_image_arch->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OS Image Arch Deleted',
+                'messages' => 'OS Image Arch with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);

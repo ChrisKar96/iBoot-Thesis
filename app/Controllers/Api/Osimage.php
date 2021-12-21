@@ -15,9 +15,9 @@ class Osimage extends ResourceController
      */
     public function index()
     {
-        $OSImage = new OsimageModel();
+        $os_image = new OsimageModel();
 
-        $data = $OSImage->findAll();
+        $data = $os_image->findAll();
 
         $response = [
             'status'   => 200,
@@ -38,15 +38,15 @@ class Osimage extends ResourceController
      */
     public function show($id = null)
     {
-        $OSImage = new OsimageModel();
+        $os_image = new OsimageModel();
 
-        $data = $OSImage->where(['id' => $id])->first();
+        $data = $os_image->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OS Image Found',
+                'messages' => 'OS Image with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
@@ -74,19 +74,21 @@ class Osimage extends ResourceController
      */
     public function create()
     {
-        $OSImage = new OsimageModel();
+        $os_image = new OsimageModel();
 
         $data = [
             'name'       => $this->request->getVar('name'),
             'ipxe_entry' => $this->request->getVar('ipxe_entry'),
         ];
 
-        $OSImage->insert($data);
+        $os_image->insert($data);
+
+        $id = $os_image->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OS Image Saved',
+            'messages' => 'OS Image Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -114,22 +116,22 @@ class Osimage extends ResourceController
      */
     public function update($id = null)
     {
-        $OSImage = new OsimageModel();
+        $os_image = new OsimageModel();
 
         $data = [
             'name'       => $this->request->getVar('name'),
             'ipxe_entry' => $this->request->getVar('ipxe_entry'),
         ];
 
-        $OSImage->update($id, $data);
+        $os_image->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OS Image Updated',
+            'messages' => 'OS Image with id ' . $id . ' Updated',
         ];
 
-        return $this->respond($response);
+        return $this->respondUpdated($response);
     }
 
     /**
@@ -141,17 +143,17 @@ class Osimage extends ResourceController
      */
     public function delete($id = null)
     {
-        $OSImage = new OsimageModel();
+        $os_image = new OsimageModel();
 
-        $data = $OSImage->find($id);
+        $data = $os_image->find($id);
 
         if ($data) {
-            $OSImage->delete($id);
+            $os_image->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OS Image Deleted',
+                'messages' => 'OS Image with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);

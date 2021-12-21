@@ -71,7 +71,7 @@ class Computer extends ResourceController
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Found',
+                'messages' => 'Computer with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
@@ -111,10 +111,12 @@ class Computer extends ResourceController
 
         $computer->insert($data);
 
+        $id = $computer->getInsertID();
+
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Saved',
+            'messages' => 'Computer Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -157,10 +159,10 @@ class Computer extends ResourceController
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Computer Updated',
+            'messages' => 'Computer with id ' . $id . ' Updated',
         ];
 
-        return $this->respond($response);
+        return $this->respondUpdated($response);
     }
 
     /**
@@ -182,7 +184,7 @@ class Computer extends ResourceController
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Computer Deleted',
+                'messages' => 'Computer with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);

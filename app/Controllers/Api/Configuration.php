@@ -15,9 +15,9 @@ class Configuration extends ResourceController
      */
     public function index()
     {
-        $Configuration = new ConfigurationModel();
+        $configuration = new ConfigurationModel();
 
-        $data = $Configuration->findAll();
+        $data = $configuration->findAll();
 
         $response = [
             'status'   => 200,
@@ -38,15 +38,15 @@ class Configuration extends ResourceController
      */
     public function show($id = null)
     {
-        $Configuration = new ConfigurationModel();
+        $configuration = new ConfigurationModel();
 
-        $data = $Configuration->where(['id' => $id])->first();
+        $data = $configuration->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Configuration Found',
+                'messages' => 'Configuration with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
@@ -74,18 +74,20 @@ class Configuration extends ResourceController
      */
     public function create()
     {
-        $Configuration = new ConfigurationModel();
+        $configuration = new ConfigurationModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
         ];
 
-        $Configuration->insert($data);
+        $configuration->insert($data);
+
+        $id = $configuration->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Configuration Saved',
+            'messages' => 'Configuration Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -113,21 +115,21 @@ class Configuration extends ResourceController
      */
     public function update($id = null)
     {
-        $Configuration = new ConfigurationModel();
+        $configuration = new ConfigurationModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
         ];
 
-        $Configuration->update($id, $data);
+        $configuration->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Configuration Updated',
+            'messages' => 'Configuration with id ' . $id . ' Updated',
         ];
 
-        return $this->respond($response);
+        return $this->respondUpdated($response);
     }
 
     /**
@@ -139,17 +141,17 @@ class Configuration extends ResourceController
      */
     public function delete($id = null)
     {
-        $Configuration = new ConfigurationModel();
+        $configuration = new ConfigurationModel();
 
-        $data = $Configuration->find($id);
+        $data = $configuration->find($id);
 
         if ($data) {
-            $Configuration->delete($id);
+            $configuration->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Configuration Deleted',
+                'messages' => 'Configuration with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);
