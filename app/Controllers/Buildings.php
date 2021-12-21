@@ -15,7 +15,7 @@ class Buildings extends BaseController
                 'columns'   => '{title:"' . lang('Text.building') . '", field:"name", sorter:"string"},
                                 {title:"' . lang('Text.address') . '", field:"address", sorter:"string"},
                                 {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string"},',
-                'moreJS' => '',
+                'JS_bef_tb' => '',
             ]
         );
     }

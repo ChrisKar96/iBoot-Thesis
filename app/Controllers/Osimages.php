@@ -36,14 +36,15 @@ class Osimages extends BaseController
                                     },
                                 },
                                 {title:"' . lang('Text.ipxe_entry') . '", field:"ipxe_entry", formatter:"textarea"},',
-                'moreJS' => 'let archs = {};
+                'JS_bef_tb' => 'let archs = {};
 
-                                api_call("' . base_url('/api/osimagearch') . '", "get").then(function(response) {
+                                api_call("' . base_url('/api/osimagearch') . '", "GET").then(function(response) {
                                     /*for (i = 0; i < response.data.length; ++i) {
                                         archs[response.data[i].id] = response.data[i].name;
                                     }*/
                                     archs = response.data;
-                                });',
+                                });
+				',
             ]
         );
     }

@@ -39,11 +39,11 @@ class Computers extends BaseController
                                     formatterParams: groups,
                                 },
                                 {title:"' . lang('Text.room') . '", field:"room", sorter:"number"},',
-                'moreJS'    => 'let groups = {};
+                'JS_bef_tb' => 'let groups = {};
 
                                 async function getGroups(){
-                                    api_call("' . base_url('/api/group') . '", "get").then(function(response) {
-                                        for (i = 0; i < response.data.length; ++i) {
+                                    await api_call("' . base_url('/api/group') . '", "GET").then(function(response) {
+                                        for (i = 0; i < response.data.length; i++) {
                                             groups[response.data[i].id] = response.data[i].name;
                                         }
                                     });

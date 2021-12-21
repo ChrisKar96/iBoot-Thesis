@@ -14,7 +14,7 @@ class Osimagearchs extends BaseController
                 'apiTarget' => base_url('/api/osimagearch'),
                 'columns'   => '{title:"' . lang('Text.name') . '", field:"name", sorter:"string"},
                                 {title:"' . lang('Text.description') . '", field:"description", sorter:"string"},',
-                'moreJS' => '',
+                'JS_bef_tb' => '',
             ]
         );
     }

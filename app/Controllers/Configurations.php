@@ -13,7 +13,7 @@ class Configurations extends BaseController
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/configuration'),
                 'columns'   => '{title:"' . lang('Text.configuration') . '", field:"name", sorter:"string"},',
-                'moreJS' => '',
+                'JS_bef_tb' => '',
             ]
         );
     }

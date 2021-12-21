@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <?php
-if (isset($columns, $apiTarget, $moreJS)): ?>
+if (isset($columns, $apiTarget, $JS_before_table)): ?>
 
     <main role="main" class="py-5">
         <div class="container">
@@ -32,7 +32,8 @@ if (isset($columns, $apiTarget, $moreJS)): ?>
                         }
                     });
                 }
-                <?= $moreJS ?>
+
+                <?= $JS_bef_tb ?>
 
                 let table = new Tabulator("#table", {
                     index: "id",

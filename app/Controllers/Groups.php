@@ -35,17 +35,18 @@ class Groups extends BaseController
                                     },
                                     formatterParams: computers,
                                 },',
-                'moreJS'    => 'let computers = {};
+                'JS_bef_tb' => 'let computers = {};
 
                                 async function getComputers(){
-                                    await api_call("' . base_url('/api/computer') . '", "get").then(function(response) {
+                                    await api_call("' . base_url('/api/computer') . '", "GET").then(function(response) {
                                         for (i = 0; i < response.data.length; ++i) {
                                             computers[response.data[i].id] = response.data[i].name;
                                         }
                                     });
                                 }
 
-                                getComputers();',
+                                getComputers();
+				',
             ]
         );
     }
