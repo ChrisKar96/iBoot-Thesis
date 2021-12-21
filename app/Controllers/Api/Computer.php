@@ -17,11 +17,21 @@ class Computer extends ResourceController
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
-            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+            'computers.*, buildings.id as building, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
         );
         $computer->builder()->join(
             'computer_groups',
             'computers.id = computer_groups.computer_id'
+        );
+        $computer->builder()->join(
+            'rooms',
+            'computers.room = rooms.id',
+            'LEFT'
+        );
+        $computer->builder()->join(
+            'buildings',
+            'rooms.building = buildings.id',
+            'LEFT'
         );
         $computer->builder()->groupBy('computers.id');
 
@@ -53,11 +63,19 @@ class Computer extends ResourceController
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
-            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+            'computers.*, buildings.id as building, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
         );
         $computer->builder()->join(
             'computer_groups',
             'computers.id = computer_groups.computer_id'
+        );
+        $computer->builder()->join(
+            'rooms',
+            'computers.room = rooms.id'
+        );
+        $computer->builder()->join(
+            'buildings',
+            'rooms.building = buildings.id'
         );
         $computer->builder()->groupBy('computers.id');
         $data = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
