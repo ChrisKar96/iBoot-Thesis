@@ -32,6 +32,7 @@ return [
     'username'               => 'Όνομα Χρήστη',
     'password'               => 'Κωδικός',
     'name'                   => 'Όνομα',
+    'fullname'               => 'Ονοματεπώνυμο',
     'phone'                  => 'Τηλέφωνο',
     'retype_password'        => 'Επαλήθευση Κωδικού',
     'address'                => 'Διεύθυνση',

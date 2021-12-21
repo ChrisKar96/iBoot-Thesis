@@ -32,6 +32,7 @@ return [
     'username'               => 'Username',
     'password'               => 'Password',
     'name'                   => 'Name',
+    'fullname'               => 'Fullname',
     'phone'                  => 'Phone',
     'retype_password'        => 'Retype Password',
     'address'                => 'Address',

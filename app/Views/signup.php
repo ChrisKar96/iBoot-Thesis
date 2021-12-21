@@ -37,7 +37,7 @@
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" type="text" id="name" name="name"
-                                   placeholder="<?= lang('Text.name'); ?>" required>
+                                   placeholder="<?= lang('Text.fullname'); ?>" required>
                             <label class="required" for="name"><?= lang('Text.name'); ?></label>
                         </div>
                         <div class="form-floating mb-3">
