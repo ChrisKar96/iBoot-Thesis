@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Model;
 
 class UserModel extends Model
@@ -14,8 +15,7 @@ class UserModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-
-    protected $allowedFields = [
+    protected $allowedFields    = [
         'username',
         'password',
         'name',
@@ -46,19 +46,19 @@ class UserModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function logout()
+    public function logout(): RedirectResponse
     {
         session()->destroy();
 
         return redirect()->to('login');
     }
 
-    protected function beforeInsert(array $data)
+    protected function beforeInsert(array $data): array
     {
         return $this->passwordHash($data);
     }
 
-    protected function passwordHash(array $data)
+    protected function passwordHash(array $data): array
     {
         if (isset($data['data']['password'])) {
             $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
