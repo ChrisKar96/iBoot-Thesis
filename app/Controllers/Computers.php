@@ -41,25 +41,8 @@ class Computers extends BaseController
                                 {title:"' . lang('Text.room') . '", field:"room", sorter:"number"},',
                 'moreJS'    => 'let groups = {};
 
-                                function getJSON(url) {
-                                    return new Promise(function(resolve, reject) {
-                                        var xhr = new XMLHttpRequest();
-                                        xhr.open(\'get\', url, true);
-                                        xhr.responseType = \'json\';
-                                        xhr.onload = function() {
-                                            var status = xhr.status;
-                                            if (status == 200) {
-                                                resolve(xhr.response);
-                                            } else {
-                                                reject(status);
-                                            }
-                                        };
-                                        xhr.send();
-                                    });
-                                };
-
                                 async function getGroups(){
-                                    getJSON("' . base_url('/api/group') . '").then(function(response) {
+                                    api_call("' . base_url('/api/group') . '", "get").then(function(response) {
                                         for (i = 0; i < response.data.length; ++i) {
                                             groups[response.data[i].id] = response.data[i].name;
                                         }

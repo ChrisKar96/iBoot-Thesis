@@ -10,6 +10,23 @@ if (isset($columns, $apiTarget, $moreJS)): ?>
             <div id="table"></div>
 
             <script>
+
+                function api_call(url, method) {
+                    return new Promise(function(resolve, reject) {
+                        let xhr = new XMLHttpRequest();
+                        xhr.open(method, url, true);
+                        xhr.responseType = 'json';
+                        xhr.onload = function() {
+                            let status = xhr.status;
+                            if (status == 200) {
+                                resolve(xhr.response);
+                            } else {
+                                reject(status);
+                            }
+                        };
+                        xhr.send();
+                    });
+                }
                 <?= $moreJS ?>
 
                 let table = new Tabulator("#table", {

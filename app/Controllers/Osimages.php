@@ -38,24 +38,7 @@ class Osimages extends BaseController
                                 {title:"' . lang('Text.ipxe_entry') . '", field:"ipxe_entry", formatter:"textarea"},',
                 'moreJS' => 'let archs = {};
 
-                                let getJSON = function(url) {
-                                  return new Promise(function(resolve, reject) {
-                                    var xhr = new XMLHttpRequest();
-                                    xhr.open(\'get\', url, true);
-                                    xhr.responseType = \'json\';
-                                    xhr.onload = function() {
-                                      var status = xhr.status;
-                                     if (status == 200) {
-                                        resolve(xhr.response);
-                                      } else {
-                                        reject(status);
-                                      }
-                                    };
-                                    xhr.send();
-                                  });
-                                };
-
-                                getJSON("' . base_url('/api/osimagearch') . '").then(function(response) {
+                                api_call("' . base_url('/api/osimagearch') . '", "get").then(function(response) {
                                     /*for (i = 0; i < response.data.length; ++i) {
                                         archs[response.data[i].id] = response.data[i].name;
                                     }*/
