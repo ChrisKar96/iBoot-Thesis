@@ -65,14 +65,15 @@ $routes->get('logout', 'User::logout');
  * API
  * --------------------------------------------------------------------
  */
-
-$routes->resource('api/computer', ['except' => 'new,edit']);
-$routes->resource('api/group', ['except' => 'new,edit']);
-$routes->resource('api/building', ['except' => 'new,edit']);
-$routes->resource('api/room', ['except' => 'new,edit']);
-$routes->resource('api/osimage', ['except' => 'new,edit']);
-$routes->resource('api/osimagearch', ['except' => 'new,edit']);
-$routes->resource('api/configuration', ['except' => 'new,edit']);
+$routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($routes) {
+    $routes->resource('computer', ['except' => 'new,edit', 'websafe' => true]);
+    $routes->resource('group', ['except' => 'new,edit', 'websafe' => true]);
+    $routes->resource('building', ['except' => 'new,edit', 'websafe' => true]);
+    $routes->resource('room', ['except' => 'new,edit', 'websafe' => true]);
+    $routes->resource('osimage', ['except' => 'new,edit', 'websafe' => true]);
+    $routes->resource('osimagearch', ['except' => 'new,edit', 'websafe' => true]);
+    $routes->resource('configuration', ['except' => 'new,edit', 'websafe' => true]);
+});
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
