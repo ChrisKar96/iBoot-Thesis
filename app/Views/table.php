@@ -38,6 +38,7 @@ if (isset($columns, $apiTarget, $moreJS)): ?>
                     index: "id",
                     layout: "fitColumns",
                     responsiveLayout: "hide",
+                    columnHeaderVertAlign:"bottom",
                     columns: [
                         {title: "id", field: "id", visible: false},
                         <?= $columns ?>
@@ -55,6 +56,9 @@ if (isset($columns, $apiTarget, $moreJS)): ?>
                     ajaxResponse: function (url, params, response) {
                         return response.data;
                     },
+                    pagination:"local",
+                    paginationSize:10,
+                    paginationSizeSelector:[10, 25, 50, 100],
                     <?php if (session()->get('locale') === 'el') : ?>
                     locale:true,
                     langs:{
@@ -70,13 +74,13 @@ if (isset($columns, $apiTarget, $moreJS)): ?>
                             "pagination":{
                                 "page_size":"Μέγεθος Σελίδας",
                                 "page_title":"Εμφάνιση Σελίδας",
-                                "first":"Πρώτο",
+                                "first":"Πρώτη",
                                 "first_title":"Πρώτη Σελίδα",
-                                "last":"Τελευταίο",
-                                "last_title":"Τελευταία Σελίδας",
-                                "prev":"Προηγούμενο",
+                                "last":"Τελευταία",
+                                "last_title":"Τελευταία Σελίδα",
+                                "prev":"Προηγούμενη",
                                 "prev_title":"Προηγούμενη Σελίδα",
-                                "next":"Επόμενο",
+                                "next":"Επόμενη",
                                 "next_title":"Επόμενη Σελίδα",
                                 "all":"Όλα",
                             },
