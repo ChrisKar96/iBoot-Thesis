@@ -17,13 +17,13 @@ class Computer extends ResourceController
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
-            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(`' . $computer->db->DBPrefix . 'computer_groups`.`group_id`)) as groups'
+            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
         );
         $computer->builder()->join(
-            $computer->db->DBPrefix . 'computer_groups',
-            $computer->db->DBPrefix . 'computers.id = ' . $computer->db->DBPrefix . 'computer_groups.computer_id'
+            'computer_groups',
+            'computers.id = computer_groups.computer_id'
         );
-        $computer->builder()->groupBy($computer->db->DBPrefix . 'computers.id');
+        $computer->builder()->groupBy('computers.id');
 
         $data = $computer->findAll();
 
@@ -53,13 +53,13 @@ class Computer extends ResourceController
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
-            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(`' . $computer->db->DBPrefix . 'computer_groups`.`group_id`)) as groups'
+            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
         );
         $computer->builder()->join(
-            $computer->db->DBPrefix . 'computer_groups',
-            $computer->db->DBPrefix . 'computers.id = ' . $computer->db->DBPrefix . 'computer_groups.computer_id'
+            'computer_groups',
+            'computers.id = computer_groups.computer_id'
         );
-        $computer->groupBy($computer->db->DBPrefix . 'computers.id');
+        $computer->builder()->groupBy('computers.id');
         $data = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
 
         // Explode groups as json array
