@@ -39,5 +39,8 @@ return [
     'delete'                 => 'Delete',
     'description'            => 'Description',
     'ipxe_entry'             => 'iPXE Menu Entry',
+    'add_row'                => 'Add Row',
+    'reset_table'            => 'Reset Table',
+    'save_table'             => 'Save Table',
     'confirm_delete'         => 'Do you really want to delete this item?',
 ];

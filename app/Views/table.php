@@ -7,7 +7,16 @@ if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
 
     <main role="main" class="py-5">
         <div class="container">
-            <div id="table"></div>
+            <div class="my-2">
+                <button class="btn btn-primary" id="add-row"><?= lang('Text.add_row'); ?></button>
+                <button class="btn btn-danger" style="float: right; display: none;" id="reset" disabled><?= lang('Text.reset_table'); ?></button>
+            </div>
+
+            <div class="my-2" id="table"></div>
+
+            <div class="my-2">
+                <button class="btn btn-success" style="float: right; display: none;" id="save" disabled><?= lang('Text.save_table'); ?></button>
+            </div>
 
             <script>
 
@@ -18,7 +27,7 @@ if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
                         xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
                         xhr.responseType = 'json';
                         xhr.onload = function() {
-                            if (xhr.status === 200) {
+                            if (xhr.response.ok) {
                                 resolve(xhr.response);
                             } else {
                                 reject(xhr.status);
@@ -33,8 +42,17 @@ if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
                     });
                 }
 
-                function deleteRow(id){
-                    api_call("<?= $apiTarget ?>/" + id + "/delete", "POST");
+                async function deleteRow(id){
+                    await api_call("<?= $apiTarget ?>/" + id + "/delete", "POST");
+                }
+
+                async function postRow(data){
+                    if(typeof data.id !== "undefined"){
+                        await api_call("<?= $apiTarget ?>/" + data.id + "/update", "POST", data);
+                    }
+                    else{
+                        await api_call("<?= $apiTarget ?>", "POST", data);
+                    }
                 }
 
                 <?= $JS_bef_tb ?>
@@ -104,6 +122,51 @@ if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
                         },
                     },
                     <?php endif; ?>
+                });
+
+                table.on("cellEdited", function(cell){
+                    if(table.getEditedCells()){
+                        document.getElementById("save").disabled = false;
+                        document.getElementById("reset").disabled = false;
+                        document.getElementById("reset").style.display = "";
+                        document.getElementById("save").style.display = "";
+                    }
+                });
+
+                //Add row on "Add Row" button click
+                document.getElementById("add-row").addEventListener("click", function(){
+                    table.addRow({}, true);
+                    table.redraw();
+                });
+
+                //Save changes to the table on "Save" button click
+                document.getElementById("save").addEventListener("click", function(){
+                    document.getElementById("save").disabled = true;
+                    document.getElementById("reset").disabled = true;
+                    let rows = new Set(); //Place rows in Set to avoid duplicates
+                    table.getEditedCells().forEach(function(cell){
+                        rows.add(cell.getRow());
+                    })
+                    rows = [...rows]; //Convert Set back to array
+                    let updates = [];
+                    rows.forEach(function(row){
+                        updates.push(postRow(row.getData()));
+                    })
+                    Promise.all(updates).then(function() {
+                        table.setData("<?= $apiTarget ?>");
+                        document.getElementById("save").style.display = "none";
+                        document.getElementById("reset").style.display = "none";
+                    });
+
+                });
+
+                //Reset table contents on "Reset the table" button click
+                document.getElementById("reset").addEventListener("click", function(){
+                    document.getElementById("save").style.display = "none";
+                    document.getElementById("reset").style.display = "none";
+                    document.getElementById("save").disabled = true;
+                    document.getElementById("reset").disabled = true;
+                    table.setData("<?= $apiTarget ?>");
                 });
 
             </script>
