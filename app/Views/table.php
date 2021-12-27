@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <?php
-if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
+if (isset($columns, $apiTarget)): ?>
 
     <main role="main" class="py-5">
         <div class="container">
@@ -55,7 +55,11 @@ if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
                     }
                 }
 
-                <?= $JS_bef_tb ?>
+                <?php
+                if (isset($JS_bef_tb)) {
+                    echo $JS_bef_tb;
+                }
+                ?>
 
                 let table = new Tabulator("#table", {
                     index: "id",
@@ -168,6 +172,12 @@ if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
                     document.getElementById("reset").disabled = true;
                     table.setData("<?= $apiTarget ?>");
                 });
+
+				<?php
+                if (isset($JS_aft_tb)) {
+                    echo $JS_aft_tb;
+                }
+                ?>
 
             </script>
         </div>
