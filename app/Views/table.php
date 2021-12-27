@@ -27,7 +27,7 @@ if (isset($columns, $apiTarget, $JS_bef_tb)): ?>
                         xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
                         xhr.responseType = 'json';
                         xhr.onload = function() {
-                            if (xhr.response.ok) {
+                            if (xhr.status >= 200 && xhr.status < 300) {
                                 resolve(xhr.response);
                             } else {
                                 reject(xhr.status);
