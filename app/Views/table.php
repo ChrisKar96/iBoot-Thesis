@@ -128,7 +128,7 @@ if (isset($columns, $apiTarget)): ?>
                     <?php endif; ?>
                 });
 
-                table.on("cellEdited", function(cell){
+                table.on("cellEdited", function(){
                     if(table.getEditedCells()){
                         document.getElementById("save").disabled = false;
                         document.getElementById("reset").disabled = false;
