@@ -47,11 +47,11 @@ if (isset($columns, $apiTarget)): ?>
                 }
 
                 async function postRow(data){
-                    if(typeof data.id !== "undefined"){
-                        await api_call("<?= $apiTarget ?>/" + data.id + "/update", "POST", data);
+                    if(typeof data.id === "undefined"){
+                        await api_call("<?= $apiTarget ?>", "POST", data);
                     }
                     else{
-                        await api_call("<?= $apiTarget ?>", "POST", data);
+                        await api_call("<?= $apiTarget ?>/" + data.id + "/update", "POST", data);
                     }
                 }
 
