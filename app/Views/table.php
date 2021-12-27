@@ -74,15 +74,20 @@ if (isset($columns, $apiTarget)): ?>
                             formatter: "buttonCross",
                             hozAlign: "center",
                             cellClick: function (e, cell) {
-                                let cell_previous_bg = cell.getRow().getElement().style.backgroundColor;
-                                cell.getRow().getElement().style.backgroundColor = "indianred";
-                                if(confirm('<?= lang('Text.confirm_delete'); ?>') && typeof cell.getRow().getIndex() !== "undefined") {
+                                if(typeof cell.getRow().getIndex() === "undefined") {
                                     cell.getRow().delete();
                                     table.redraw();
-                                    deleteRow(cell.getRow().getIndex());
                                 }
                                 else {
-                                    cell.getRow().getElement().style.backgroundColor = cell_previous_bg;
+                                    let cell_previous_bg = cell.getRow().getElement().style.backgroundColor;
+                                    cell.getRow().getElement().style.backgroundColor = "indianred";
+                                    if (confirm('<?= lang('Text.confirm_delete'); ?>')) {
+                                        cell.getRow().delete();
+                                        table.redraw();
+                                        deleteRow(cell.getRow().getIndex());
+                                    } else {
+                                        cell.getRow().getElement().style.backgroundColor = cell_previous_bg;
+                                    }
                                 }
                             },
                             width:140
