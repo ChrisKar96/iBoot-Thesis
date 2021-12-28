@@ -10,6 +10,8 @@ class User extends BaseController
     {
         $data = ['title' => lang('Text.log_in')];
 
+        session()->keepFlashdata('referred_from');
+
         if ($this->request->getMethod() === 'post') {
             helper('form');
 
@@ -37,6 +39,10 @@ class User extends BaseController
             // Storing session values
             $this->setUserSession($user);
             // Redirecting to dashboard after login
+            if ($referred_from = (string) session()->getFlashdata('referred_from')) {
+                return redirect()->to($referred_from);
+            }
+
             return redirect()->to(base_url('dashboard'));
         }
 
