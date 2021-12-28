@@ -11,7 +11,7 @@
                     [lang('Text.groups'), 'groups.png', 'groups'],
                     [lang('Text.buildings'), 'apartment-building.png', 'buildings'],
                     [lang('Text.rooms'), 'saladeestar.png', 'rooms'],
-                    [lang('Text.os_images'), 'boot_menu.png', 'os-images'],
+                    [lang('Text.os_images'), 'boot_menu.png', 'osimages'],
                     [lang('Text.configurations'), 'template.png', 'configurations'],
                 ];
 

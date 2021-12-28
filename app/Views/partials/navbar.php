@@ -44,11 +44,11 @@ if (! isset($title)) {
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
                                 <a class="dropdown-item <?= ($title === lang('Text.os_images')) ? ' active' : ''; ?>"
-                                   href="<?= site_url('os-images'); ?>"><?= lang('Text.os_images'); ?></a>
+                                   href="<?= site_url('osimages'); ?>"><?= lang('Text.os_images'); ?></a>
                             </li>
                             <li>
                                 <a class="dropdown-item <?= ($title === lang('Text.os_image_archs')) ? ' active' : ''; ?>"
-                                   href="<?= site_url('os-image-archs'); ?>"><?= lang('Text.os_image_archs'); ?></a>
+                                   href="<?= site_url('osimagearchs'); ?>"><?= lang('Text.os_image_archs'); ?></a>
                             </li>
                             <li>
                                 <a class="dropdown-item <?= ($title === lang('Text.configurations')) ? ' active' : ''; ?>"
