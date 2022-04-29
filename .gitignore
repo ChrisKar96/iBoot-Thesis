@@ -133,3 +133,5 @@ service-start.sh
 iboot.sql
 
 app/Database/Seeds/UserSeeder.php
+
+composer.phar
