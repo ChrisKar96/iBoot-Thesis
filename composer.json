@@ -33,8 +33,7 @@
         "friendsofphp/php-cs-fixer": "*",
         "codeigniter/coding-standard": "^1.1",
         "roave/security-advisories": "dev-latest",
-        "ext-xdebug": "*",
-        "tatter/patches": "^2.0"
+        "ext-xdebug": "*"
     },
     "suggest": {
         "ext-fileinfo": "Improves mime type detection for files"
