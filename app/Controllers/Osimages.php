@@ -13,7 +13,7 @@ class Osimages extends BaseController
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/osimage'),
                 'columns'   => '{title:"' . lang('Text.os_image') . '", field:"name", sorter:"string", width: 200, editor:"input", validator:["required", "maxLength:30"]},
-                                {title:"' . lang('Text.arch') . '", field:"arch", sorter:"number", width: 150, validator:["required", "numeric", "min:0"], editor:"select",
+                                {title:"' . lang('Text.arch') . '", field:"arch", sorter:"number", width: 150, validator:["required", "numeric", "min:0"], editor:"list",
                                     editorParams:{
                                         values:arch_names
                                     },

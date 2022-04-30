@@ -13,7 +13,7 @@ class Rooms extends BaseController
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/room'),
                 'columns'   => '{title:"' . lang('Text.room') . '", field:"name", sorter:"string", editor:"input", validator:["required", "maxLength:20"]},
-                                {title:"' . lang('Text.building') . '", field:"building", sorter:"number", validator:["required", "numeric", "min:0"], editor:"select",
+                                {title:"' . lang('Text.building') . '", field:"building", sorter:"number", validator:["required", "numeric", "min:0"], editor:"list",
                                     editorParams:{
                                         values:buildings
                                     },

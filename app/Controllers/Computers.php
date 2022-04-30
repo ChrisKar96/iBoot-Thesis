@@ -16,7 +16,7 @@ class Computers extends BaseController
                                 {title:"MAC", field:"mac", sorter:"string", editor:"input"},
                                 {title:"IPv4", field:"ipv4", sorter:"string", editor:"input"},
                                 {title:"IPv6", field:"ipv6", sorter:"string", editor:"input"},
-                                {title:"' . lang('Text.groups') . '", field:"groups", editor:"select",
+                                {title:"' . lang('Text.groups') . '", field:"groups", editor:"list",
                                     editorParams:{
                                         multiselect:true,
                                         values:groups
@@ -42,7 +42,7 @@ class Computers extends BaseController
                                 {
                                     title:"' . lang('Text.location') . '", headerHozAlign:"center",
                                     columns:[
-                                        {title:"' . lang('Text.building') . '", field:"building", editor:"select",
+                                        {title:"' . lang('Text.building') . '", field:"building", editor:"list",
                                             editorParams:{
                                                 values:buildings
                                             },
@@ -60,7 +60,7 @@ class Computers extends BaseController
                                             },
                                             formatterParams: buildings,
                                         },
-                                        {title:"' . lang('Text.room') . '", field:"room", editor:"select",
+                                        {title:"' . lang('Text.room') . '", field:"room", editor:"list",
                                             editorParams:{
                                                 values:building_rooms,
 												disabled:true,
