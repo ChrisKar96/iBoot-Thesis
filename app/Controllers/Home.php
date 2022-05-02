@@ -13,4 +13,9 @@ class Home extends BaseController
     {
         return view('boot', ['title' => 'iPXE Boot Menu']);
     }
+
+    public function initboot()
+    {
+        return view('initboot', ['title' => 'iPXE Boot Menu']);
+    }
 }

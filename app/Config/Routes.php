@@ -46,6 +46,7 @@ $routes->get('osimagearchs', 'Osimagearchs::index', ['filter' => 'auth']);
 $routes->get('configurations', 'Configurations::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout');
 $routes->get('boot', 'Home::boot');
+$routes->get('initboot', 'Home::initboot');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

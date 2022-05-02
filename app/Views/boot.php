@@ -1,10 +1,10 @@
 <?= $this->extend('template') ?>
 
 <?= $this->section('bootmenu') ?>
-    #!ipxe
-    ####       iBoot initial loader        ####
-    chain --autofree <?= site_url('initboot.php'); ?> || echo boot failed...
-    exit
+#!ipxe
+####       iBoot initial loader        ####
+chain --replace --autofree <?= site_url('initboot'); ?> || echo boot failed...
+exit
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -14,14 +14,25 @@
         <h1 class="text-center"><?= lang('Text.configure_your_dhcp'); ?></h1>
 
         <p><?= lang('Text.add_to_your_dhcpd'); ?></p>
-<pre class="text-center"><code>if exists user-class and ( option user-class = "iPXE" ) {
-    filename "<?= site_url('boot.php'); ?>";
-}
-else {
-    filename "undionly.kpxe";
-}
+        <pre><code>if exists user-class and ( option user-class = "iPXE" ) {
+                &nbsp;&nbsp;&nbsp;&nbsp;filename "<?= site_url('boot'); ?>";
+            }
+            else if option client-arch != 00:00 {
+                &nbsp;&nbsp;&nbsp;&nbsp;filename "ipxe.efi";
+            }
+            else {
+                &nbsp;&nbsp;&nbsp;&nbsp;filename "undionly.kpxe";
+            }</code></pre>
 </code></pre>
     </div>
 </main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Hide ipxe command at top
+        const navbar = document.querySelector('.navbar');
+        navbar.style.cssText += 'top:-24px;';
+    });
+</script>
 
 <?= $this->endSection() ?>
