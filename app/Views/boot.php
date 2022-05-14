@@ -3,7 +3,7 @@
 <?= $this->section('bootmenu') ?>
 #!ipxe
 ####       iBoot initial loader        ####
-chain --replace --autofree <?= site_url('initboot'); ?> || echo boot failed...
+chain --replace --autofree <?= site_url('initboot'); ?>?mac=${netX/mac}&uuid=${uuid} || echo boot failed...
 exit
 <?= $this->endSection() ?>
 
@@ -23,7 +23,6 @@ exit
             else {
                 &nbsp;&nbsp;&nbsp;&nbsp;filename "undionly.kpxe";
             }</code></pre>
-</code></pre>
     </div>
 </main>
 
