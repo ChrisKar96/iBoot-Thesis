@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace iBoot\Controllers;
 
 class Configurations extends BaseController
 {

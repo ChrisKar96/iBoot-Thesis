@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace iBoot\Models;
 
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Model;

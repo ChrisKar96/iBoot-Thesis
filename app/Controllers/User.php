@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace iBoot\Controllers;
 
-use App\Models\UserModel;
+use iBoot\Models\UserModel;
 
 class User extends BaseController
 {

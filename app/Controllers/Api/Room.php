@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers\Api;
+namespace iBoot\Controllers\Api;
 
-use App\Models\Api\RoomModel;
+use iBoot\Models\Api\RoomModel;
 use CodeIgniter\RESTful\ResourceController;
 use ReflectionException;
 

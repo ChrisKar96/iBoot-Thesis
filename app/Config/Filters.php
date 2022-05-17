@@ -2,9 +2,9 @@
 
 namespace Config;
 
-use App\Filters\Auth;
-use App\Filters\Locale;
-use App\Filters\Noauth;
+use iBoot\Filters\Auth;
+use iBoot\Filters\Locale;
+use iBoot\Filters\Noauth;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;

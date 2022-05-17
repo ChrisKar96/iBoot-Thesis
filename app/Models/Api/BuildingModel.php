@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Api;
+namespace iBoot\Models\Api;
 
 use CodeIgniter\Model;
 

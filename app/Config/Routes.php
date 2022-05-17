@@ -16,7 +16,7 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
  * Router Setup
  * --------------------------------------------------------------------
  */
-$routes->setDefaultNamespace('App\Controllers');
+$routes->setDefaultNamespace('iBoot\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
@@ -66,7 +66,7 @@ $routes->get('initboot', 'Home::initboot');
  * API
  * --------------------------------------------------------------------
  */
-$routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($routes) {
+$routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
     $routes->resource('computer', ['except' => 'new,edit', 'websafe' => true]);
     $routes->resource('group', ['except' => 'new,edit', 'websafe' => true]);
     $routes->resource('building', ['except' => 'new,edit', 'websafe' => true]);

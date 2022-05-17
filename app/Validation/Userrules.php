@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Validation;
+namespace iBoot\Validation;
 
-use App\Models\UserModel;
+use iBoot\Models\UserModel;
 
 class Userrules
 {

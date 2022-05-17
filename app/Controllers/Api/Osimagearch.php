@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers\Api;
+namespace iBoot\Controllers\Api;
 
-use App\Models\Api\OsimagearchModel;
+use iBoot\Models\Api\OsimagearchModel;
 use CodeIgniter\RESTful\ResourceController;
 use ReflectionException;
 

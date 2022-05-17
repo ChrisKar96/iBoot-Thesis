@@ -2,7 +2,7 @@
 
 namespace Config;
 
-use App\Validation\Userrules;
+use iBoot\Validation\Userrules;
 use CodeIgniter\Validation\CreditCardRules;
 use CodeIgniter\Validation\FileRules;
 use CodeIgniter\Validation\FormatRules;

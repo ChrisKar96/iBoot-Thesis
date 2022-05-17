@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database\Seeds;
+namespace iBoot\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
