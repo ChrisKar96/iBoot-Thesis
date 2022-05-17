@@ -45,3 +45,38 @@
 .settings-menu .fa-fw {
     margin-right: 10px;
 }
+
+code {
+    font-family: monospace;
+    text-align: left;
+}
+
+pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    border: 0;
+    word-break: normal;
+    white-space: pre-line;
+    background: transparent;
+    font-size: 100%;
+    border-radius: 6px;
+    font-family: Consolas,monospace;
+}
+
+pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: whitesmoke;
+    border-radius: 6px;
+    word-wrap: normal;
+    margin-top: 0;
+    margin-bottom: 16px;
+    width: fit-content;
+    display: inline-flex;
+}
