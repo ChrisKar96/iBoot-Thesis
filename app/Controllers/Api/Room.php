@@ -2,8 +2,8 @@
 
 namespace iBoot\Controllers\Api;
 
-use iBoot\Models\Api\RoomModel;
 use CodeIgniter\RESTful\ResourceController;
+use iBoot\Models\Api\RoomModel;
 use ReflectionException;
 
 class Room extends ResourceController
@@ -84,7 +84,7 @@ class Room extends ResourceController
 
         $room->insert($data);
 
-		$id = $room->getInsertID();
+        $id = $room->getInsertID();
 
         $response = [
             'status'   => 200,

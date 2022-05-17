@@ -121,9 +121,7 @@ class Computer extends ResourceController
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
+            'mac'  => $this->request->getVar('uuid'),
             'room' => $this->request->getVar('room'),
         ];
 
@@ -166,9 +164,7 @@ class Computer extends ResourceController
 
         $data = [
             'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('mac'),
-            'ipv4' => $this->request->getVar('ipv4'),
-            'ipv6' => $this->request->getVar('ipv6'),
+            'mac'  => $this->request->getVar('uuid'),
             'room' => $this->request->getVar('room'),
         ];
 
