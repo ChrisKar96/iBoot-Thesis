@@ -13,9 +13,7 @@ class Computers extends BaseController
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/computer'),
                 'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input"},
-                                {title:"MAC", field:"mac", sorter:"string", editor:"input"},
-                                {title:"IPv4", field:"ipv4", sorter:"string", editor:"input"},
-                                {title:"IPv6", field:"ipv6", sorter:"string", editor:"input"},
+                                {title:"UUID", field:"uuid", sorter:"string", editor:"input"},
                                 {title:"' . lang('Text.groups') . '", field:"groups", editor:"list",
                                     editorParams:{
                                         multiselect:true,
@@ -96,6 +94,7 @@ class Computers extends BaseController
                                     await api_call("' . base_url('/api/building') . '", "GET").then(function(response) {
                                         for (i = 0; i < response.data.length; i++) {
                                             buildings[response.data[i].id] = response.data[i].name;
+                                            building_rooms[response.data[i].id] = [];
                                         }
                                         buildings[null] = "";
                                     });
@@ -105,27 +104,23 @@ class Computers extends BaseController
 
                                 let rooms = {};
 
+                                let building_rooms = {};
+
                                 async function getRooms(){
                                     await api_call("' . base_url('/api/room') . '", "GET").then(function(response) {
                                         for (i = 0; i < response.data.length; i++) {
                                             rooms[response.data[i].id] = response.data[i].name;
+                                            building_rooms[response.data[i].building][response.data[i].id] = response.data[i].name;
                                         }
                                         rooms[null] = "";
+                                        building_rooms[null] = "";
                                     });
                                 }
 
                                 getRooms();
 
-                                let building_rooms = {};
-
                                 function updateBuildingRooms(cell){
-                                	console.log(cell);
-
-                                	building_rooms = {};
-                                	for (i = 0; i < response.data.length; i++) {
-										building_rooms[i] = rooms[i];
-									}
-									building_rooms[null] = "";
+									
                                 }
                 ',
             ]
