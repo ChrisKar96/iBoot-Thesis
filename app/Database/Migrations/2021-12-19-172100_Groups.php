@@ -24,7 +24,7 @@ class Groups extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('groups');
+        $this->forge->createTable('groups', true);
 
         $this->db->enableForeignKeyChecks();
     }

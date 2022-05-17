@@ -25,7 +25,7 @@ class ComputerGroups extends Migration
         $this->forge->addPrimaryKey('group_id, computer_id');
         $this->forge->addForeignKey('group_id', 'groups', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('computer_id', 'computers', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('computer_groups');
+        $this->forge->createTable('computer_groups', true);
 
         $this->db->enableForeignKeyChecks();
     }

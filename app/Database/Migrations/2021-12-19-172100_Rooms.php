@@ -35,7 +35,7 @@ class Rooms extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('building', 'buildings', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('rooms');
+        $this->forge->createTable('rooms', true);
 
         $this->db->enableForeignKeyChecks();
     }

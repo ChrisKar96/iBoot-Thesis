@@ -34,7 +34,7 @@ class OsImages extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('arch', 'os_image_archs', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->createTable('os_images');
+        $this->forge->createTable('os_images', true);
 
         $this->db->enableForeignKeyChecks();
     }

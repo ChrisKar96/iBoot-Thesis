@@ -26,7 +26,7 @@ class BootMenuImages extends Migration
         $this->forge->addKey('image_id', true);
         $this->forge->addForeignKey('boot_menu_id', 'boot_menu', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('image_id', 'os_images', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('boot_menu_images');
+        $this->forge->createTable('boot_menu_images', true);
 
         $this->db->enableForeignKeyChecks();
     }

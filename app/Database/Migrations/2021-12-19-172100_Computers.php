@@ -46,7 +46,7 @@ class Computers extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('room', 'rooms', 'id', 'CASCADE', 'SET NULL');
-        $this->forge->createTable('computers');
+        $this->forge->createTable('computers', true);
 
         $this->db->enableForeignKeyChecks();
     }

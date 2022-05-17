@@ -34,7 +34,7 @@ class Buildings extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('buildings');
+        $this->forge->createTable('buildings', true);
 
         $this->db->enableForeignKeyChecks();
     }

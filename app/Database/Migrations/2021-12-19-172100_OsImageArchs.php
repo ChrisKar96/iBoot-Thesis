@@ -30,7 +30,7 @@ class OsImageArchs extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('name');
-        $this->forge->createTable('os_image_archs');
+        $this->forge->createTable('os_image_archs', true);
 
         $this->db->enableForeignKeyChecks();
     }

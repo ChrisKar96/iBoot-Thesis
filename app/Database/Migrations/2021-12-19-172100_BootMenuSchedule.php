@@ -48,7 +48,7 @@ class BootMenuSchedule extends Migration
         $this->forge->addForeignKey('group_id', 'groups', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addUniqueKey('time_from, time_to, date, group_id');
         $this->forge->addUniqueKey('time_from, time_to, day_of_week, group_id');
-        $this->forge->createTable('boot_menu_images');
+        $this->forge->createTable('boot_menu_images', true);
 
         $this->db->enableForeignKeyChecks();
     }

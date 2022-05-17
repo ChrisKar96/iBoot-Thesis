@@ -24,7 +24,7 @@ class BootMenu extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('boot_menu');
+        $this->forge->createTable('boot_menu', true);
 
         $this->db->enableForeignKeyChecks();
     }
