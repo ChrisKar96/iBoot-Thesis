@@ -2,8 +2,8 @@
 
 namespace iBoot\Controllers\Api;
 
-use iBoot\Models\Api\ComputerModel;
 use CodeIgniter\RESTful\ResourceController;
+use iBoot\Models\Api\ComputerModel;
 use ReflectionException;
 
 class Computer extends ResourceController
@@ -120,9 +120,10 @@ class Computer extends ResourceController
         $computer = new ComputerModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('uuid'),
-            'room' => $this->request->getVar('room'),
+            'name'      => $this->request->getVar('name'),
+            'uuid'      => $this->request->getVar('uuid'),
+            'room'      => $this->request->getVar('room'),
+            'validated' => $this->request->getVar('validated'),
         ];
 
         $computer->insert($data);
@@ -163,9 +164,10 @@ class Computer extends ResourceController
         $computer = new ComputerModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'mac'  => $this->request->getVar('uuid'),
-            'room' => $this->request->getVar('room'),
+            'name'      => $this->request->getVar('name'),
+            'uuid'      => $this->request->getVar('uuid'),
+            'room'      => $this->request->getVar('room'),
+            'validated' => $this->request->getVar('validated'),
         ];
 
         $computer->update($id, $data);

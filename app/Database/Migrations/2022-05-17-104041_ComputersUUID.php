@@ -37,6 +37,8 @@ class ComputersUUID extends Migration
         $this->forge->modifyColumn('computers', $fieldsToModify);
 
         $this->forge->addColumn('computers', $fieldsToAdd);
+
+        $this->forge->addUniqueKey('uuid');
     }
 
     public function down()
