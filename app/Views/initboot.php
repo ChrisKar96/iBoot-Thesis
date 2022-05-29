@@ -1,3 +1,17 @@
+<?php
+
+use iBoot\Models\Api\ComputerModel;
+
+if (! isset($_GET['uuid'])) : ?>
+There was an error. This page should be loaded using a GET request to privide the UUID of the machine. Make sure your DHCP server / ipxe installation can provide the uuid property.
+<?php else :
+    $uuid     = $_GET['uuid'];
+    $computer = new ComputerModel();
+    $computer->builder()->select('id');
+    $id = $computer->where($computer->db->DBPrefix . 'computers.uuid', $uuid)->first()['id'];
+    if (! $id) {
+        try {
+            $computer->insert(['id' => null, 'name' => null, 'uuid' => $uuid, 'room' => null, 'validated' => 0]); ?>
 #!ipxe
 
 :start
@@ -28,15 +42,14 @@ isset ${post_boot} || chain --replace --autofree boot.ipxe ||
 :main_menu
 isset ${main_menu_cursor} || set main_menu_cursor exit
 clear version
-menu ${main_menu_title} [IP: ${netX/ip}]
+menu ${main_menu_title} UUID: ${uuid}
+item --gap Use the UUID shown to verify and configure this computer in iBoot
+item
 item --gap Default:
 item --key x exit ${space} Boot from hard disk [x]
 item
 item --gap Main menu:
 
-item netboot_xyz_boot_menu ${space} -> Netboot.xyz Boot Menu
-item sal_boot_menu         ${space} -> SAL Boot Menu
-item rackspace_boot_menu   ${space} -> Rackspace Boot Menu
 item
 item --gap Tools:
 item sysinfo ${space} System info
@@ -58,18 +71,6 @@ echo You cancelled the menu, dropping you to a shell
 echo Type "exit" to return to menu.
 set menu main_menu
 shell
-goto main_menu
-
-:sal_boot_menu
-chain http://boot.salstar.sk || goto error
-goto main_menu
-
-:rackspace_boot_menu
-chain http://boot.rackspace.com/menu.ipxe || goto error
-goto main_menu
-
-:netboot_xyz_boot_menu
-chain --autofree http://boot.netboot.xyz || goto error
 goto main_menu
 
 :reboot
@@ -112,3 +113,26 @@ item --gap Filename:
 item filename ${space} ${netX/filename}
 choose empty ||
 goto main_menu
+		<?php
+        } catch (ReflectionException $e) {
+            echo $e->getMessage();
+        }
+    } else {
+        $computer->builder()->select(
+            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+        );
+        $computer->builder()->join(
+            'computer_groups',
+            'computers.id = computer_groups.computer_id'
+        );
+        $computer->builder()->groupBy('computers.id');
+        $computer = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
+        if ($computer && $computer['validated']) {
+            echo 'This would be the computer specific (based on group and time) boot menu.';
+        }
+    }
+?>
+
+
+
+<?php endif; ?>
