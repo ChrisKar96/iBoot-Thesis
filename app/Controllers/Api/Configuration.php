@@ -2,8 +2,8 @@
 
 namespace iBoot\Controllers\Api;
 
-use iBoot\Models\Api\ConfigurationModel;
 use CodeIgniter\RESTful\ResourceController;
+use iBoot\Models\Api\ConfigurationModel;
 use ReflectionException;
 
 class Configuration extends ResourceController

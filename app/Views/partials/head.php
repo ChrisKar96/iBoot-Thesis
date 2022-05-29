@@ -18,9 +18,18 @@
 
 	<?php
     if (isset($tabulator) && $tabulator) : ?>
-        <!-- Tabulator CSS -->
+        <!-- Tabulator Assets -->
         <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@5.2.5/dist/css/tabulator.min.css">
         <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.2.5/dist/js/tabulator.min.js"></script>
+	<?php
+    endif; ?>
+
+	<?php
+    if (isset($calendar) && $calendar) : ?>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+        <!-- FullCalendar Assets -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.css">
+        <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5,npm/fullcalendar@5/locales-all.min.js"></script>
 	<?php
     endif; ?>
 
