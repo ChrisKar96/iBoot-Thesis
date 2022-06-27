@@ -189,7 +189,7 @@
 
         <!-- Request -->
         <div class="content" id="request">
-			<?php $request = \iBoot\Config\Services::request(); ?>
+			<?php $request = \Config\Services::request(); ?>
 
             <table>
                 <tbody>
@@ -307,7 +307,7 @@
 
         <!-- Response -->
 		<?php
-        $response = \iBoot\Config\Services::response();
+        $response = \Config\Services::response();
         $response->setStatusCode(http_response_code());
         ?>
         <div class="content" id="response">
