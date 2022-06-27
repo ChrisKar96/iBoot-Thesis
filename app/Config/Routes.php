@@ -42,7 +42,6 @@ $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
 $routes->get('buildings', 'Buildings::index', ['filter' => 'auth']);
 $routes->get('rooms', 'Rooms::index', ['filter' => 'auth']);
 $routes->get('osimages', 'Osimages::index', ['filter' => 'auth']);
-$routes->get('osimagearchs', 'Osimagearchs::index', ['filter' => 'auth']);
 $routes->get('configurations', 'Configurations::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout');
 $routes->get('boot', 'Home::boot');

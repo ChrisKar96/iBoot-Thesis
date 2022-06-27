@@ -47,10 +47,6 @@ if (! isset($title)) {
                                    href="<?= site_url('osimages'); ?>"><?= lang('Text.os_images'); ?></a>
                             </li>
                             <li>
-                                <a class="dropdown-item <?= ($title === lang('Text.os_image_archs')) ? ' active' : ''; ?>"
-                                   href="<?= site_url('osimagearchs'); ?>"><?= lang('Text.os_image_archs'); ?></a>
-                            </li>
-                            <li>
                                 <a class="dropdown-item <?= ($title === lang('Text.configurations')) ? ' active' : ''; ?>"
                                    href="<?= site_url('configurations'); ?>"><?= lang('Text.configurations'); ?></a>
                             </li>
