@@ -3,7 +3,7 @@
 // English App Text
 return [
     'christos_karamolegkos'  => 'Christos Karamolegkos',
-    'christoskaramo_website' => 'https://www.christoskaramo.tk',
+    'christoskaramo_website' => 'https://www.ckaramolegkos.gr',
     'design_and_development' => 'Design and Development',
     'sign_up'                => 'Sign Up',
     'log_in'                 => 'Log In',

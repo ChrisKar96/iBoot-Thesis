@@ -3,7 +3,7 @@
 // Greek App Text
 return [
     'christos_karamolegkos'  => 'Χρήστος Καραμολέγκος',
-    'christoskaramo_website' => 'https://www.christoskaramo.tk/el',
+    'christoskaramo_website' => 'https://www.ckaramolegkos.gr/el',
     'design_and_development' => 'Σχεδιασμός και Ανάπτυξη',
     'sign_up'                => 'Εγγραφή',
     'log_in'                 => 'Σύνδεση',
