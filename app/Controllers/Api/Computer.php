@@ -21,7 +21,8 @@ class Computer extends ResourceController
         );
         $computer->builder()->join(
             'computer_groups',
-            'computers.id = computer_groups.computer_id'
+            'computers.id = computer_groups.computer_id',
+            'LEFT'
         );
         $computer->builder()->join(
             'rooms',
@@ -67,15 +68,18 @@ class Computer extends ResourceController
         );
         $computer->builder()->join(
             'computer_groups',
-            'computers.id = computer_groups.computer_id'
+            'computers.id = computer_groups.computer_id',
+            'LEFT'
         );
         $computer->builder()->join(
             'rooms',
-            'computers.room = rooms.id'
+            'computers.room = rooms.id',
+            'LEFT'
         );
         $computer->builder()->join(
             'buildings',
-            'rooms.building = buildings.id'
+            'rooms.building = buildings.id',
+            'LEFT'
         );
         $computer->builder()->groupBy('computers.id');
         $data = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
