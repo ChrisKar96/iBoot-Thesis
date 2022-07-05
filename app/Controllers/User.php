@@ -2,10 +2,15 @@
 
 namespace iBoot\Controllers;
 
+use CodeIgniter\I18n\Time;
 use iBoot\Models\UserModel;
+use ReflectionException;
 
 class User extends BaseController
 {
+    /**
+     * @throws ReflectionException
+     */
     public function login()
     {
         $data = ['title' => lang('Text.log_in')];
@@ -16,7 +21,7 @@ class User extends BaseController
             helper('form');
 
             $rules = [
-                'username' => 'required|min_length[3]|max_length[255]',
+                'username' => 'required|min_length[3]|max_length[320]',
                 'password' => 'required|min_length[5]|max_length[255]|validateUser[username,password]',
             ];
 
@@ -32,9 +37,25 @@ class User extends BaseController
                     'title'      => lang('Text.log_in'),
                 ]);
             }
+
             $model = new UserModel();
 
-            $user = $model->where('username', $this->request->getVar('username'))->first();
+            $username = $this->request->getVar('username');
+            $password = $this->request->getVar('password');
+
+            // Support authenticating with email as well
+            $user = $model->where('username', $username)->orWhere('email', $username)->first();
+
+            $login_time = [
+                'id'        => $user['id'],
+                'lastLogin' => Time::now(),
+            ];
+
+            $model->save($login_time);
+
+            // Get user's API token
+            $apiUserModel  = new Api\User();
+            $user['token'] = $apiUserModel->login($username, $password)['token'];
 
             // Storing session values
             $this->setUserSession($user);
@@ -52,37 +73,53 @@ class User extends BaseController
     private function setUserSession($user)
     {
         $data = [
-            'id'         => $user['id'],
-            'name'       => $user['name'],
-            'phone'      => $user['phone'],
-            'username'   => $user['username'],
-            'isLoggedIn' => true,
+            'id'            => $user['id'],
+            'name'          => $user['name'],
+            'email'         => $user['email'],
+            'phone'         => $user['phone'],
+            'username'      => $user['username'],
+            'apiToken'      => $user['token'],
+            'isAdmin'       => $user['admin'],
+            'verifiedEmail' => $user['verifiedEmail'],
+            'isLoggedIn'    => true,
         ];
 
         session()->set($data);
     }
 
-    public function signup()
+    public function registerAdmin()
     {
-        $data = ['title' => lang('Text.sign_up')];
+        $UserModel         = new UserModel();
+        $globalAdminExists = $UserModel->where('admin', 1)->first();
+        if (! $globalAdminExists) {
+            return $this->signup(true);
+        }
+
+        return redirect()->to(base_url('login'));
+    }
+
+    public function signup($globalAdmin = false)
+    {
+        $title  = $globalAdmin ? lang('Text.sign_up_admin') : lang('Text.sign_up');
+        $action = $globalAdmin ? base_url('registerAdmin') : base_url('signup');
 
         if ($this->request->getMethod() === 'post') {
             helper('form');
 
             $rules = [
-                'name'             => 'required|min_length[3]|max_length[255]',
+                'name'             => 'required|min_length[3]|max_length[40]',
                 'phone'            => 'max_length[15]',
-                'username'         => 'required|min_length[3]|max_length[255]',
-                'password'         => 'required|min_length[5]|max_length[255]',
-                'password_confirm' => 'matches[password]',
+                'email'            => 'required|valid_email|is_unique[users.email,id,{id}]',
+                'username'         => 'required|alpha_numeric_punct|min_length[3]|max_length[40]|is_unique[users.username,id,{id}]',
+                'password'         => 'required|alpha_numeric_punct|min_length[5]|max_length[255]',
+                'password_confirm' => 'required|alpha_numeric_punct|matches[password]',
             ];
 
             if (! $this->validate($rules)) {
-                $data['validation'] = $this->validator;
-
                 return view('signup', [
                     'validation' => $this->validator,
-                    'title'      => lang('Text.sign_up'),
+                    'title'      => $title,
+                    'action'     => $action,
                 ]);
             }
             $model = new UserModel();
@@ -90,9 +127,13 @@ class User extends BaseController
             $newData = [
                 'name'     => $this->request->getVar('name'),
                 'phone'    => $this->request->getVar('phone'),
+                'email'    => $this->request->getVar('email'),
                 'username' => $this->request->getVar('username'),
                 'password' => $this->request->getVar('password'),
+                'admin'    => $globalAdmin,
+                'accepted' => $globalAdmin,
             ];
+
             $model->save($newData);
             $session = session();
             $session->setFlashdata('success', 'Successful Registration');
@@ -100,7 +141,10 @@ class User extends BaseController
             return redirect()->to(base_url('login'));
         }
 
-        return view('signup', $data);
+        return view('signup', [
+            'title'  => $title,
+            'action' => $action,
+        ]);
     }
 
     public function profile()

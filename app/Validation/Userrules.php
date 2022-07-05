@@ -9,7 +9,7 @@ class Userrules
     public function validateUser(string $str, string $fields, array $data)
     {
         $model = new UserModel();
-        $user  = $model->where('username', $data['username'])->first();
+        $user  = $model->where('username', $data['username'])->orWhere('email', $data['username'])->first();
 
         if (! $user) {
             return false;

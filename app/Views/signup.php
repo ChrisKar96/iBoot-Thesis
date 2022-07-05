@@ -11,11 +11,18 @@
                             <?= $validation->listErrors() ?>
                         </div>
                     <?php
-                    endif; ?>
+                    endif;
+                    if (! isset($title)) {
+                        $title = lang('Text.sign_up');
+                    }
+                    if (! isset($action)) {
+                        $action = base_url('signup');
+                    }
+                    ?>
 
-                    <form action="<?= base_url('signup'); ?>" method="post">
+                    <form action="<?= $action; ?>" method="post">
                         <?= csrf_field() ?>
-                        <h2 class="text-center"><?= lang('Text.sign_up'); ?></h2>
+                        <h2 class="text-center"><?= $title; ?></h2>
                         <div class="illustration">
                             <img alt="iboot logo" class="img-responsive"
                                  src='<?= base_url('/assets/img/computer.png'); ?>'>
@@ -39,6 +46,11 @@
                             <input class="form-control" type="text" id="name" name="name"
                                    placeholder="<?= lang('Text.fullname'); ?>" required>
                             <label class="required" for="name"><?= lang('Text.name'); ?></label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" type="text" id="email" name="email"
+                                   placeholder="<?= lang('Text.email'); ?>" required>
+                            <label class="required" for="email"><?= lang('Text.email'); ?></label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" type="text" id="phone" name="phone"

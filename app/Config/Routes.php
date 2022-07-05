@@ -33,6 +33,7 @@ $routes->setAutoRoute(false);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('locale/(:segment)', 'Locale::set/$1');
+$routes->match(['get', 'post'], 'registerAdmin', 'User::registerAdmin', ['filter' => 'noauth']);
 $routes->match(['get', 'post'], 'signup', 'User::signup', ['filter' => 'noauth']);
 $routes->match(['get', 'post'], 'login', 'User::login', ['filter' => 'noauth']);
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
@@ -66,13 +67,13 @@ $routes->get('initboot', 'Home::initboot');
  * --------------------------------------------------------------------
  */
 $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
-    $routes->resource('computer', ['except' => 'new,edit', 'websafe' => true]);
-    $routes->resource('group', ['except' => 'new,edit', 'websafe' => true]);
-    $routes->resource('building', ['except' => 'new,edit', 'websafe' => true]);
-    $routes->resource('room', ['except' => 'new,edit', 'websafe' => true]);
-    $routes->resource('osimage', ['except' => 'new,edit', 'websafe' => true]);
-    $routes->resource('osimagearch', ['except' => 'new,edit', 'websafe' => true]);
-    $routes->resource('configuration', ['except' => 'new,edit', 'websafe' => true]);
+    $routes->post('login', 'User::login');
+    $routes->resource('computer', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('group', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('building', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('room', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('osimage', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('configuration', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
 });
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {

@@ -2,15 +2,16 @@
 
 namespace Config;
 
-use iBoot\Filters\Auth;
-use iBoot\Filters\Locale;
-use iBoot\Filters\Noauth;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
+use iBoot\Filters\Auth;
+use iBoot\Filters\ApiAuth;
+use iBoot\Filters\Locale;
+use iBoot\Filters\Noauth;
 
 class Filters extends BaseConfig
 {
@@ -27,6 +28,7 @@ class Filters extends BaseConfig
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'auth'          => Auth::class,
+        'apiauth'       => ApiAuth::class,
         'noauth'        => Noauth::class,
         'locale'        => Locale::class,
     ];
