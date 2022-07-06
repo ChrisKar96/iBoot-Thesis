@@ -2,13 +2,16 @@
 
 namespace iBoot\Controllers;
 
+use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\I18n\Time;
+use Exception;
 use iBoot\Models\UserModel;
 use ReflectionException;
 
 class User extends BaseController
 {
     /**
+     * @throws Exception
      * @throws ReflectionException
      */
     public function login()
@@ -98,6 +101,11 @@ class User extends BaseController
         return redirect()->to(base_url('login'));
     }
 
+    /**
+     * @param mixed $globalAdmin
+     *
+     * @throws ReflectionException
+     */
     public function signup($globalAdmin = false)
     {
         $title  = $globalAdmin ? lang('Text.sign_up_admin') : lang('Text.sign_up');
@@ -138,6 +146,8 @@ class User extends BaseController
             $session = session();
             $session->setFlashdata('success', 'Successful Registration');
 
+            $model->send_validation_email($newData['email']);
+
             return redirect()->to(base_url('login'));
         }
 
@@ -147,7 +157,7 @@ class User extends BaseController
         ]);
     }
 
-    public function profile()
+    public function profile(): string
     {
         $data  = ['title' => lang('Text.profile')];
         $model = new UserModel();
@@ -157,10 +167,32 @@ class User extends BaseController
         return view('profile', $data);
     }
 
-    public function logout()
+    public function logout(): RedirectResponse
     {
         session()->destroy();
 
         return redirect()->to('login');
+    }
+
+    /**
+     * @param mixed $email_address
+     * @param mixed $email_code
+     *
+     * @throws ReflectionException
+     */
+    public function verifyEmail($email_address, $email_code): RedirectResponse
+    {
+        $model = new UserModel();
+
+        $model->where('email', $email_address)->where('md5(CONCAT(email, created_at))', $email_code)->set(['verifiedEmail' => 1])->update();
+
+		return redirect()->to('login');
+    }
+
+    public function send_validation_email($email_address): bool
+    {
+        $model = new UserModel();
+
+        return $model->send_validation_email($email_address);
     }
 }

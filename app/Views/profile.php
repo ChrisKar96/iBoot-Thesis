@@ -9,8 +9,15 @@
                 <div class="panel-body">
                     <h3>Hi, <?= $user['name'] ?></h3>
                     <hr>
-                    <p>Username: <?= $user['username'] ?></p>
-                    <p>Phone: <?= $user['phone'] ?></p>
+                    <p><strong>Username:</strong> <?= $user['username'] ?></p>
+                    <p><strong>Email:</strong> <?= $user['email'] ?> <strong>Status:</strong>
+                    <?php if ($user['verifiedEmail']) {
+                        echo "<span style='color:green;'>Verified</span>";
+                    } else {
+                        echo "<span style='color:red;'>Not Verified</span> <a href='" . base_url('sendEmailVerification/' . $user['email']) . "'>Send confirmation mail again</a>";
+                    } ?>
+                    </p>
+                    <p><strong>Phone:</strong> <?= $user['phone'] ?></p>
                 </div>
             </div>
         </div>

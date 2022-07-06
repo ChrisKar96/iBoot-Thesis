@@ -22,9 +22,15 @@ class User extends BaseController
             $password = $this->request->getVar('password');
         }
 
-        if (! empty($username)) {
-            $user = $userModel->where('username', $username)->orWhere('email', $username)->first();
+        if (empty($username) || empty($password)) {
+            if (! empty($this->request)) {
+                return $this->respond(['error' => 'Username or Password is empty.'], 401);
+            }
+
+            return null;
         }
+
+        $user = $userModel->where('username', $username)->orWhere('email', $username)->first();
 
         if ($user === null) {
             if (! empty($this->request)) {
@@ -46,13 +52,15 @@ class User extends BaseController
 
         $key = getenv('JWT_SECRET');
         $iat = time(); // current timestamp value
+        $nbf = $iat + 10;
         $exp = $iat + 3600;
 
         $payload = [
-            'iss'   => 'Issuer of the JWT',
-            'aud'   => 'Audience that the JWT',
-            'sub'   => 'Subject of the JWT',
+            'iss'   => 'iBoot',
+            'aud'   => $user['username'],
+            'sub'   => 'iBoot API',
             'iat'   => $iat, //Time the JWT issued at
+            'nbf'   => $nbf, //not before in seconds
             'exp'   => $exp, // Expiration time of token
             'email' => $user['email'],
         ];

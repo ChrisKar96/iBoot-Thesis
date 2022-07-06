@@ -33,10 +33,12 @@ $routes->setAutoRoute(false);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('locale/(:segment)', 'Locale::set/$1');
+$routes->get('verifyEmail/(:segment)/(:hash)', 'User::verifyEmail/$1/$2');
 $routes->match(['get', 'post'], 'registerAdmin', 'User::registerAdmin', ['filter' => 'noauth']);
 $routes->match(['get', 'post'], 'signup', 'User::signup', ['filter' => 'noauth']);
 $routes->match(['get', 'post'], 'login', 'User::login', ['filter' => 'noauth']);
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
+$routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('computers', 'Computers::index', ['filter' => 'auth']);
 $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
@@ -67,7 +69,9 @@ $routes->get('initboot', 'Home::initboot');
  * --------------------------------------------------------------------
  */
 $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
+    $routes->post('register', 'User::register');
     $routes->post('login', 'User::login');
+    $routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'apiauth']);
     $routes->resource('computer', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('group', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('building', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);

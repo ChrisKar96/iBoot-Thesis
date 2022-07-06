@@ -37,6 +37,11 @@
                             <label class="required" for="password"><?= lang('Text.password'); ?></label>
                         </div>
                         <button type="submit" class="btn btn-primary"><?= lang('Text.log_in'); ?></button>
+                        <div class="row mt-3">
+                            <div class="col text-center">
+                                <a href="#"><?= lang('Text.forgot_credentials'); ?></a>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

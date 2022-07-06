@@ -4,6 +4,8 @@ namespace iBoot\Models;
 
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Model;
+use Config\Services;
+use ReflectionException;
 
 class UserModel extends Model
 {
@@ -71,4 +73,33 @@ class UserModel extends Model
 
         return $data;
     }
+
+    public function send_validation_email($email_address): bool
+    {
+        $user = $this->where('email', $email_address)->first();
+
+        if (! empty($user)) {
+            $email_code = md5($email_address . $user['created_at']);
+
+            $email = Services::email();
+
+            $email->setTo($email_address);
+
+            $email->setMailType('html');
+            $email->setSubject('iBoot email verification');
+
+            $message = '<p>Hi ' . $user['name'] . ',</p>';
+
+            $message .= '<p>Please confirm your email address for your account with username <strong>' . $user['username'] . '</strong>.</p>';
+            $message .= '<p>Click the link below to confirm your email address ' . $email_address . '</p>';
+            $message .= '<p><a href="' . base_url('verifyEmail/' . $email_address . '/' . $email_code) . '">Confirm your email address</a></p>';
+
+            $email->setMessage($message);
+
+            return $email->send();
+        }
+
+        return false;
+    }
+
 }
