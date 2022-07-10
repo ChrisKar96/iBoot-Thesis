@@ -4,7 +4,9 @@ namespace iBoot\Controllers;
 
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\I18n\Time;
+use Config\Services;
 use Exception;
+use iBoot\Models\ForgotPasswordTokenModel;
 use iBoot\Models\UserModel;
 use ReflectionException;
 
@@ -12,7 +14,6 @@ class User extends BaseController
 {
     /**
      * @throws Exception
-     * @throws ReflectionException
      */
     public function login()
     {
@@ -50,13 +51,6 @@ class User extends BaseController
             // Support authenticating with email as well
             $user = $model->where('username', $username)->orWhere('email', $username)->first();
 
-            $login_time = [
-                'id'        => $user['id'],
-                'lastLogin' => Time::now(),
-            ];
-
-            $model->save($login_time);
-
             // Get user's API token
             $apiUserModel  = new Api\User();
             $user['token'] = $apiUserModel->login($username, $password)['token'];
@@ -91,6 +85,9 @@ class User extends BaseController
         session()->set($data);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function registerAdmin()
     {
         $UserModel         = new UserModel();
@@ -112,7 +109,12 @@ class User extends BaseController
         $title  = $globalAdmin ? lang('Text.sign_up_admin') : lang('Text.sign_up');
         $action = $globalAdmin ? base_url('registerAdmin') : base_url('signup');
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->getPost('name')
+            && $this->request->getPost('phone')
+            && $this->request->getPost('email')
+            && $this->request->getPost('username')
+            && $this->request->getPost('password')
+            && $this->request->getPost('password_confirm')) {
             helper('form');
 
             $rules = [
@@ -147,7 +149,7 @@ class User extends BaseController
             $session = session();
             $session->setFlashdata('success', 'Successful Registration');
 
-            $model->send_validation_email($newData['email']);
+            $this->sendValidationEmail($newData['email']);
 
             return redirect()->to(base_url('login'));
         }
@@ -187,13 +189,223 @@ class User extends BaseController
 
         $model->where('email', $email_address)->where('md5(CONCAT(email, created_at))', $email_code)->set(['verifiedEmail' => 1])->update();
 
-		return redirect()->to('login');
+        return redirect()->to('login');
     }
 
-    public function send_validation_email($email_address): bool
+    public function sendValidationEmail($email_address): bool
     {
         $model = new UserModel();
 
-        return $model->send_validation_email($email_address);
+        $user = $model->where('email', $email_address)->first();
+
+        if (! empty($user)) {
+            $email_code = md5($email_address . $user['created_at']);
+
+            $email = Services::email();
+
+            $email->setTo($email_address);
+
+            $email->setMailType('html');
+            $email->setSubject('iBoot email verification');
+
+            $message = '<p>Hi ' . $user['name'] . ',</p>';
+
+            $message .= '<p>Please confirm your email address for your account with username <strong>' . $user['username'] . '</strong>.</p>';
+            $message .= '<p>Click the link below to confirm your email address ' . $email_address . '</p>';
+            $message .= '<p><a href="' . base_url('verifyEmail/' . $email_address . '/' . $email_code) . '">Confirm your email address</a></p>';
+
+            $email->setMessage($message);
+
+            return $email->send();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param mixed|null $data
+     *
+     * @throws Exception
+     */
+    public function forgotCredentials($data = null): string
+    {
+        $data['title'] = lang('Text.forgot_credentials');
+
+        return view('forgotCredentials', $data);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function forgotUsername(): string
+    {
+        if ($this->request->getPost('email')) {
+            $email_address = $this->request->getPost('email');
+
+            helper('form');
+
+            $rules = [
+                'email' => 'required|valid_email',
+            ];
+
+            if (! $this->validate($rules)) {
+                return $this->forgotCredentials([
+                    'validationForgotUsername' => $this->validator,
+                ]);
+            }
+            $model = new UserModel();
+            $user  = $model->where('email', $email_address)->first();
+
+            if (empty($user)) {
+                return $this->forgotCredentials([
+                    'validationForgotUsername' => $this->validator,
+                    'userNotFoundUsername'     => true,
+                ]);
+            }
+
+            $email = Services::email();
+
+            $email->setTo($user['email']);
+
+            $email->setMailType('html');
+            $email->setSubject('iBoot username reminder');
+
+            $message = '<p>Hi ' . $user['name'] . ',</p>';
+
+            $message .= '<p>Your username is <strong>' . $user['username'] . '</strong>.</p>';
+
+            $email->setMessage($message);
+
+            $reminderSent = $email->send();
+
+            return $this->forgotCredentials([
+                'validationForgotUsername' => $this->validator,
+                'reminderSentUsername'     => $reminderSent,
+            ]);
+        }
+
+        return $this->forgotCredentials();
+    }
+
+    /**
+     * @throws Exception
+     * @throws ReflectionException
+     */
+    public function forgotPassword(): string
+    {
+        if ($this->request->getPost('username')) {
+            $username = $this->request->getPost('username');
+
+            helper('form');
+
+            $rules = [
+                'username' => 'required|min_length[3]|max_length[320]',
+            ];
+
+            if (! $this->validate($rules)) {
+                return $this->forgotCredentials([
+                    'validationForgotPassword' => $this->validator,
+                ]);
+            }
+            $userModel = new UserModel();
+            $user      = $userModel->where('username', $username)->orWhere('email', $username)->first();
+
+            if (empty($user)) {
+                return $this->forgotCredentials([
+                    'validationForgotPassword' => $this->validator,
+                    'userNotFoundPassword'     => true,
+                ]);
+            }
+
+            $token      = urlencode(md5($user['id'] . Time::now()));
+            $token_exp  = Time::now()->addMinutes(15);
+            $token_data = [
+                'userId'                                => $user['id'],
+                'forgot_password_token'                 => $token,
+                'forgot_password_token_expiration_date' => $token_exp,
+            ];
+
+            $forgotPasswordTokenModel = new forgotPasswordTokenModel();
+            $forgotPasswordTokenModel->save($token_data);
+
+            $email = Services::email();
+
+            $email->setTo($user['email']);
+
+            $email->setMailType('html');
+            $email->setSubject('iBoot reissue password');
+
+            $message = '<p>Hi ' . $user['name'] . ',</p>';
+
+            $message .= '<p><a href="' . base_url('forgotPassword/token/' . $token) . '">Click here</a> to reissue your password.</p>';
+            $message .= '<p>The link will be valid until ' . $token_exp . '</p>';
+
+            $email->setMessage($message);
+
+            $reminderSent = $email->send();
+
+            return $this->forgotCredentials([
+                'validationForgotPassword' => $this->validator,
+                'reminderSentPassword'     => $reminderSent,
+            ]);
+        }
+
+        return $this->forgotCredentials();
+    }
+
+	/**
+	 * @param string $token
+	 *
+	 * @return string
+	 * @throws ReflectionException
+	 */
+    public function forgotPasswordToken(string $token): string
+    {
+        $data          = ['title' => lang('Text.forgot_password')];
+        $data['token'] = $token;
+
+        $forgotPasswordTokenModel = new forgotPasswordTokenModel();
+        $user                     = $forgotPasswordTokenModel->where('forgot_password_token', $token)->where('forgot_password_token_expiration_date >', Time::now())->first();
+
+        if (empty($user)) {
+            $data['tokenInvalid'] = true;
+
+            return view('reissuePassword', $data);
+        }
+
+        if ($this->request->getPost('password')
+            && $this->request->getPost('password_confirm')) {
+            helper('form');
+
+            $rules = [
+                'password'         => 'required|alpha_numeric_punct|min_length[5]|max_length[255]',
+                'password_confirm' => 'required|alpha_numeric_punct|matches[password]',
+            ];
+
+            if (! $this->validate($rules)) {
+                $data['validationReissuePassword'] = $this->validator;
+
+                return view('reissuePassword', $data);
+            }
+            $userModel = new UserModel();
+            $userModel->where('id', $user['userId']);
+            $data['passwordChanged'] = $this->changePassword($user['userId'], $this->request->getVar('password'));
+            $forgotPasswordTokenModel->delete($user['userId']);
+        }
+
+        return view('reissuePassword', $data);
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function changePassword(int $id, string $password): bool
+    {
+        $userModel = new UserModel();
+
+        return $userModel->save([
+            'id'       => $id,
+            'password' => $password,
+        ]);
     }
 }

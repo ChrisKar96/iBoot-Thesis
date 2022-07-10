@@ -37,7 +37,14 @@
     <link rel="stylesheet" href="<?= base_url('/assets/css/style.css'); ?>">
 
 	<?php
-    if (isset($title) && ($title === lang('Text.log_in') || $title === lang('Text.sign_up') || $title === lang('Text.sign_up_admin'))) : ?>
+    $form_pages = [
+        lang('Text.log_in'),
+        lang('Text.sign_up'),
+        lang('Text.sign_up_admin'),
+        lang('Text.forgot_credentials'),
+        lang('Text.forgot_password'),
+    ];
+    if (isset($title) && in_array($title, $form_pages, true)) : ?>
         <!-- Log In / Register Form CSS -->
         <link rel="stylesheet" href="<?= base_url('/assets/css/login-clean.css'); ?>">
 	<?php

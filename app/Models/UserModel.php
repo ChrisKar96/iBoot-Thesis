@@ -4,8 +4,6 @@ namespace iBoot\Models;
 
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Model;
-use Config\Services;
-use ReflectionException;
 
 class UserModel extends Model
 {
@@ -26,6 +24,8 @@ class UserModel extends Model
         'admin',
         'accepted',
         'verifiedEmail',
+        'forgot_password_token',
+        'forgot_password_token_expiration_date',
         'lastLogin',
     ];
 
@@ -46,7 +46,7 @@ class UserModel extends Model
     protected $allowCallbacks = true;
     protected $beforeInsert   = ['beforeInsert'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['beforeUpdate'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
@@ -65,6 +65,11 @@ class UserModel extends Model
         return $this->passwordHash($data);
     }
 
+    protected function beforeUpdate(array $data): array
+    {
+        return $this->passwordHash($data);
+    }
+
     protected function passwordHash(array $data): array
     {
         if (isset($data['data']['password'])) {
@@ -73,33 +78,4 @@ class UserModel extends Model
 
         return $data;
     }
-
-    public function send_validation_email($email_address): bool
-    {
-        $user = $this->where('email', $email_address)->first();
-
-        if (! empty($user)) {
-            $email_code = md5($email_address . $user['created_at']);
-
-            $email = Services::email();
-
-            $email->setTo($email_address);
-
-            $email->setMailType('html');
-            $email->setSubject('iBoot email verification');
-
-            $message = '<p>Hi ' . $user['name'] . ',</p>';
-
-            $message .= '<p>Please confirm your email address for your account with username <strong>' . $user['username'] . '</strong>.</p>';
-            $message .= '<p>Click the link below to confirm your email address ' . $email_address . '</p>';
-            $message .= '<p><a href="' . base_url('verifyEmail/' . $email_address . '/' . $email_code) . '">Confirm your email address</a></p>';
-
-            $email->setMessage($message);
-
-            return $email->send();
-        }
-
-        return false;
-    }
-
 }

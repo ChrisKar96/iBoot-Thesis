@@ -34,11 +34,19 @@ $routes->setAutoRoute(false);
 $routes->get('/', 'Home::index');
 $routes->get('locale/(:segment)', 'Locale::set/$1');
 $routes->get('verifyEmail/(:segment)/(:hash)', 'User::verifyEmail/$1/$2');
+
 $routes->match(['get', 'post'], 'registerAdmin', 'User::registerAdmin', ['filter' => 'noauth']);
 $routes->match(['get', 'post'], 'signup', 'User::signup', ['filter' => 'noauth']);
 $routes->match(['get', 'post'], 'login', 'User::login', ['filter' => 'noauth']);
+$routes->get('forgotCredentials', 'User::forgotCredentials', ['filter' => 'noauth']);
+$routes->post('forgotUsername', 'User::forgotUsername', ['filter' => 'noauth']);
+$routes->get('forgotUsername', 'User::forgotCredentials', ['filter' => 'noauth']);
+$routes->get('forgotPassword', 'User::forgotCredentials', ['filter' => 'noauth']);
+$routes->match(['get', 'post'], 'forgotPassword/token/(:hash)', 'User::forgotPasswordToken/$1', ['filter' => 'noauth']);
+$routes->post('forgotPassword', 'User::forgotPassword', ['filter' => 'noauth']);
+
+$routes->get('sendEmailVerification/(:segment)', 'User::sendValidationEmail/$1', ['filter' => 'auth']);
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
-$routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('computers', 'Computers::index', ['filter' => 'auth']);
 $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
@@ -69,8 +77,10 @@ $routes->get('initboot', 'Home::initboot');
  * --------------------------------------------------------------------
  */
 $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
-    $routes->post('register', 'User::register');
-    $routes->post('login', 'User::login');
+    $routes->group('user', static function ($routes) {
+        $routes->post('register', 'User::register');
+        $routes->post('login', 'User::login');
+    });
     $routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'apiauth']);
     $routes->resource('computer', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('group', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);

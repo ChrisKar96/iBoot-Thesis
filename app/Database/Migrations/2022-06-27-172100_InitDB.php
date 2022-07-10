@@ -58,10 +58,14 @@ class InitDB extends Migration
                 'constraint' => 1,
                 'default'    => 0,
             ],
-            'lastLogin' => [
-                'type'    => 'DATETIME',
-                'default' => null,
-                'null'    => true,
+            'forgot_password_token' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => true,
+            ],
+            'forgot_password_token_expiration_date' => [
+                'type' => 'TIMESTAMP',
+                'null' => true,
             ],
             'created_at' => [
                 'type' => 'TIMESTAMP',
@@ -71,11 +75,36 @@ class InitDB extends Migration
                 'type' => 'TIMESTAMP',
                 'null' => true,
             ],
+            'deleted_at' => [
+                'type' => 'TIMESTAMP',
+                'null' => true,
+            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('username');
         $this->forge->addUniqueKey('email');
         $this->forge->createTable('users', true);
+
+        // FORGOT PASSWORD TOKENS
+        $this->forge->addField([
+            'userId' => [
+                'type'       => 'INT',
+                'constraint' => 10,
+                'unsigned'   => true,
+            ],
+            'forgot_password_token' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => true,
+            ],
+            'forgot_password_token_expiration_date' => [
+                'type' => 'TIMESTAMP',
+                'null' => true,
+            ],
+        ]);
+        $this->forge->addKey('userId', true);
+        $this->forge->addUniqueKey('forgot_password_token');
+        $this->forge->createTable('forgot_password_tokens', true);
 
         // BUILDINGS
         $this->forge->addField([

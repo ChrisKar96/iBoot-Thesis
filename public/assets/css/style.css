@@ -84,3 +84,7 @@ pre {
     width: fit-content;
     display: inline-flex;
 }
+
+.alert {
+    text-align: center;
+}
