@@ -28,6 +28,7 @@ return [
     'computers'              => 'Υπολογιστές',
     'toggle_navigation_bar'  => 'Εναλλαγή μπάρας πλοήγησης',
     'username'               => 'Όνομα Χρήστη',
+    'username_or_email'      => 'Όνομα Χρήστη ή Email',
     'password'               => 'Κωδικός',
     'email'                  => 'Email',
     'name'                   => 'Όνομα',
@@ -46,6 +47,5 @@ return [
     'add_to_your_dhcpd'      => 'Προσθέστε το ακόλουθο κομμάτι κώδικα στο αρχείο dhcpd.conf της υπάρχουσας ISC εγκατάστασης σας.',
     'forgot_credentials'     => 'Υπενθύμιση Στοιχείων Πρόσβασης',
     'forgot_username'        => 'Υπενθύμιση Ονόματος Χρήστη',
-    'forgot_email'           => 'Υπενθύμιση Email',
     'forgot_password'        => 'Επανέκδοση Κωδικού Πρόσβασης',
 ];

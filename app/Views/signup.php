@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 my-md-2">
+            <div class="col-xs-12 col-sm-10 col-lg-8 col-xl-6 my-md-2">
                 <div class="login-clean">
                     <?php
                     if (isset($validation)): ?>
@@ -20,7 +20,7 @@
                     }
                     ?>
 
-                    <form action="<?= $action; ?>" method="post">
+                    <form action="<?= $action; ?>" method="post" style="margin: 3vmin;">
                         <?= csrf_field() ?>
                         <h2 class="text-center"><?= $title; ?></h2>
                         <div class="illustration">

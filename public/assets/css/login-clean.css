@@ -3,12 +3,11 @@
 }
 
 .login-clean form {
-    margin: 3vmin;
     background-color: #ffffff;
     border-radius: 4px;
     color: #505e6c;
     box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
-    padding: 5vmin 10vmin;
+    padding: 4vmin 7vmin;
 }
 
 .login-clean .illustration {

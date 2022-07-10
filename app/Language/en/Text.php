@@ -28,6 +28,7 @@ return [
     'computers'              => 'Computers',
     'toggle_navigation_bar'  => 'Toggle navigation bar',
     'username'               => 'Username',
+    'username_or_email'      => 'Username or Email',
     'password'               => 'Password',
     'email'                  => 'Email',
     'name'                   => 'Name',
@@ -46,6 +47,5 @@ return [
     'add_to_your_dhcpd'      => 'Add the following code snippet to the dhcpd.conf file of your existing ISC installation.',
     'forgot_credentials'     => 'Forgot Credentials',
     'forgot_username'        => 'Remind Username',
-    'forgot_email'           => 'Remind Email',
     'forgot_password'        => 'Reissue Password',
 ];
