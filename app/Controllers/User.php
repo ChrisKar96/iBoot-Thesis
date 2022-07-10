@@ -20,17 +20,18 @@ class User extends BaseController
 
         session()->keepFlashdata('referred_from');
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->getPost('username')
+            && $this->request->getPost('password')) {
             helper('form');
 
             $rules = [
                 'username' => 'required|min_length[3]|max_length[320]',
-                'password' => 'required|min_length[5]|max_length[255]|validateUser[username,password]',
+                'password' => 'required|min_length[5]|max_length[255]|authenticateUser[username,password]',
             ];
 
             $errors = [
                 'password' => [
-                    'validateUser' => lang('Validation.username_or_password_dont_match'),
+                    'authenticateUser' => lang('Validation.username_or_password_dont_match'),
                 ],
             ];
 

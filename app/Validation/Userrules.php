@@ -6,7 +6,7 @@ use iBoot\Models\UserModel;
 
 class Userrules
 {
-    public function validateUser(string $str, string $fields, array $data)
+    public function authenticateUser(string $str, string $fields, array $data)
     {
         $model = new UserModel();
         $user  = $model->where('username', $data['username'])->orWhere('email', $data['username'])->first();
