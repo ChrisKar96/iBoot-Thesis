@@ -56,13 +56,15 @@ class User extends BaseController
         $exp = $iat + 3600;
 
         $payload = [
-            'iss'   => 'iBoot',
-            'aud'   => $user['username'],
-            'sub'   => 'iBoot API',
-            'iat'   => $iat, //Time the JWT issued at
-            'nbf'   => $nbf, //not before in seconds
-            'exp'   => $exp, // Expiration time of token
-            'email' => $user['email'],
+            'iss'      => 'iBoot',
+            'aud'      => base_url(),
+            'sub'      => 'iBoot API',
+            'iat'      => $iat, //Time the JWT issued at
+            'nbf'      => $nbf, //not before in seconds
+            'exp'      => $exp, // Expiration time of token
+            'username' => $user['username'],
+            'isAdmin'  => $user['admin'],
+            'accepted' => $user['accepted'],
         ];
 
         $token = JWT::encode($payload, $key, 'HS256');
