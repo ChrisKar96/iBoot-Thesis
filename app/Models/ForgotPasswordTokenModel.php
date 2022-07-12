@@ -14,7 +14,7 @@ class ForgotPasswordTokenModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_id', 'forgot_password_token', 'forgot_password_token_expiration_date'];
+    protected $allowedFields    = ['user_id', 'token', 'exp_date'];
 
     // Dates
     protected $useTimestamps = false;

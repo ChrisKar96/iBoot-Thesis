@@ -14,7 +14,7 @@ class ComputerModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'uuid', 'room', 'validated'];
+    protected $allowedFields    = ['name', 'uuid', 'mac', 'lab', 'validated'];
 
     // Dates
     protected $useTimestamps = false;

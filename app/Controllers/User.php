@@ -320,9 +320,9 @@ class User extends BaseController
             $token      = urlencode(md5($user['id'] . Time::now()));
             $token_exp  = Time::now()->addMinutes(15);
             $token_data = [
-                'user_id'                                => $user['id'],
-                'forgot_password_token'                 => $token,
-                'forgot_password_token_expiration_date' => $token_exp,
+                'user_id'  => $user['id'],
+                'token'    => $token,
+                'exp_date' => $token_exp,
             ];
 
             $forgotPasswordTokenModel = new forgotPasswordTokenModel();
@@ -353,19 +353,17 @@ class User extends BaseController
         return $this->forgotCredentials();
     }
 
-	/**
-	 * @param string $token
-	 *
-	 * @return string
-	 * @throws ReflectionException
-	 */
+    /**
+     * @throws Exception
+     * @throws ReflectionException
+     */
     public function forgotPasswordToken(string $token): string
     {
         $data          = ['title' => lang('Text.forgot_password')];
         $data['token'] = $token;
 
         $forgotPasswordTokenModel = new forgotPasswordTokenModel();
-        $user                     = $forgotPasswordTokenModel->where('forgot_password_token', $token)->where('forgot_password_token_expiration_date >', Time::now())->first();
+        $user                     = $forgotPasswordTokenModel->where('token', $token)->where('exp_date >', Time::now())->first();
 
         if (empty($user)) {
             $data['tokenInvalid'] = true;

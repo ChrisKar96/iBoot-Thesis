@@ -21,12 +21,10 @@ class InitDB extends Migration
             'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '40',
-                'null'       => false,
             ],
             'email' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '320',
-                'null'       => false,
             ],
             'phone' => [
                 'type'       => 'VARCHAR',
@@ -36,12 +34,10 @@ class InitDB extends Migration
             'username' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '40',
-                'null'       => false,
             ],
             'password' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
-                'null'       => false,
             ],
             'admin' => [
                 'type'       => 'TINYINT',
@@ -66,10 +62,6 @@ class InitDB extends Migration
                 'type' => 'TIMESTAMP',
                 'null' => true,
             ],
-            'deleted_at' => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
-            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('username');
@@ -83,22 +75,22 @@ class InitDB extends Migration
                 'constraint' => 10,
                 'unsigned'   => true,
             ],
-            'forgot_password_token' => [
+            'token' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
                 'null'       => true,
             ],
-            'forgot_password_token_expiration_date' => [
+            'exp_date' => [
                 'type' => 'TIMESTAMP',
                 'null' => true,
             ],
         ]);
         $this->forge->addKey('user_id', true);
-        $this->forge->addUniqueKey('forgot_password_token');
-		$this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addUniqueKey('token');
+        $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('forgot_password_tokens', true);
 
-        // BUILDINGS
+        // LABS
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -109,7 +101,6 @@ class InitDB extends Migration
             'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '20',
-                'null'       => false,
             ],
             'address' => [
                 'type'       => 'VARCHAR',
@@ -121,47 +112,28 @@ class InitDB extends Migration
                 'constraint' => '15',
                 'null'       => true,
             ],
-            'image_server_ip' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '15',
-                'null'       => false,
-            ],
-            'image_server_prefix_path' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '50',
-                'null'       => false,
-            ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('buildings', true);
+        $this->forge->createTable('labs', true);
 
-        // ROOMS
+        // BOOT MENU x OsImages
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 10,
-                'unsigned'       => true,
-                'auto_increment' => true,
-            ],
-            'name' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '20',
-                'null'       => false,
-            ],
-            'building' => [
+            'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 10,
                 'unsigned'   => true,
             ],
-            'phone' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '15',
-                'null'       => true,
+            'lab_id' => [
+                'type'       => 'INT',
+                'constraint' => 10,
+                'unsigned'   => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('building', 'buildings', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('rooms', true);
+        $this->forge->addKey('user_id', true);
+        $this->forge->addKey('lab_id', true);
+        $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('lab_id', 'labs', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('user_labs', true);
 
         // OsImages
         $this->forge->addField([
@@ -174,11 +146,9 @@ class InitDB extends Migration
             'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '30',
-                'null'       => false,
             ],
             'ipxe_entry' => [
                 'type' => 'TEXT',
-                'null' => false,
             ],
         ]);
         $this->forge->addKey('id', true);
@@ -201,12 +171,16 @@ class InitDB extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '36',
             ],
+            'mac' => [
+                'type'       => 'CHAR',
+                'constraint' => '17',
+            ],
             'validated' => [
                 'type'       => 'TINYINT',
                 'constraint' => 1,
                 'default'    => 0,
             ],
-            'room' => [
+            'lab' => [
                 'type'       => 'INT',
                 'constraint' => 10,
                 'unsigned'   => true,
@@ -214,7 +188,7 @@ class InitDB extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('room', 'rooms', 'id', 'CASCADE', 'SET NULL');
+        $this->forge->addForeignKey('lab', 'labs', 'id', 'CASCADE', 'SET NULL');
         $this->forge->createTable('computers', true);
 
         // GROUPS
@@ -228,7 +202,14 @@ class InitDB extends Migration
             'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '20',
-                'null'       => false,
+            ],
+            'image_server_ip' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '15',
+            ],
+            'image_server_prefix_path' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '50',
             ],
         ]);
         $this->forge->addKey('id', true);
@@ -298,16 +279,20 @@ class InitDB extends Migration
             ],
             'time_from' => [
                 'type' => 'TIME',
+                'null' => true,
             ],
             'time_to' => [
                 'type' => 'TIME',
+                'null' => true,
             ],
             'day_of_week' => [
                 'type'     => 'TINYINT',
                 'unsigned' => true,
+                'null'     => true,
             ],
             'date' => [
                 'type' => 'DATE',
+                'null' => true,
             ],
             'boot_menu_id' => [
                 'type'       => 'INT',
@@ -324,8 +309,8 @@ class InitDB extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('boot_menu_id', 'boot_menu', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('group_id', 'groups', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addUniqueKey('time_from, time_to, date, group_id');
-        $this->forge->addUniqueKey('time_from, time_to, day_of_week, group_id');
+        $this->forge->addUniqueKey(['time_from', 'time_to', 'date', 'group_id']);
+        $this->forge->addUniqueKey(['time_from', 'time_to', 'day_of_week', 'group_id']);
         $this->forge->createTable('boot_menu_schedules', true);
 
         $this->db->enableForeignKeyChecks();
@@ -333,15 +318,16 @@ class InitDB extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('users');
-        $this->forge->dropTable('buildings');
-        $this->forge->dropTable('rooms');
-        $this->forge->dropTable('os_images');
-        $this->forge->dropTable('computers');
-        $this->forge->dropTable('groups');
-        $this->forge->dropTable('computer_groups');
-        $this->forge->dropTable('boot_menu');
-        $this->forge->dropTable('boot_menu_images');
-        $this->forge->dropTable('boot_menu_schedules');
+        $this->forge->dropTable('users', true);
+        $this->forge->dropTable('forgot_password_tokens', true);
+        $this->forge->dropTable('labs', true);
+        $this->forge->dropTable('user_labs', true);
+        $this->forge->dropTable('os_images', true);
+        $this->forge->dropTable('computers', true);
+        $this->forge->dropTable('groups', true);
+        $this->forge->dropTable('computer_groups', true);
+        $this->forge->dropTable('boot_menu', true);
+        $this->forge->dropTable('boot_menu_images', true);
+        $this->forge->dropTable('boot_menu_schedules', true);
     }
 }
