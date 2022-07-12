@@ -24,8 +24,6 @@ class UserModel extends Model
         'admin',
         'accepted',
         'verifiedEmail',
-        'forgot_password_token',
-        'forgot_password_token_expiration_date',
         'lastLogin',
     ];
 

@@ -58,15 +58,6 @@ class InitDB extends Migration
                 'constraint' => 1,
                 'default'    => 0,
             ],
-            'forgot_password_token' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '255',
-                'null'       => true,
-            ],
-            'forgot_password_token_expiration_date' => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
-            ],
             'created_at' => [
                 'type' => 'TIMESTAMP',
                 'null' => true,
@@ -87,7 +78,7 @@ class InitDB extends Migration
 
         // FORGOT PASSWORD TOKENS
         $this->forge->addField([
-            'userId' => [
+            'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 10,
                 'unsigned'   => true,
@@ -102,8 +93,9 @@ class InitDB extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('userId', true);
+        $this->forge->addKey('user_id', true);
         $this->forge->addUniqueKey('forgot_password_token');
+		$this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('forgot_password_tokens', true);
 
         // BUILDINGS

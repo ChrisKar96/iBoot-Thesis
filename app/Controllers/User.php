@@ -320,7 +320,7 @@ class User extends BaseController
             $token      = urlencode(md5($user['id'] . Time::now()));
             $token_exp  = Time::now()->addMinutes(15);
             $token_data = [
-                'userId'                                => $user['id'],
+                'user_id'                                => $user['id'],
                 'forgot_password_token'                 => $token,
                 'forgot_password_token_expiration_date' => $token_exp,
             ];
@@ -388,9 +388,9 @@ class User extends BaseController
                 return view('reissuePassword', $data);
             }
             $userModel = new UserModel();
-            $userModel->where('id', $user['userId']);
-            $data['passwordChanged'] = $this->changePassword($user['userId'], $this->request->getVar('password'));
-            $forgotPasswordTokenModel->delete($user['userId']);
+            $userModel->where('id', $user['user_id']);
+            $data['passwordChanged'] = $this->changePassword($user['user_id'], $this->request->getVar('password'));
+            $forgotPasswordTokenModel->delete($user['user_id']);
         }
 
         return view('reissuePassword', $data);

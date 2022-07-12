@@ -8,13 +8,13 @@ class ForgotPasswordTokenModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'forgot_password_tokens';
-    protected $primaryKey       = 'userId';
+    protected $primaryKey       = 'user_id';
     protected $useAutoIncrement = false;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['userId', 'forgot_password_token', 'forgot_password_token_expiration_date'];
+    protected $allowedFields    = ['user_id', 'forgot_password_token', 'forgot_password_token_expiration_date'];
 
     // Dates
     protected $useTimestamps = false;
