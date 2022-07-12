@@ -2,16 +2,17 @@
 
 use iBoot\Models\Api\ComputerModel;
 
-if (! isset($_GET['uuid'])) : ?>
-There was an error. This page should be loaded using a GET request to privide the UUID of the machine. Make sure your DHCP server / ipxe installation can provide the uuid property.
+if (! (isset($_GET['uuid'], $_GET['mac']))) : ?>
+There was an error. This page should be loaded using a GET request to provide the MAC and UUID of the machine. Make sure your DHCP server / ipxe installation can provide the uuid property.
 <?php else :
     $uuid     = $_GET['uuid'];
+    $mac      = $_GET['mac'];
     $computer = new ComputerModel();
     $computer->builder()->select('id');
     $id = $computer->where($computer->db->DBPrefix . 'computers.uuid', $uuid)->first()['id'];
     if (! $id) {
         try {
-            $computer->insert(['id' => null, 'name' => null, 'uuid' => $uuid, 'room' => null, 'validated' => 0]); ?>
+            $computer->insert(['id' => null, 'name' => null, 'mac' => $mac, 'uuid' => $uuid, 'lab' => null, 'validated' => 0]); ?>
 #!ipxe
 
 :start
@@ -42,7 +43,7 @@ isset ${post_boot} || chain --replace --autofree boot.ipxe ||
 :main_menu
 isset ${main_menu_cursor} || set main_menu_cursor exit
 clear version
-menu ${main_menu_title} UUID: ${uuid}
+menu ${main_menu_title} UUID: ${uuid} MAC: ${netX/mac}
 item --gap Use the UUID shown to verify and configure this computer in iBoot
 item
 item --gap Default:

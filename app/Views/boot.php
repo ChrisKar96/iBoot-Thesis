@@ -3,7 +3,7 @@
 <?= $this->section('bootmenu') ?>
 #!ipxe
 ####       iBoot initial loader        ####
-chain --replace --autofree <?= site_url('initboot'); ?>?uuid=${uuid} || echo boot failed...
+chain --replace --autofree <?= site_url('initboot'); ?>?mac=${netX/mac}&uuid=${uuid} || echo boot failed...
 exit
 <?= $this->endSection() ?>
 
