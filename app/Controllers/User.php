@@ -110,7 +110,6 @@ class User extends BaseController
         $action = $globalAdmin ? base_url('registerAdmin') : base_url('signup');
 
         if ($this->request->getPost('name')
-            && $this->request->getPost('phone')
             && $this->request->getPost('email')
             && $this->request->getPost('username')
             && $this->request->getPost('password')
@@ -151,7 +150,7 @@ class User extends BaseController
 
             $this->sendValidationEmail($newData['email']);
 
-            return redirect()->to(base_url('login'));
+            return redirect()->to(base_url());
         }
 
         return view('signup', [
