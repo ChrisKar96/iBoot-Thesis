@@ -175,11 +175,6 @@ class InitDB extends Migration
                 'type'       => 'CHAR',
                 'constraint' => '17',
             ],
-            'validated' => [
-                'type'       => 'TINYINT',
-                'constraint' => 1,
-                'default'    => 0,
-            ],
             'lab' => [
                 'type'       => 'INT',
                 'constraint' => 10,
