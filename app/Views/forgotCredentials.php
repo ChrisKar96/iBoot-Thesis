@@ -16,7 +16,7 @@
                     endif;
                     if (isset($reminderSentUsername)): ?>
                     <div class="alert alert-success">
-                        <p><?= lang('Text.you_will_receive_an_email_with', [lang('your_username')]); ?>.</p>
+                        <p><?= lang('Text.you_will_receive_an_email_with', [lang('Text.your_username')]); ?>.</p>
                     </div>
                     <?php
                     endif;
