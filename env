@@ -52,6 +52,19 @@
 # database.tests.DBPrefix =
 
 #--------------------------------------------------------------------
+# EMAIL
+#--------------------------------------------------------------------
+
+# email.fromEmail = ''
+# email.fromName = '
+# email.protocol = 'mail'
+# email.mailPath = '/usr/sbin/sendmail'
+# email.SMTPHost = ''
+# email.SMTPUser = ''
+# email.SMTPPass = ''
+# email.SMTPPort = ''
+
+#--------------------------------------------------------------------
 # CONTENT SECURITY POLICY
 #--------------------------------------------------------------------
 
