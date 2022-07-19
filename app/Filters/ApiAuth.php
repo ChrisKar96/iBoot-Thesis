@@ -50,7 +50,7 @@ class ApiAuth implements FilterInterface
             $decoded  = JWT::decode($token, new Key($key, 'HS256'));
             $response = service('response');
 
-            if ($decoded['iss'] !== 'iBoot' || $decoded['aud'] !== base_url() || $decoded['sub'] !== 'iBoot API') {
+            if ($decoded->iss !== 'iBoot' || $decoded->aud !== base_url() || $decoded->sub !== 'iBoot API') {
                 $response->setBody('Token not valid. Access denied');
                 $response->setStatusCode(401);
 
