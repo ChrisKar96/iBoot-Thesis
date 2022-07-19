@@ -2,7 +2,7 @@
 
 namespace iBoot\Controllers\Api;
 
-use iBoot\Models\Api\GroupModel;
+use iBoot\Models\GroupModel;
 use CodeIgniter\RESTful\ResourceController;
 use ReflectionException;
 

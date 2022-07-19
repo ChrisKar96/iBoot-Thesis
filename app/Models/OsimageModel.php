@@ -1,20 +1,23 @@
 <?php
 
-namespace iBoot\Models\Api;
+namespace iBoot\Models;
 
 use CodeIgniter\Model;
 
-class ConfigurationModel extends Model
+class OsimageModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'boot_menu';
+    protected $table            = 'os_images';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name'];
+    protected $allowedFields    = [
+        'name',
+        'ipxe_entry',
+    ];
 
     // Dates
     protected $useTimestamps = false;
@@ -24,7 +27,11 @@ class ConfigurationModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules = [
+        'id'         => 'numeric|max_length[10]|permit_empty|is_unique[os_images.id,id,{id}]',
+        'name'       => 'max_length[30]|required',
+        'ipxe_entry' => 'required',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;

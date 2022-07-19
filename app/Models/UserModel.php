@@ -2,7 +2,6 @@
 
 namespace iBoot\Models;
 
-use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Model;
 
 class UserModel extends Model
@@ -16,15 +15,15 @@ class UserModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'username',
-        'password',
         'name',
         'email',
         'phone',
-        'admin',
-        'accepted',
+        'username',
+        'password',
+        'isAdmin',
         'verifiedEmail',
-        'lastLogin',
+        'created_at',
+        'updated_at',
     ];
 
     // Dates
@@ -35,7 +34,16 @@ class UserModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules = [
+        'id'            => 'numeric|max_length[10]|permit_empty|is_unique[users.id,id,{id}]',
+        'name'          => 'min_length[3]|max_length[40]|required',
+        'email'         => 'valid_email|max_length[320]|required|is_unique[users.email,id,{id}]',
+        'phone'         => 'min_length[3]|max_length[15]|permit_empty',
+        'username'      => 'alpha_numeric_punct|min_length[3]|max_length[40]|required',
+        'password'      => 'alpha_numeric_punct|min_length[5]|max_length[255]|required',
+        'isAdmin'       => 'numeric|max_length[1]|permit_empty',
+        'verifiedEmail' => 'numeric|max_length[1]|permit_empty',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
@@ -50,13 +58,6 @@ class UserModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-
-    public function logout(): RedirectResponse
-    {
-        session()->destroy();
-
-        return redirect()->to('login');
-    }
 
     protected function beforeInsert(array $data): array
     {

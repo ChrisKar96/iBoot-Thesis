@@ -25,16 +25,9 @@ if (! isset($title)) {
                         <a class="nav-link <?= ($title === lang('Text.groups')) ? ' active' : ''; ?>" aria-current="page"
                            href="<?= site_url('groups'); ?>"><?= lang('Text.groups'); ?></a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle <?= ($title === lang('Text.buildings') || $title === lang('Text.rooms')) ? ' active' : ''; ?>"
-                           href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false"><?= lang('Text.locations'); ?></a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item <?= ($title === lang('Text.buildings')) ? ' active' : ''; ?>"
-                                   href="<?= site_url('buildings'); ?>"><?= lang('Text.buildings'); ?></a></li>
-                            <li><a class="dropdown-item <?= ($title === lang('Text.rooms')) ? ' active' : ''; ?>"
-                                   href="<?= site_url('rooms'); ?>"><?= lang('Text.rooms'); ?></a></li>
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($title === lang('Text.labs')) ? ' active' : ''; ?>" aria-current="page"
+                           href="<?= site_url('labs'); ?>"><?= lang('Text.labs'); ?></a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle <?= ($title === lang('Text.os_images') || $title === lang('Text.os_image_archs') || $title === lang('Text.configurations')) ? ' active' : ''; ?>"
@@ -48,7 +41,7 @@ if (! isset($title)) {
                             </li>
                             <li>
                                 <a class="dropdown-item <?= ($title === lang('Text.configurations')) ? ' active' : ''; ?>"
-                                   href="<?= site_url('configurations'); ?>"><?= lang('Text.configurations'); ?></a>
+                                   href="<?= site_url('schedules'); ?>"><?= lang('Text.schedules'); ?></a>
                             </li>
                         </ul>
                     </li>

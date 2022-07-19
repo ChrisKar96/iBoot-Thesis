@@ -3,10 +3,10 @@
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
-use iBoot\Models\Api\RoomModel;
+use iBoot\Models\ScheduleModel;
 use ReflectionException;
 
-class Room extends ResourceController
+class Schedules extends ResourceController
 {
     /**
      * Return an array of resource objects, themselves in array format
@@ -15,14 +15,14 @@ class Room extends ResourceController
      */
     public function index()
     {
-        $room = new RoomModel();
+        $schedule = new ScheduleModel();
 
-        $data = $room->findAll();
+        $data = $schedule->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' Rooms Found',
+            'messages' => count($data) . ' Schedules Found',
             'data'     => $data,
         ];
 
@@ -38,22 +38,22 @@ class Room extends ResourceController
      */
     public function show($id = null)
     {
-        $room = new RoomModel();
+        $schedule = new ScheduleModel();
 
-        $data = $room->where(['id' => $id])->first();
+        $data = $schedule->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Room with id ' . $id . ' Found',
+                'messages' => 'Schedule with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No Room Found with id ' . $id);
+        return $this->failNotFound('No Schedule Found with id ' . $id);
     }
 
     /**
@@ -74,22 +74,20 @@ class Room extends ResourceController
      */
     public function create()
     {
-        $room = new RoomModel();
+        $schedule = new ScheduleModel();
 
         $data = [
-            'name'     => $this->request->getVar('name'),
-            'building' => $this->request->getVar('building'),
-            'phone'    => $this->request->getVar('phone'),
+            'name' => $this->request->getVar('name'),
         ];
 
-        $room->insert($data);
+        $schedule->insert($data);
 
-        $id = $room->getInsertID();
+        $id = $schedule->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Room Saved with id ' . $id,
+            'messages' => 'Schedule Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -117,20 +115,18 @@ class Room extends ResourceController
      */
     public function update($id = null)
     {
-        $room = new RoomModel();
+        $schedule = new ScheduleModel();
 
         $data = [
-            'name'     => $this->request->getVar('name'),
-            'building' => $this->request->getVar('building'),
-            'phone'    => $this->request->getVar('phone'),
+            'name' => $this->request->getVar('name'),
         ];
 
-        $room->update($id, $data);
+        $schedule->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Room with id ' . $id . ' Updated',
+            'messages' => 'Schedule with id ' . $id . ' Updated',
         ];
 
         return $this->respondUpdated($response);
@@ -145,22 +141,22 @@ class Room extends ResourceController
      */
     public function delete($id = null)
     {
-        $room = new RoomModel();
+        $schedule = new ScheduleModel();
 
-        $data = $room->find($id);
+        $data = $schedule->find($id);
 
         if ($data) {
-            $room->delete($id);
+            $schedule->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Room with id ' . $id . ' Deleted',
+                'messages' => 'Schedule with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No Room Found with id ' . $id);
+        return $this->failNotFound('No Schedule Found with id ' . $id);
     }
 }

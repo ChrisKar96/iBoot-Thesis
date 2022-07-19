@@ -4,19 +4,20 @@ namespace iBoot\Models;
 
 use CodeIgniter\Model;
 
-class ForgotPasswordTokenModel extends Model
+class LabModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'forgot_password_tokens';
-    protected $primaryKey       = 'user_id';
-    protected $useAutoIncrement = false;
+    protected $table            = 'buildings';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'token',
-        'exp_date',
+        'name',
+        'address',
+        'phone',
     ];
 
     // Dates
@@ -28,8 +29,10 @@ class ForgotPasswordTokenModel extends Model
 
     // Validation
     protected $validationRules = [
-        'user_id' => 'numeric|max_length[10]|required|is_unique[forgot_password_tokens.user_id,id,{id}]',
-        'token'   => 'max_length[255]',
+        'id'      => 'numeric|max_length[10]|permit_empty|is_unique[labs.id,id,{id}]',
+        'name'    => 'max_length[20]|required',
+        'address' => 'max_length[50]',
+        'phone'   => 'max_length[15]',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

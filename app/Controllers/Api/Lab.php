@@ -2,11 +2,11 @@
 
 namespace iBoot\Controllers\Api;
 
+use iBoot\Models\LabModel;
 use CodeIgniter\RESTful\ResourceController;
-use iBoot\Models\Api\ConfigurationModel;
 use ReflectionException;
 
-class Configuration extends ResourceController
+class Lab extends ResourceController
 {
     /**
      * Return an array of resource objects, themselves in array format
@@ -15,14 +15,14 @@ class Configuration extends ResourceController
      */
     public function index()
     {
-        $configuration = new ConfigurationModel();
+        $lab = new LabModel();
 
-        $data = $configuration->findAll();
+        $data = $lab->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' Configurations Found',
+            'messages' => count($data) . ' Labs Found',
             'data'     => $data,
         ];
 
@@ -38,22 +38,22 @@ class Configuration extends ResourceController
      */
     public function show($id = null)
     {
-        $configuration = new ConfigurationModel();
+        $lab = new LabModel();
 
-        $data = $configuration->where(['id' => $id])->first();
+        $data = $lab->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Configuration with id ' . $id . ' Found',
+                'messages' => 'Lab with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No Configuration Found with id ' . $id);
+        return $this->failNotFound('No Lab Found with id ' . $id);
     }
 
     /**
@@ -74,20 +74,22 @@ class Configuration extends ResourceController
      */
     public function create()
     {
-        $configuration = new ConfigurationModel();
+        $lab = new LabModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
+            'name'    => $this->request->getVar('name'),
+            'address' => $this->request->getVar('address'),
+            'phone'   => $this->request->getVar('phone'),
         ];
 
-        $configuration->insert($data);
+        $lab->insert($data);
 
-        $id = $configuration->getInsertID();
+        $id = $lab->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Configuration Saved with id ' . $id,
+            'messages' => 'Lab Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -115,18 +117,20 @@ class Configuration extends ResourceController
      */
     public function update($id = null)
     {
-        $configuration = new ConfigurationModel();
+        $lab = new LabModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
+            'name'    => $this->request->getVar('name'),
+            'address' => $this->request->getVar('address'),
+            'phone'   => $this->request->getVar('phone'),
         ];
 
-        $configuration->update($id, $data);
+        $lab->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Configuration with id ' . $id . ' Updated',
+            'messages' => 'Lab with id ' . $id . ' Updated',
         ];
 
         return $this->respondUpdated($response);
@@ -141,22 +145,22 @@ class Configuration extends ResourceController
      */
     public function delete($id = null)
     {
-        $configuration = new ConfigurationModel();
+        $lab = new LabModel();
 
-        $data = $configuration->find($id);
+        $data = $lab->find($id);
 
         if ($data) {
-            $configuration->delete($id);
+            $lab->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Configuration with id ' . $id . ' Deleted',
+                'messages' => 'Lab with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No Configuration Found with id ' . $id);
+        return $this->failNotFound('No Lab Found with id ' . $id);
     }
 }

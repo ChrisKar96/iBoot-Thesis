@@ -2,6 +2,9 @@
 
 <?= $this->section('content') ?>
 
+<?php
+ $user = session()->get('user');
+?>
     <main role="main" class="py-5">
         <div class="container">
             <div class="row">

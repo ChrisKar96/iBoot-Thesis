@@ -2,7 +2,7 @@
 
 namespace iBoot\Controllers\Api;
 
-use iBoot\Models\Api\OsimageModel;
+use iBoot\Models\OsimageModel;
 use CodeIgniter\RESTful\ResourceController;
 use ReflectionException;
 

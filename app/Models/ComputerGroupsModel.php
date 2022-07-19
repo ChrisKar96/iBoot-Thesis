@@ -1,10 +1,10 @@
 <?php
 
-namespace iBoot\Models\Api;
+namespace iBoot\Models;
 
 use CodeIgniter\Model;
 
-class GroupModel extends Model
+class ComputerGroupsModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'groups';
@@ -14,7 +14,10 @@ class GroupModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'boot_menu'];
+    protected $allowedFields    = [
+        'group_id',
+        'computer_id',
+    ];
 
     // Dates
     protected $useTimestamps = false;
@@ -24,7 +27,10 @@ class GroupModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules = [
+        'group_id'    => 'numeric|max_length[10]|required',
+        'computer_id' => 'numeric|max_length[10]|required',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;

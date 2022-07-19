@@ -4,20 +4,17 @@ namespace iBoot\Models;
 
 use CodeIgniter\Model;
 
-class ForgotPasswordTokenModel extends Model
+class BootMenuImagesModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'forgot_password_tokens';
-    protected $primaryKey       = 'user_id';
-    protected $useAutoIncrement = false;
+    protected $table            = 'boot_menu_images';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [
-        'token',
-        'exp_date',
-    ];
+    protected $allowedFields    = ['name'];
 
     // Dates
     protected $useTimestamps = false;
@@ -28,8 +25,9 @@ class ForgotPasswordTokenModel extends Model
 
     // Validation
     protected $validationRules = [
-        'user_id' => 'numeric|max_length[10]|required|is_unique[forgot_password_tokens.user_id,id,{id}]',
-        'token'   => 'max_length[255]',
+        'id'           => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
+        'boot_menu_id' => 'numeric|max_length[10]|required',
+        'image_id'     => 'numeric|max_length[10]|required',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

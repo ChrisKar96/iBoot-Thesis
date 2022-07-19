@@ -50,10 +50,10 @@ $routes->get('profile', 'User::profile', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('computers', 'Computers::index', ['filter' => 'auth']);
 $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
-$routes->get('buildings', 'Buildings::index', ['filter' => 'auth']);
-$routes->get('rooms', 'Rooms::index', ['filter' => 'auth']);
+$routes->get('labs', 'Labs::index', ['filter' => 'auth']);
 $routes->get('osimages', 'Osimages::index', ['filter' => 'auth']);
-$routes->get('configurations', 'Configurations::index', ['filter' => 'auth']);
+$routes->get('boot_menu', 'BootMenu::index', ['filter' => 'auth']);
+$routes->get('schedules', 'Schedules::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout');
 $routes->get('boot', 'Home::boot');
 $routes->get('initboot', 'Home::initboot');
@@ -84,10 +84,9 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     $routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'apiauth']);
     $routes->resource('computer', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('group', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('building', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('room', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('lab', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('osimage', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('configuration', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('schedule', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
 });
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {

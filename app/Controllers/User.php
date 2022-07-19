@@ -19,6 +19,12 @@ class User extends BaseController
     {
         $data = ['title' => lang('Text.log_in')];
 
+        $model      = new UserModel();
+        $usersExist = $model->first();
+        if (! $usersExist) {
+            return redirect()->to(base_url());
+        }
+
         session()->keepFlashdata('referred_from');
 
         if ($this->request->getPost('username')
@@ -71,27 +77,17 @@ class User extends BaseController
     private function setUserSession($user)
     {
         $data = [
-            'id'            => $user['id'],
-            'name'          => $user['name'],
-            'email'         => $user['email'],
-            'phone'         => $user['phone'],
-            'username'      => $user['username'],
-            'apiToken'      => $user['token'],
-            'isAdmin'       => $user['admin'],
-            'verifiedEmail' => $user['verifiedEmail'],
-            'isLoggedIn'    => true,
+            'user'       => $user,
+            'isLoggedIn' => true,
         ];
 
         session()->set($data);
     }
 
-    /**
-     * @throws ReflectionException
-     */
     public function registerAdmin()
     {
         $UserModel         = new UserModel();
-        $globalAdminExists = $UserModel->where('admin', 1)->first();
+        $globalAdminExists = $UserModel->where('isAdmin', 1)->first();
         if (! $globalAdminExists) {
             return $this->signup(true);
         }
@@ -101,13 +97,11 @@ class User extends BaseController
 
     /**
      * @param mixed $globalAdmin
-     *
-     * @throws ReflectionException
      */
     public function signup($globalAdmin = false)
     {
-        $title  = $globalAdmin ? lang('Text.sign_up_admin') : lang('Text.sign_up');
-        $action = $globalAdmin ? base_url('registerAdmin') : base_url('signup');
+        $data['title']  = $globalAdmin ? lang('Text.sign_up_admin') : lang('Text.sign_up');
+        $data['action'] = $globalAdmin ? base_url('registerAdmin') : base_url('signup');
 
         if ($this->request->getPost('name')
             && $this->request->getPost('email')
@@ -118,7 +112,7 @@ class User extends BaseController
 
             $rules = [
                 'name'             => 'required|min_length[3]|max_length[40]',
-                'phone'            => 'max_length[15]',
+                'phone'            => 'permit_empty|min_length[3]|max_length[15]',
                 'email'            => 'required|valid_email|is_unique[users.email,id,{id}]',
                 'username'         => 'required|alpha_numeric_punct|min_length[3]|max_length[40]|is_unique[users.username,id,{id}]',
                 'password'         => 'required|alpha_numeric_punct|min_length[5]|max_length[255]',
@@ -126,45 +120,42 @@ class User extends BaseController
             ];
 
             if (! $this->validate($rules)) {
-                return view('signup', [
-                    'validation' => $this->validator,
-                    'title'      => $title,
-                    'action'     => $action,
-                ]);
+                $data['validation'] = $this->validator;
+
+                return view('signup', $data);
             }
             $model = new UserModel();
 
             $newData = [
                 'name'     => $this->request->getVar('name'),
-                'phone'    => $this->request->getVar('phone'),
                 'email'    => $this->request->getVar('email'),
+                'phone'    => $this->request->getVar('phone'),
                 'username' => $this->request->getVar('username'),
                 'password' => $this->request->getVar('password'),
-                'admin'    => $globalAdmin,
-                'accepted' => $globalAdmin,
+                'isAdmin'  => $globalAdmin,
             ];
 
-            $model->save($newData);
-            $session = session();
-            $session->setFlashdata('success', 'Successful Registration');
+            try {
+                $model->save($newData);
+                $session = session();
+                $session->setFlashdata('success', 'Successful Registration');
 
-            $this->sendValidationEmail($newData['email']);
+                $this->sendValidationEmail($newData['email']);
 
-            return redirect()->to(base_url());
+                return redirect()->to(base_url());
+            } catch (ReflectionException $e) {
+                $data['error'] = $e;
+
+                return view('signup', $data);
+            }
         }
 
-        return view('signup', [
-            'title'  => $title,
-            'action' => $action,
-        ]);
+        return view('signup', $data);
     }
 
     public function profile(): string
     {
-        $data  = ['title' => lang('Text.profile')];
-        $model = new UserModel();
-
-        $data['user'] = $model->where('id', session()->get('id'))->first();
+        $data = ['title' => lang('Text.profile')];
 
         return view('profile', $data);
     }
@@ -187,6 +178,11 @@ class User extends BaseController
         $model = new UserModel();
 
         $model->where('email', $email_address)->where('md5(CONCAT(email, created_at))', $email_code)->set(['verifiedEmail' => 1])->update();
+		$userSession = session()->get('user');
+		if(! empty($userSession)){
+			$userSession['verifiedEmail'] = true;
+			session()->set('user', $userSession);
+		}
 
         return redirect()->to('login');
     }
@@ -257,8 +253,7 @@ class User extends BaseController
 
             if (empty($user)) {
                 return $this->forgotCredentials([
-                    'validationForgotUsername' => $this->validator,
-                    'userNotFoundUsername'     => true,
+                    'userNotFoundUsername' => true,
                 ]);
             }
 
@@ -278,8 +273,7 @@ class User extends BaseController
             $reminderSent = $email->send();
 
             return $this->forgotCredentials([
-                'validationForgotUsername' => $this->validator,
-                'reminderSentUsername'     => $reminderSent,
+                'reminderSentUsername' => $reminderSent,
             ]);
         }
 

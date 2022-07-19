@@ -1,20 +1,20 @@
 <?php
 
-namespace iBoot\Models\Api;
+namespace iBoot\Models;
 
 use CodeIgniter\Model;
 
-class ComputerModel extends Model
+class BootMenuModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'computers';
+    protected $table            = 'boot_menu';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'uuid', 'mac', 'lab'];
+    protected $allowedFields    = ['name'];
 
     // Dates
     protected $useTimestamps = false;
@@ -24,7 +24,10 @@ class ComputerModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules = [
+        'id'   => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
+        'name' => 'max_length[20]|required',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;

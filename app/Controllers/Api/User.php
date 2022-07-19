@@ -63,8 +63,7 @@ class User extends BaseController
             'nbf'      => $nbf, //not before in seconds
             'exp'      => $exp, // Expiration time of token
             'username' => $user['username'],
-            'isAdmin'  => $user['admin'],
-            'accepted' => $user['accepted'],
+            'isAdmin'  => $user['isAdmin'],
         ];
 
         $token = JWT::encode($payload, $key, 'HS256');

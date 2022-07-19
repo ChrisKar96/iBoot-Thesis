@@ -20,7 +20,7 @@ class Home extends BaseController
         }
 
         $UserModel         = new UserModel();
-        $globalAdminExists = $UserModel->where('admin', 1)->first();
+        $globalAdminExists = $UserModel->where('isAdmin', 1)->first();
         if (! $globalAdminExists) {
             return redirect()->to(base_url('registerAdmin'));
         }

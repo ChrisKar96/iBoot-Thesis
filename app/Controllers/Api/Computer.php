@@ -3,7 +3,7 @@
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
-use iBoot\Models\Api\ComputerModel;
+use iBoot\Models\ComputerModel;
 use ReflectionException;
 
 class Computer extends ResourceController
@@ -17,7 +17,7 @@ class Computer extends ResourceController
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
-            'computers.*, buildings.id as building, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+            'computers.*, labs.id as lab, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
         );
         $computer->builder()->join(
             'computer_groups',
@@ -25,13 +25,8 @@ class Computer extends ResourceController
             'LEFT'
         );
         $computer->builder()->join(
-            'rooms',
-            'computers.room = rooms.id',
-            'LEFT'
-        );
-        $computer->builder()->join(
-            'buildings',
-            'rooms.building = buildings.id',
+            'labs',
+            'computers.lab = labs.id',
             'LEFT'
         );
         $computer->builder()->groupBy('computers.id');
@@ -64,7 +59,7 @@ class Computer extends ResourceController
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
-            'computers.*, buildings.id as building, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+            'computers.*, labs.id as lab, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
         );
         $computer->builder()->join(
             'computer_groups',
@@ -72,13 +67,8 @@ class Computer extends ResourceController
             'LEFT'
         );
         $computer->builder()->join(
-            'rooms',
-            'computers.room = rooms.id',
-            'LEFT'
-        );
-        $computer->builder()->join(
-            'buildings',
-            'rooms.building = buildings.id',
+            'labs',
+            'computers.lab = labs.id',
             'LEFT'
         );
         $computer->builder()->groupBy('computers.id');
@@ -124,10 +114,10 @@ class Computer extends ResourceController
         $computer = new ComputerModel();
 
         $data = [
-            'name'      => $this->request->getVar('name'),
-            'uuid'      => $this->request->getVar('uuid'),
-            'room'      => $this->request->getVar('room'),
-            'validated' => $this->request->getVar('validated'),
+            'name' => $this->request->getVar('name'),
+            'uuid' => $this->request->getVar('uuid'),
+            'mac'  => $this->request->getVar('mac'),
+            'lab'  => $this->request->getVar('lab'),
         ];
 
         $computer->insert($data);
@@ -168,10 +158,10 @@ class Computer extends ResourceController
         $computer = new ComputerModel();
 
         $data = [
-            'name'      => $this->request->getVar('name'),
-            'uuid'      => $this->request->getVar('uuid'),
-            'room'      => $this->request->getVar('room'),
-            'validated' => $this->request->getVar('validated'),
+            'name' => $this->request->getVar('name'),
+            'uuid' => $this->request->getVar('uuid'),
+            'mac'  => $this->request->getVar('mac'),
+            'room' => $this->request->getVar('room'),
         ];
 
         $computer->update($id, $data);

@@ -9,10 +9,10 @@
                 $items = [
                     [lang('Text.computers'), 'computer.png', 'computers'],
                     [lang('Text.groups'), 'groups.png', 'groups'],
-                    [lang('Text.buildings'), 'apartment-building.png', 'buildings'],
-                    [lang('Text.rooms'), 'saladeestar.png', 'rooms'],
-                    [lang('Text.os_images'), 'boot_menu.png', 'osimages'],
-                    [lang('Text.configurations'), 'template.png', 'configurations'],
+                    [lang('Text.labs'), 'lab.png', 'labs'],
+                    [lang('Text.os_images'), 'osimage.png', 'osimages'],
+                    [lang('Text.boot_menu'), 'boot-menu.png', 'boot_menu'],
+                    [lang('Text.schedules'), 'schedule.png', 'schedules'],
                 ];
 
                 for ($i = 0; $i <= count($items) - 1; $i++) {
