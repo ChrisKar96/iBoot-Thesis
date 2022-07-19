@@ -77,16 +77,17 @@ $routes->get('initboot', 'Home::initboot');
  * --------------------------------------------------------------------
  */
 $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
+    $routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'apiauth']);
     $routes->group('user', static function ($routes) {
         $routes->post('register', 'User::register');
         $routes->post('login', 'User::login');
     });
-    $routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'apiauth']);
-    $routes->resource('computer', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('group', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('lab', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('osimage', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('schedule', ['except' => 'new,edit', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('computer', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('group', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('lab', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('osimage', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('schedule', ['websafe' => true, 'filter' => 'apiauth']);
 });
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
