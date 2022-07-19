@@ -77,6 +77,7 @@ $routes->get('initboot', 'Home::initboot');
  * --------------------------------------------------------------------
  */
 $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
+    $routes->get('', 'Swagger::index');
     $routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'apiauth']);
     $routes->group('user', static function ($routes) {
         $routes->post('register', 'User::register');
