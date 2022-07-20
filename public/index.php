@@ -44,26 +44,18 @@ $app->initialize();
 $context = is_cli() ? 'php-cli' : 'web';
 $app->setContext($context);
 
-try {
-    // Perform migrations
-    $updated = Config\Services::migrations()->latest();
-    // Export API yaml file
-    $openapi = OpenApi\Generator::scan([$paths->appDirectory . '/Controllers', $paths->appDirectory . '/Entities']);
-    header('Content-Type: application/x-yaml');
-    file_put_contents(__DIR__ . '/assets/api.yaml', $openapi->toYaml());
-} catch (Throwable $e) {
-    echo $e->getMessage();
-}
-
-try {
-    // Perform migrations
-    Config\Services::migrations()->latest();
-    // Export API yaml file
-    $openapi = OpenApi\Generator::scan([$paths->appDirectory . '/Controllers', $paths->appDirectory . '/Entities']);
-    header('Content-Type: application/x-yaml');
-    file_put_contents(__DIR__ . '/assets/api.yaml', $openapi->toYaml());
-} catch (Throwable $e) {
-    echo $e->getMessage();
+if (! session()->get('iBootIsInstalled')) {
+    try {
+        // Perform migrations
+        $updated = Config\Services::migrations()->latest();
+        // Export API yaml file
+        $openapi = OpenApi\Generator::scan([$paths->appDirectory . '/Controllers', $paths->appDirectory . '/Entities']);
+        header('Content-Type: application/x-yaml');
+        file_put_contents(__DIR__ . '/assets/api.yaml', $openapi->toYaml());
+        session()->set('iBootIsInstalled', true);
+    } catch (Throwable $e) {
+        echo $e->getMessage();
+    }
 }
 
 /*
