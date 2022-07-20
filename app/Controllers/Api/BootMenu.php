@@ -4,28 +4,28 @@ namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
-use iBoot\Models\LabModel;
+use iBoot\Models\BootMenuModel;
 use ReflectionException;
 
-class Lab extends ResourceController
+class BootMenu extends ResourceController
 {
     /**
      * @OA\Get(
-     *     path="/lab",
-     *     tags={"Lab"},
-     *     summary="Find Labs",
-     *     description="Returns list of Lab objects",
-     *     operationId="getLabs",
+     *     path="/bootmenu",
+     *     tags={"BootMenu"},
+     *     summary="Find BootMenus",
+     *     description="Returns list of BootMenu objects",
+     *     operationId="getBootMenus",
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
      *         @OA\JsonContent(type="object",
-     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Lab")),
+     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/BootMenu")),
      *         ),
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Lab objects not found"
+     *         description="BootMenu objects not found"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -36,14 +36,14 @@ class Lab extends ResourceController
      */
     public function index(): Response
     {
-        $lab = new LabModel();
+        $os_image = new BootMenuModel();
 
-        $data = $lab->findAll();
+        $data = $os_image->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' Labs Found',
+            'messages' => count($data) . ' Boot Menu Found',
             'data'     => $data,
         ];
 
@@ -52,15 +52,15 @@ class Lab extends ResourceController
 
     /**
      * @OA\Get(
-     *     path="/lab/{id}",
-     *     tags={"Lab"},
-     *     summary="Find Lab by ID",
-     *     description="Returns a single Lab",
-     *     operationId="getLabById",
+     *     path="/bootmenu/{id}",
+     *     tags={"BootMenu"},
+     *     summary="Find BootMenu by ID",
+     *     description="Returns a single BootMenu",
+     *     operationId="getBootMenuById",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID of Lab to return",
+     *         description="ID of BootMenu to return",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -69,7 +69,7 @@ class Lab extends ResourceController
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Lab"),
+     *         @OA\JsonContent(ref="#/components/schemas/BootMenu"),
      *     ),
      *     @OA\Response(
      *         response=400,
@@ -77,7 +77,7 @@ class Lab extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Lab not found"
+     *         description="BootMenu not found"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -90,24 +90,24 @@ class Lab extends ResourceController
      *
      * @return mixed
      */
-    public function show($id = null)
+    public function show($id = null): Response
     {
-        $lab = new LabModel();
+        $os_image = new BootMenuModel();
 
-        $data = $lab->where(['id' => $id])->first();
+        $data = $os_image->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Lab with id ' . $id . ' Found',
+                'messages' => 'Boot Menu with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No Lab Found with id ' . $id);
+        return $this->failNotFound('No Boot Menu Found with id ' . $id);
     }
 
     /**
@@ -121,14 +121,14 @@ class Lab extends ResourceController
 
     /**
      * @OA\Post(
-     *     path="/lab",
-     *     tags={"Lab"},
-     *     summary="Add a new Lab",
-     *     operationId="addLab",
+     *     path="/bootmenu",
+     *     tags={"BootMenu"},
+     *     summary="Add a new BootMenu",
+     *     operationId="addBootMenu",
      *     @OA\Response(
      *         response=201,
-     *         description="Created Lab",
-     *         @OA\JsonContent(ref="#/components/schemas/Lab"),
+     *         description="Created BootMenu",
+     *         @OA\JsonContent(ref="#/components/schemas/BootMenu"),
      *     ),
      *     @OA\Response(
      *         response=405,
@@ -137,7 +137,7 @@ class Lab extends ResourceController
      *     security={
      *         {"bearerAuth": {}}
      *     },
-     *     requestBody={"$ref": "#/components/requestBodies/Lab"}
+     *     requestBody={"$ref": "#/components/requestBodies/BootMenu"}
      * )
      *
      * Create a new resource object, from "posted" parameters
@@ -146,22 +146,20 @@ class Lab extends ResourceController
      */
     public function create(): Response
     {
-        $lab = new LabModel();
+        $os_image = new BootMenuModel();
 
         $data = [
-            'name'    => $this->request->getVar('name'),
-            'address' => $this->request->getVar('address'),
-            'phone'   => $this->request->getVar('phone'),
+            'name' => $this->request->getVar('name'),
         ];
 
-        $lab->insert($data);
+        $os_image->insert($data);
 
-        $id = $lab->getInsertID();
+        $id = $os_image->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Lab Saved with id ' . $id,
+            'messages' => 'Boot Menu Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -180,14 +178,14 @@ class Lab extends ResourceController
 
     /**
      * @OA\Put(
-     *     path="/lab/{id}",
-     *     tags={"Lab"},
-     *     summary="Update an existing Lab",
-     *     operationId="updateLab",
+     *     path="/bootmenu/{id}",
+     *     tags={"BootMenu"},
+     *     summary="Update an existing BootMenu",
+     *     operationId="updateBootMenu",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Lab id to update",
+     *         description="BootMenu id to update",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -199,7 +197,7 @@ class Lab extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Lab not found"
+     *         description="BootMenu not found"
      *     ),
      *     @OA\Response(
      *         response=405,
@@ -208,7 +206,7 @@ class Lab extends ResourceController
      *     security={
      *         {"bearerAuth": {}}
      *     },
-     *     requestBody={"$ref": "#/components/requestBodies/Lab"}
+     *     requestBody={"$ref": "#/components/requestBodies/BootMenu"}
      * )
      *
      * Add or update a model resource, from "posted" properties
@@ -219,20 +217,18 @@ class Lab extends ResourceController
      */
     public function update($id = null): Response
     {
-        $lab = new LabModel();
+        $os_image = new BootMenuModel();
 
         $data = [
-            'name'    => $this->request->getVar('name'),
-            'address' => $this->request->getVar('address'),
-            'phone'   => $this->request->getVar('phone'),
+            'name' => $this->request->getVar('name'),
         ];
 
-        $lab->update($id, $data);
+        $os_image->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Lab with id ' . $id . ' Updated',
+            'messages' => 'Boot Menu with id ' . $id . ' Updated',
         ];
 
         return $this->respondUpdated($response);
@@ -240,14 +236,14 @@ class Lab extends ResourceController
 
     /**
      * @OA\Delete(
-     *     path="/lab/{id}",
-     *     tags={"Lab"},
-     *     summary="Deletes a Lab",
-     *     operationId="deleteLab",
+     *     path="/bootmenu/{id}",
+     *     tags={"BootMenu"},
+     *     summary="Deletes a BootMenu",
+     *     operationId="deleteBootMenu",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Lab id to delete",
+     *         description="BootMenu id to delete",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -259,7 +255,7 @@ class Lab extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Lab not found",
+     *         description="BootMenu not found",
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -272,22 +268,22 @@ class Lab extends ResourceController
      */
     public function delete($id = null): Response
     {
-        $lab = new LabModel();
+        $os_image = new BootMenuModel();
 
-        $data = $lab->find($id);
+        $data = $os_image->find($id);
 
         if ($data) {
-            $lab->delete($id);
+            $os_image->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Lab with id ' . $id . ' Deleted',
+                'messages' => 'Boot Menu with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No Lab Found with id ' . $id);
+        return $this->failNotFound('No Boot Menu Found with id ' . $id);
     }
 }

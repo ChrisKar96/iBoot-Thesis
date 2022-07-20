@@ -84,6 +84,7 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
         $routes->post('login', 'User::login');
     });
     $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('bootmenu', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('computer', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('lab', ['websafe' => true, 'filter' => 'apiauth']);
