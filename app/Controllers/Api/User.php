@@ -10,9 +10,29 @@ use ReflectionException;
 class User extends ResourceController
 {
     /**
-     * Return an array of resource objects, themselves in array format
+     * @OA\Get(
+     *     path="/user",
+     *     tags={"User"},
+     *     summary="Find Users",
+     *     description="Returns list of User objects",
+     *     operationId="getUsers",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(type="object",
+     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/User")),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User objects not found"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
      *
-     * @return mixed
+     * Return an array of resource objects, themselves in array format
      */
     public function index()
     {
@@ -31,6 +51,39 @@ class User extends ResourceController
     }
 
     /**
+     * @OA\Get(
+     *     path="/user/{id}",
+     *     tags={"User"},
+     *     summary="Find User by ID",
+     *     description="Returns a single User",
+     *     operationId="getUserById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of User to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/User"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     *
      * Return the properties of a resource object
      *
      * @param mixed|null $id
@@ -67,11 +120,29 @@ class User extends ResourceController
     }
 
     /**
+     * @OA\Post(
+     *     path="/user",
+     *     tags={"User"},
+     *     summary="Add a new User",
+     *     operationId="addUser",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Created User",
+     *         @OA\JsonContent(ref="#/components/schemas/User"),
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Invalid input"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/User"}
+     * )
+     *
      * Create a new resource object, from "posted" parameters
      *
-     * @throws ReflectionException
-     *
-     * @return mixed
+     *@throws ReflectionException
      */
     public function create()
     {
@@ -106,13 +177,43 @@ class User extends ResourceController
     }
 
     /**
+     * @OA\Put(
+     *     path="/user/{id}",
+     *     tags={"User"},
+     *     summary="Update an existing User",
+     *     operationId="updateUser",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="User id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/User"}
+     * )
+     *
      * Add or update a model resource, from "posted" properties
      *
      * @param mixed|null $id
      *
-     * @throws ReflectionException
-     *
-     * @return mixed
+     *@throws ReflectionException
      */
     public function update($id = null)
     {
@@ -134,11 +235,36 @@ class User extends ResourceController
     }
 
     /**
+     * @OA\Delete(
+     *     path="/user/{id}",
+     *     tags={"User"},
+     *     summary="Deletes a User",
+     *     operationId="deleteUser",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="User id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
      * Delete the designated resource object from the model
      *
      * @param mixed|null $id
-     *
-     * @return mixed
      */
     public function delete($id = null)
     {
@@ -161,6 +287,46 @@ class User extends ResourceController
         return $this->failNotFound('No User Found with id ' . $id);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/user/login",
+     *     tags={"User"},
+     *     summary="Login with user credentials",
+     *     operationId="userLogin",
+     *     @OA\Response(
+     *         response=200,
+     *         description="User Logged In",
+     *         @OA\JsonContent(type="object",
+     *            @OA\Property(property="token",type="string"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Invalid input"
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="username",
+     *         			   description="username or email",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     * )
+     *
+     * Login with User credentials and receive API token
+     *
+     * @param mixed|null $username
+     * @param mixed|null $password
+     */
     public function login($username = null, $password = null)
     {
         $userModel = new UserModel();

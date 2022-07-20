@@ -135,3 +135,5 @@ iboot.sql
 app/Database/Seeds/UserSeeder.php
 
 composer.phar
+
+public/assets/api.yaml

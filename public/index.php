@@ -27,6 +27,17 @@ $paths = new Config\Paths();
 $bootstrap = rtrim($paths->systemDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'bootstrap.php';
 $app       = require realpath($bootstrap) ?: $bootstrap;
 
+try {
+    // Perform migrations
+    Config\Services::migrations()->latest();
+    // Export API yaml file
+    $openapi = OpenApi\Generator::scan([$paths->appDirectory . '/Controllers', $paths->appDirectory . '/Entities']);
+    header('Content-Type: application/x-yaml');
+    file_put_contents(__DIR__ . '/assets/api.yaml', $openapi->toYaml());
+} catch (Throwable $e) {
+    echo $e->getMessage();
+}
+
 /*
  *---------------------------------------------------------------
  * LAUNCH THE APPLICATION

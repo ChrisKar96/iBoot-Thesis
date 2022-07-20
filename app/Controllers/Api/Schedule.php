@@ -4,28 +4,28 @@ namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
-use iBoot\Models\LabModel;
+use iBoot\Models\ScheduleModel;
 use ReflectionException;
 
-class Lab extends ResourceController
+class Schedule extends ResourceController
 {
     /**
      * @OA\Get(
-     *     path="/lab",
-     *     tags={"Lab"},
-     *     summary="Find Labs",
-     *     description="Returns list of Lab objects",
-     *     operationId="getLabs",
+     *     path="/schedule",
+     *     tags={"Schedule"},
+     *     summary="Find Schedules",
+     *     description="Returns list of Schedule objects",
+     *     operationId="getSchedules",
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
      *         @OA\JsonContent(type="object",
-     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Lab")),
+     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Schedule")),
      *         ),
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Lab objects not found"
+     *         description="Schedule objects not found"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -34,16 +34,16 @@ class Lab extends ResourceController
      *
      * Return an array of resource objects, themselves in array format
      */
-    public function index(): Response
+    public function index()
     {
-        $lab = new LabModel();
+        $schedule = new ScheduleModel();
 
-        $data = $lab->findAll();
+        $data = $schedule->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' Labs Found',
+            'messages' => count($data) . ' Schedules Found',
             'data'     => $data,
         ];
 
@@ -52,15 +52,15 @@ class Lab extends ResourceController
 
     /**
      * @OA\Get(
-     *     path="/lab/{id}",
-     *     tags={"Lab"},
-     *     summary="Find Lab by ID",
-     *     description="Returns a single Lab",
-     *     operationId="getLabById",
+     *     path="/schedule/{id}",
+     *     tags={"Schedule"},
+     *     summary="Find Schedule by ID",
+     *     description="Returns a single Schedule",
+     *     operationId="getScheduleById",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID of Lab to return",
+     *         description="ID of Schedule to return",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -69,7 +69,7 @@ class Lab extends ResourceController
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Lab"),
+     *         @OA\JsonContent(ref="#/components/schemas/Schedule"),
      *     ),
      *     @OA\Response(
      *         response=400,
@@ -77,7 +77,7 @@ class Lab extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Lab not found"
+     *         description="Schedule not found"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -87,27 +87,25 @@ class Lab extends ResourceController
      * Return the properties of a resource object
      *
      * @param mixed|null $id
-     *
-     * @return mixed
      */
-    public function show($id = null)
+    public function show($id = null): Response
     {
-        $lab = new LabModel();
+        $schedule = new ScheduleModel();
 
-        $data = $lab->where(['id' => $id])->first();
+        $data = $schedule->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Lab with id ' . $id . ' Found',
+                'messages' => 'Schedule with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No Lab Found with id ' . $id);
+        return $this->failNotFound('No Schedule Found with id ' . $id);
     }
 
     /**
@@ -121,14 +119,14 @@ class Lab extends ResourceController
 
     /**
      * @OA\Post(
-     *     path="/lab",
-     *     tags={"Lab"},
-     *     summary="Add a new Lab",
-     *     operationId="addLab",
+     *     path="/schedule",
+     *     tags={"Schedule"},
+     *     summary="Add a new Schedule",
+     *     operationId="addSchedule",
      *     @OA\Response(
      *         response=201,
-     *         description="Created Lab",
-     *         @OA\JsonContent(ref="#/components/schemas/Lab"),
+     *         description="Created Schedule",
+     *         @OA\JsonContent(ref="#/components/schemas/Schedule"),
      *     ),
      *     @OA\Response(
      *         response=405,
@@ -137,7 +135,7 @@ class Lab extends ResourceController
      *     security={
      *         {"bearerAuth": {}}
      *     },
-     *     requestBody={"$ref": "#/components/requestBodies/Lab"}
+     *     requestBody={"$ref": "#/components/requestBodies/Schedule"}
      * )
      *
      * Create a new resource object, from "posted" parameters
@@ -146,22 +144,20 @@ class Lab extends ResourceController
      */
     public function create(): Response
     {
-        $lab = new LabModel();
+        $schedule = new ScheduleModel();
 
         $data = [
-            'name'    => $this->request->getVar('name'),
-            'address' => $this->request->getVar('address'),
-            'phone'   => $this->request->getVar('phone'),
+            'name' => $this->request->getVar('name'),
         ];
 
-        $lab->insert($data);
+        $schedule->insert($data);
 
-        $id = $lab->getInsertID();
+        $id = $schedule->getInsertID();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Lab Saved with id ' . $id,
+            'messages' => 'Schedule Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -180,14 +176,14 @@ class Lab extends ResourceController
 
     /**
      * @OA\Put(
-     *     path="/lab/{id}",
-     *     tags={"Lab"},
-     *     summary="Update an existing Lab",
-     *     operationId="updateLab",
+     *     path="/schedule/{id}",
+     *     tags={"Schedule"},
+     *     summary="Update an existing Schedule",
+     *     operationId="updateSchedule",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Lab id to update",
+     *         description="Schedule id to update",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -199,7 +195,7 @@ class Lab extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Lab not found"
+     *         description="Schedule not found"
      *     ),
      *     @OA\Response(
      *         response=405,
@@ -208,7 +204,7 @@ class Lab extends ResourceController
      *     security={
      *         {"bearerAuth": {}}
      *     },
-     *     requestBody={"$ref": "#/components/requestBodies/Lab"}
+     *     requestBody={"$ref": "#/components/requestBodies/Schedule"}
      * )
      *
      * Add or update a model resource, from "posted" properties
@@ -219,20 +215,18 @@ class Lab extends ResourceController
      */
     public function update($id = null): Response
     {
-        $lab = new LabModel();
+        $schedule = new ScheduleModel();
 
         $data = [
-            'name'    => $this->request->getVar('name'),
-            'address' => $this->request->getVar('address'),
-            'phone'   => $this->request->getVar('phone'),
+            'name' => $this->request->getVar('name'),
         ];
 
-        $lab->update($id, $data);
+        $schedule->update($id, $data);
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'Lab with id ' . $id . ' Updated',
+            'messages' => 'Schedule with id ' . $id . ' Updated',
         ];
 
         return $this->respondUpdated($response);
@@ -240,14 +234,14 @@ class Lab extends ResourceController
 
     /**
      * @OA\Delete(
-     *     path="/lab/{id}",
-     *     tags={"Lab"},
-     *     summary="Deletes a Lab",
-     *     operationId="deleteLab",
+     *     path="/schedule/{id}",
+     *     tags={"Schedule"},
+     *     summary="Deletes a Schedule",
+     *     operationId="deleteSchedule",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Lab id to delete",
+     *         description="Schedule id to delete",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -259,7 +253,7 @@ class Lab extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Lab not found",
+     *         description="Schedule not found",
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -272,22 +266,22 @@ class Lab extends ResourceController
      */
     public function delete($id = null): Response
     {
-        $lab = new LabModel();
+        $schedule = new ScheduleModel();
 
-        $data = $lab->find($id);
+        $data = $schedule->find($id);
 
         if ($data) {
-            $lab->delete($id);
+            $schedule->delete($id);
 
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'Lab with id ' . $id . ' Deleted',
+                'messages' => 'Schedule with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No Lab Found with id ' . $id);
+        return $this->failNotFound('No Schedule Found with id ' . $id);
     }
 }

@@ -2,18 +2,39 @@
 
 namespace iBoot\Controllers\Api;
 
-use iBoot\Models\OsimageModel;
+use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
+use iBoot\Models\OsimageModel;
 use ReflectionException;
 
 class Osimage extends ResourceController
 {
     /**
-     * Return an array of resource objects, themselves in array format
+     * @OA\Get(
+     *     path="/osimage",
+     *     tags={"OsImage"},
+     *     summary="Find OsImages",
+     *     description="Returns list of OsImage objects",
+     *     operationId="getOsImages",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(type="object",
+     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Osimage")),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="OsImage objects not found"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
      *
-     * @return mixed
+     * Return an array of resource objects, themselves in array format
      */
-    public function index()
+    public function index(): Response
     {
         $os_image = new OsimageModel();
 
@@ -30,13 +51,44 @@ class Osimage extends ResourceController
     }
 
     /**
+     * @OA\Get(
+     *     path="/osimage/{id}",
+     *     tags={"OsImage"},
+     *     summary="Find OsImage by ID",
+     *     description="Returns a single OsImage",
+     *     operationId="getOsImageById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of OsImage to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Osimage"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="OsImage not found"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     *
      * Return the properties of a resource object
      *
      * @param mixed|null $id
-     *
-     * @return mixed
      */
-    public function show($id = null)
+    public function show($id = null): Response
     {
         $os_image = new OsimageModel();
 
@@ -66,11 +118,29 @@ class Osimage extends ResourceController
     }
 
     /**
+     * @OA\Post(
+     *     path="/osimage",
+     *     tags={"OsImage"},
+     *     summary="Add a new OsImage",
+     *     operationId="addOsImage",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Created OsImage",
+     *         @OA\JsonContent(ref="#/components/schemas/Osimage"),
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Invalid input"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/OsImage"}
+     * )
+     *
      * Create a new resource object, from "posted" parameters
      *
-     * @throws ReflectionException
-     *
-     * @return mixed
+     *@throws ReflectionException
      */
     public function create()
     {
@@ -106,13 +176,43 @@ class Osimage extends ResourceController
     }
 
     /**
+     * @OA\Put(
+     *     path="/osimage/{id}",
+     *     tags={"OsImage"},
+     *     summary="Update an existing OsImage",
+     *     operationId="updateOsImage",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="OsImage id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="OsImage not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/OsImage"}
+     * )
+     *
      * Add or update a model resource, from "posted" properties
      *
      * @param mixed|null $id
      *
-     * @throws ReflectionException
-     *
-     * @return mixed
+     *@throws ReflectionException
      */
     public function update($id = null)
     {
@@ -135,11 +235,36 @@ class Osimage extends ResourceController
     }
 
     /**
+     * @OA\Delete(
+     *     path="/osimage/{id}",
+     *     tags={"OsImage"},
+     *     summary="Deletes a OsImage",
+     *     operationId="deleteOsImage",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="OsImage id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="OsImage not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
      * Delete the designated resource object from the model
      *
      * @param mixed|null $id
-     *
-     * @return mixed
      */
     public function delete($id = null)
     {
