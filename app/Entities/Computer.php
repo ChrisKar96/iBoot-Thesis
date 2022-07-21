@@ -77,18 +77,6 @@ class Computer extends Entity
 
     /**
      * @OA\Property(
-     *     description="validated",
-     *     title="validated",
-     *     type="integer",
-     * 	   format="-",
-     * 	   nullable=false,
-     * 	   maxLength=1,
-     * )
-     */
-    private $validated;
-
-    /**
-     * @OA\Property(
      *     description="lab",
      *     title="lab",
      *     type="integer",
