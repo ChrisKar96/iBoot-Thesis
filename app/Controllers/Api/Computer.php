@@ -2,6 +2,7 @@
 
 namespace iBoot\Controllers\Api;
 
+use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\ComputerModel;
 use ReflectionException;
@@ -35,6 +36,9 @@ class Computer extends ResourceController
      */
     public function index()
     {
+        $userIsAdmin   = session()->getFlashdata('userIsAdmin');
+        $userLabAccess = session()->getFlashdata('userLabAccess');
+
         $computer = new ComputerModel();
         $computer->builder()->select(
             'computers.*, labs.id as lab, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
@@ -49,6 +53,11 @@ class Computer extends ResourceController
             'computers.lab = labs.id',
             'LEFT'
         );
+
+        if (! $userIsAdmin) {
+            $computer->builder()->whereIn('lab', $userLabAccess)->orWhere('lab', null);
+        }
+
         $computer->builder()->groupBy('computers.id');
 
         $data = $computer->findAll();
@@ -179,7 +188,7 @@ class Computer extends ResourceController
             'name' => $this->request->getVar('name'),
             'uuid' => $this->request->getVar('uuid'),
             'mac'  => $this->request->getVar('mac'),
-            'lab'  => $this->request->getVar('lab'),
+            'lab'  => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
         ];
 
         $computer->insert($data);
@@ -366,5 +375,118 @@ class Computer extends ResourceController
         }
 
         return $this->failNotFound('No Computer Found with id ' . $id);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/computer/{id}/lab",
+     *     tags={"Computer"},
+     *     summary="Update Lab for an existing Computer",
+     *     operationId="updateComputerLab",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="lab",
+     *         			   description="Lab id to set to Computer",
+     *                     type="integer"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     *
+     * @OA\Post(
+     *     path="/computer/update/{id}/lab",
+     *     tags={"Computer"},
+     *     summary="Update Lab for an existing Computer (Websafe alternative)",
+     *     operationId="updateComputerLabWebsafe",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="lab",
+     *         			   description="Lab id to set to Computer",
+     *                     type="integer"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     *
+     * Add or update a model resource, from "posted" properties
+     *
+     * @param mixed|null $id
+     *
+     *@throws ReflectionException
+     */
+    public function updateComputerLab($id): Response
+    {
+        $computer = new ComputerModel();
+
+        $data = [
+            'id'  => $id,
+            'lab' => $this->request->getVar('lab'),
+        ];
+
+        $computer->save($data);
+
+        $response = [
+            'status'   => 200,
+            'error'    => null,
+            'messages' => 'Set Lab ' . $data['lab'] . ' for Computer with id ' . $id,
+        ];
+
+        return $this->respondUpdated($response);
     }
 }

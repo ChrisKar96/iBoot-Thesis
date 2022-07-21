@@ -29,6 +29,10 @@ class User extends ResourceController
      *         response=404,
      *         description="User objects not found"
      *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Access Denied"
+     *     ),
      *     security={
      *         {"bearerAuth": {}}
      *     }
@@ -38,18 +42,26 @@ class User extends ResourceController
      */
     public function index()
     {
-        $user = new UserModel();
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
 
-        $data = $user->findAll();
+        if ($userIsAdmin) {
+            $user = new UserModel();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => count($data) . ' Users Found',
-            'data'     => $data,
-        ];
+            $data = $user->findAll();
 
-        return $this->respond($response);
+            $response = [
+                'status'   => 200,
+                'error'    => null,
+                'messages' => count($data) . ' Users Found',
+                'data'     => $data,
+            ];
+
+            return $this->respond($response);
+        }
+
+        $response = service('response');
+
+        $this->respond($response, 401, 'Access denied');
     }
 
     /**
@@ -142,7 +154,11 @@ class User extends ResourceController
         $user = new UserModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
+            'name'     => $this->request->getVar('name'),
+            'email'    => $this->request->getVar('email'),
+            'phone'    => (empty($this->request->getVar('phone')) ? null : $this->request->getVar('phone')),
+            'username' => $this->request->getVar('username'),
+            'password' => $this->request->getVar('password'),
         ];
 
         $user->insert($data);
@@ -391,7 +407,10 @@ class User extends ResourceController
 
         if ($user === null) {
             if (! empty($this->request)) {
-                return $this->respond(['error' => 'Invalid credentials.', 'username' => $username], 401);
+                return $this->respond([
+                    'error'    => 'Invalid credentials.',
+                    'username' => $username,
+                ], 401);
             }
 
             return null;
@@ -420,7 +439,6 @@ class User extends ResourceController
             'nbf'      => $nbf, //not before in seconds
             'exp'      => $exp, // Expiration time of token
             'username' => $user['username'],
-            'isAdmin'  => $user['isAdmin'],
         ];
 
         $token = JWT::encode($payload, $key, 'HS256');

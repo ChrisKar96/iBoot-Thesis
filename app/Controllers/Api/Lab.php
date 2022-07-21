@@ -137,25 +137,35 @@ class Lab extends ResourceController
      */
     public function create(): Response
     {
-        $lab = new LabModel();
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
 
-        $data = [
-            'name'    => $this->request->getVar('name'),
-            'address' => $this->request->getVar('address'),
-            'phone'   => $this->request->getVar('phone'),
-        ];
+        if ($userIsAdmin) {
+            $lab = new LabModel();
 
-        $lab->insert($data);
+            $data = [
+                'name'    => $this->request->getVar('name'),
+                'address' => $this->request->getVar('address'),
+                'phone'   => $this->request->getVar('phone'),
+            ];
 
-        $id = $lab->getInsertID();
+            $lab->insert($data);
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Lab Saved with id ' . $id,
-        ];
+            $id = $lab->getInsertID();
 
-        return $this->respondCreated($response);
+            $response = [
+                'status'   => 200,
+                'error'    => null,
+                'messages' => 'Lab Saved with id ' . $id,
+            ];
+
+            return $this->respondCreated($response);
+        }
+
+        $response = service('response');
+        $response->setBody('Access denied');
+        $response->setStatusCode(401);
+
+        return $response;
     }
 
     /**

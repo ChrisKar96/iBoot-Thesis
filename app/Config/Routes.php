@@ -90,6 +90,10 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     });
     $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('bootmenu', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->group('computer', static function ($routes) {
+        $routes->put('(:segment)/lab', 'Computer::updateComputerLab/$1');
+        $routes->post('update/(:segment)/lab', 'Computer::updateComputerLab/$1');
+    });
     $routes->resource('computer', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('lab', ['websafe' => true, 'filter' => 'apiauth']);

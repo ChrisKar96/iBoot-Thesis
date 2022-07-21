@@ -34,7 +34,7 @@ class ComputerModel extends Model
         'name' => 'max_length[20]',
         'uuid' => 'max_length[36]|required',
         'mac'  => 'max_length[17]|required',
-        'lab'  => 'numeric|max_length[10]',
+        'lab'  => 'numeric|max_length[10]|permit_empty',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
