@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Swagger UI</title>
+  <title>iBoot - API Specification</title>
   <link rel="stylesheet" type="text/css" href="<?= base_url('assets/swagger/swagger-ui.css') ?>">
   <link rel="icon" type="image/png" href="<?= base_url('assets/swagger/favicon-32x32.png') ?> sizes=" 32x32" />
   <link rel="icon" type="image/png" href="<?= base_url('assets/swagger/favicon-16x16.png') ?> sizes=" 16x16" />
@@ -36,22 +36,16 @@
   <script>
     window.onload = function() {
       // Begin Swagger UI call region
-      const ui = SwaggerUIBundle({
-        url: "<?= base_url('assets/api.yaml') ?>",
-        dom_id: '#swagger-ui',
-        deepLinking: true,
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIStandalonePreset
-        ],
-        plugins: [
-          SwaggerUIBundle.plugins.DownloadUrl
-        ],
-        layout: "StandaloneLayout"
+      window.ui = SwaggerUIBundle({
+          spec: <?= session()->get('iBootAPISpec') ?>,
+          dom_id: '#swagger-ui',
+          deepLinking: true,
+          presets: [
+              SwaggerUIBundle.presets.apis,
+              SwaggerUIStandalonePreset
+          ]
       })
       // End Swagger UI call region
-
-      window.ui = ui
     }
   </script>
 </body>

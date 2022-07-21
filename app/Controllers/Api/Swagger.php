@@ -2,7 +2,10 @@
 
 namespace iBoot\Controllers\Api;
 
+use Config;
 use iBoot\Controllers\BaseController;
+
+define('API_URL', base_url('api'));
 
 class Swagger extends BaseController
 {
@@ -12,7 +15,7 @@ class Swagger extends BaseController
      *     title="iBoot API",
      * )
      * @OA\Server(
-     *     url="../api",
+     *     url=API_URL,
      *     description="iBoot API base url"
      * )
      * @OA\SecurityScheme(
@@ -24,6 +27,13 @@ class Swagger extends BaseController
      */
     public function index()
     {
+        if (! session()->has('iBootAPISpec')) {
+            // Export API Spec JSON session variable
+            $paths   = new Config\Paths();
+            $openapi = \OpenApi\Generator::scan([$paths->appDirectory . '/Controllers', $paths->appDirectory . '/Entities']);
+            session()->set('iBootAPISpec', str_replace('\n', '', $openapi->toJson(0)));
+        }
+
         return view('swagger');
     }
 }

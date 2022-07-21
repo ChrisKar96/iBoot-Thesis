@@ -125,15 +125,8 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
-
 .php-cs-fixer.cache
 
 service-start.sh
 
-iboot.sql
-
-app/Database/Seeds/UserSeeder.php
-
 composer.phar
-
-public/assets/api.yaml

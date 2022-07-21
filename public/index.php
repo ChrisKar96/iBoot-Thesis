@@ -47,11 +47,7 @@ $app->setContext($context);
 if (! session()->get('iBootIsInstalled')) {
     try {
         // Perform migrations
-        $updated = Config\Services::migrations()->latest();
-        // Export API yaml file
-        $openapi = OpenApi\Generator::scan([$paths->appDirectory . '/Controllers', $paths->appDirectory . '/Entities']);
-        header('Content-Type: application/x-yaml');
-        file_put_contents(__DIR__ . '/assets/api.yaml', $openapi->toYaml());
+        Config\Services::migrations()->latest();
         session()->set('iBootIsInstalled', true);
     } catch (Throwable $e) {
         echo $e->getMessage();
