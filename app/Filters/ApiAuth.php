@@ -5,8 +5,12 @@ namespace iBoot\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use Exception;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use iBoot\Models\UserLabsModel;
+use iBoot\Models\UserModel;
 
 class ApiAuth implements FilterInterface
 {
@@ -50,12 +54,29 @@ class ApiAuth implements FilterInterface
             $decoded  = JWT::decode($token, new Key($key, 'HS256'));
             $response = service('response');
 
-            if ($decoded->iss !== 'iBoot' || $decoded->aud !== base_url() || $decoded->sub !== 'iBoot API') {
+            $userModel = new UserModel();
+            $user      = $userModel->where('username', $decoded->username)->first();
+
+            if ($decoded->iss !== 'iBoot' || $decoded->aud !== base_url() || $decoded->sub !== 'iBoot API' || empty($user)) {
                 $response->setBody('Token not valid. Access denied');
                 $response->setStatusCode(401);
 
                 return $response;
             }
+
+            if (! $user['isAdmin']) {
+                $userLabsModel = new UserLabsModel();
+                $userLabs      = $userLabsModel->select('lab_id')->where('user_id', $user['id'])->findAll();
+                $userLabAccess = array_column($userLabs,'lab_id');
+                session()->setFlashdata('userLabAccess', $userLabAccess);
+            }
+            session()->setFlashdata('userIsAdmin', $user['isAdmin']);
+        } catch (ExpiredException $ex) {
+            $response = service('response');
+            $response->setBody('Access denied. Token is expired.');
+            $response->setStatusCode(401);
+
+            return $response;
         } catch (Exception $ex) {
             $response = service('response');
             $response->setBody('Access denied');
