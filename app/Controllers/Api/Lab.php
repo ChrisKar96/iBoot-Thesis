@@ -111,15 +111,6 @@ class Lab extends ResourceController
     }
 
     /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    public function new()
-    {
-    }
-
-    /**
      * @OA\Post(
      *     path="/lab",
      *     tags={"Lab"},
@@ -168,22 +159,43 @@ class Lab extends ResourceController
     }
 
     /**
-     * Return the editable properties of a resource object
-     *
-     * @param mixed|null $id
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-    }
-
-    /**
      * @OA\Put(
      *     path="/lab/{id}",
      *     tags={"Lab"},
      *     summary="Update an existing Lab",
      *     operationId="updateLab",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Lab id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Lab not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/Lab"}
+     * )
+     *
+     * @OA\Post(
+     *     path="/lab/update/{id}",
+     *     tags={"Lab"},
+     *     summary="Update an existing Lab (Websafe alternative)",
+     *     operationId="updateLabWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -244,6 +256,33 @@ class Lab extends ResourceController
      *     tags={"Lab"},
      *     summary="Deletes a Lab",
      *     operationId="deleteLab",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Lab id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Lab not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
+     * @OA\Post(
+     *     path="/lab/delete/{id}",
+     *     tags={"Lab"},
+     *     summary="Deletes a Lab (Websafe alternative)",
+     *     operationId="deleteLabWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

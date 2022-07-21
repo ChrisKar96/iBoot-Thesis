@@ -111,15 +111,6 @@ class BootMenu extends ResourceController
     }
 
     /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    public function new()
-    {
-    }
-
-    /**
      * @OA\Post(
      *     path="/bootmenu",
      *     tags={"BootMenu"},
@@ -166,22 +157,43 @@ class BootMenu extends ResourceController
     }
 
     /**
-     * Return the editable properties of a resource object
-     *
-     * @param mixed|null $id
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-    }
-
-    /**
      * @OA\Put(
      *     path="/bootmenu/{id}",
      *     tags={"BootMenu"},
      *     summary="Update an existing BootMenu",
      *     operationId="updateBootMenu",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="BootMenu id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="BootMenu not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/BootMenu"}
+     * )
+     *
+     * @OA\Post(
+     *     path="/bootmenu/update/{id}",
+     *     tags={"BootMenu"},
+     *     summary="Update an existing BootMenu (Websafe alternative)",
+     *     operationId="updateBootMenuWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -240,6 +252,33 @@ class BootMenu extends ResourceController
      *     tags={"BootMenu"},
      *     summary="Deletes a BootMenu",
      *     operationId="deleteBootMenu",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="BootMenu id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="BootMenu not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
+     * @OA\Post(
+     *     path="/bootmenu/delete/{id}",
+     *     tags={"BootMenu"},
+     *     summary="Deletes a BootMenu (Websafe alternative)",
+     *     operationId="deleteBootMenuWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

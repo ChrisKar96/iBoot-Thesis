@@ -109,15 +109,6 @@ class Schedule extends ResourceController
     }
 
     /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    public function new()
-    {
-    }
-
-    /**
      * @OA\Post(
      *     path="/schedule",
      *     tags={"Schedule"},
@@ -164,22 +155,43 @@ class Schedule extends ResourceController
     }
 
     /**
-     * Return the editable properties of a resource object
-     *
-     * @param mixed|null $id
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-    }
-
-    /**
      * @OA\Put(
      *     path="/schedule/{id}",
      *     tags={"Schedule"},
      *     summary="Update an existing Schedule",
      *     operationId="updateSchedule",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Schedule id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Schedule not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/Schedule"}
+     * )
+     *
+     * @OA\Post(
+     *     path="/schedule/update/{id}",
+     *     tags={"Schedule"},
+     *     summary="Update an existing Schedule (Websafe alternative)",
+     *     operationId="updateScheduleWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -238,6 +250,33 @@ class Schedule extends ResourceController
      *     tags={"Schedule"},
      *     summary="Deletes a Schedule",
      *     operationId="deleteSchedule",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Schedule id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Schedule not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
+     * @OA\Post(
+     *     path="/schedule/delete/{id}",
+     *     tags={"Schedule"},
+     *     summary="Deletes a Schedule (Websafe alternative)",
+     *     operationId="deleteScheduleWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

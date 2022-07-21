@@ -8,32 +8,32 @@ use ReflectionException;
 
 class Computer extends ResourceController
 {
-	/**
-	 * @OA\Get(
-	 *     path="/computer",
-	 *     tags={"Computer"},
-	 *     summary="Find Computers",
-	 *     description="Returns list of Computer objects",
-	 *     operationId="getComputers",
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="successful operation",
-	 *         @OA\JsonContent(type="object",
-	 *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Computer")),
-	 *         ),
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="Computer objects not found"
-	 *     ),
-	 *     security={
-	 *         {"bearerAuth": {}}
-	 *     }
-	 * )
-	 *
-	 * Return an array of resource objects, themselves in array format
-	 */
-	public function index()
+    /**
+     * @OA\Get(
+     *     path="/computer",
+     *     tags={"Computer"},
+     *     summary="Find Computers",
+     *     description="Returns list of Computer objects",
+     *     operationId="getComputers",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(type="object",
+     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Computer")),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer objects not found"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     *
+     * Return an array of resource objects, themselves in array format
+     */
+    public function index()
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
@@ -68,47 +68,47 @@ class Computer extends ResourceController
         return $this->respond($response);
     }
 
-	/**
-	 * @OA\Get(
-	 *     path="/computer/{id}",
-	 *     tags={"Computer"},
-	 *     summary="Find Computer by ID",
-	 *     description="Returns a single Computer",
-	 *     operationId="getComputerById",
-	 *     @OA\Parameter(
-	 *         name="id",
-	 *         in="path",
-	 *         description="ID of Computer to return",
-	 *         required=true,
-	 *         @OA\Schema(
-	 *             type="integer"
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="successful operation",
-	 *         @OA\JsonContent(ref="#/components/schemas/Computer"),
-	 *     ),
-	 *     @OA\Response(
-	 *         response=400,
-	 *         description="Invalid ID supplier"
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="Computer not found"
-	 *     ),
-	 *     security={
-	 *         {"bearerAuth": {}}
-	 *     }
-	 * )
-	 *
-	 * Return the properties of a resource object
-	 *
-	 * @param mixed|null $id
-	 *
-	 * @return mixed
-	 */
-	public function show($id = null)
+    /**
+     * @OA\Get(
+     *     path="/computer/{id}",
+     *     tags={"Computer"},
+     *     summary="Find Computer by ID",
+     *     description="Returns a single Computer",
+     *     operationId="getComputerById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of Computer to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Computer"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     *
+     * Return the properties of a resource object
+     *
+     * @param mixed|null $id
+     *
+     * @return mixed
+     */
+    public function show($id = null)
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
@@ -147,40 +147,31 @@ class Computer extends ResourceController
     }
 
     /**
-     * Return a new resource object, with default properties
+     * @OA\Post(
+     *     path="/computer",
+     *     tags={"Computer"},
+     *     summary="Add a new Computer",
+     *     operationId="addComputer",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Created Computer",
+     *         @OA\JsonContent(ref="#/components/schemas/Computer"),
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Invalid input"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/Computer"}
+     * )
      *
-     * @return mixed
+     * Create a new resource object, from "posted" parameters
+     *
+     *@throws ReflectionException
      */
-    public function new()
-    {
-    }
-
-	/**
-	 * @OA\Post(
-	 *     path="/computer",
-	 *     tags={"Computer"},
-	 *     summary="Add a new Computer",
-	 *     operationId="addComputer",
-	 *     @OA\Response(
-	 *         response=201,
-	 *         description="Created Computer",
-	 *         @OA\JsonContent(ref="#/components/schemas/Computer"),
-	 *     ),
-	 *     @OA\Response(
-	 *         response=405,
-	 *         description="Invalid input"
-	 *     ),
-	 *     security={
-	 *         {"bearerAuth": {}}
-	 *     },
-	 *     requestBody={"$ref": "#/components/requestBodies/Computer"}
-	 * )
-	 *
-	 * Create a new resource object, from "posted" parameters
-	 *
-	 *@throws ReflectionException
-	 */
-	public function create()
+    public function create()
     {
         $computer = new ComputerModel();
 
@@ -205,56 +196,77 @@ class Computer extends ResourceController
     }
 
     /**
-     * Return the editable properties of a resource object
+     * @OA\Put(
+     *     path="/computer/{id}",
+     *     tags={"Computer"},
+     *     summary="Update an existing Computer",
+     *     operationId="updateComputer",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/Computer"}
+     * )
+     *
+     * @OA\Post(
+     *     path="/computer/update/{id}",
+     *     tags={"Computer"},
+     *     summary="Update an existing Computer (Websafe alternative)",
+     *     operationId="updateComputerWebsafe",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/Computer"}
+     * )
+     *
+     * Add or update a model resource, from "posted" properties
      *
      * @param mixed|null $id
      *
-     * @return mixed
+     *@throws ReflectionException
      */
-    public function edit($id = null)
-    {
-    }
-
-	/**
-	 * @OA\Put(
-	 *     path="/computer/{id}",
-	 *     tags={"Computer"},
-	 *     summary="Update an existing Computer",
-	 *     operationId="updateComputer",
-	 *     @OA\Parameter(
-	 *         name="id",
-	 *         in="path",
-	 *         description="Computer id to update",
-	 *         required=true,
-	 *         @OA\Schema(
-	 *             type="integer"
-	 *         ),
-	 *     ),
-	 *     @OA\Response(
-	 *         response=400,
-	 *         description="Invalid ID supplied"
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="Computer not found"
-	 *     ),
-	 *     @OA\Response(
-	 *         response=405,
-	 *         description="Validation exception"
-	 *     ),
-	 *     security={
-	 *         {"bearerAuth": {}}
-	 *     },
-	 *     requestBody={"$ref": "#/components/requestBodies/Computer"}
-	 * )
-	 *
-	 * Add or update a model resource, from "posted" properties
-	 *
-	 * @param mixed|null $id
-	 *
-	 *@throws ReflectionException
-	 */
-	public function update($id = null)
+    public function update($id = null)
     {
         $computer = new ComputerModel();
 
@@ -276,39 +288,66 @@ class Computer extends ResourceController
         return $this->respondUpdated($response);
     }
 
-	/**
-	 * @OA\Delete(
-	 *     path="/computer/{id}",
-	 *     tags={"Computer"},
-	 *     summary="Deletes a Computer",
-	 *     operationId="deleteComputer",
-	 *     @OA\Parameter(
-	 *         name="id",
-	 *         in="path",
-	 *         description="Computer id to delete",
-	 *         required=true,
-	 *         @OA\Schema(
-	 *             type="integer"
-	 *         ),
-	 *     ),
-	 *     @OA\Response(
-	 *         response=400,
-	 *         description="Invalid ID supplied",
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="Computer not found",
-	 *     ),
-	 *     security={
-	 *         {"bearerAuth": {}}
-	 *     },
-	 * )
-	 *
-	 * Delete the designated resource object from the model
-	 *
-	 * @param mixed|null $id
-	 */
-	public function delete($id = null)
+    /**
+     * @OA\Delete(
+     *     path="/computer/{id}",
+     *     tags={"Computer"},
+     *     summary="Deletes a Computer",
+     *     operationId="deleteComputer",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
+     * @OA\Post(
+     *     path="/computer/delete/{id}",
+     *     tags={"Computer"},
+     *     summary="Deletes a Computer (Websafe alternative)",
+     *     operationId="deleteComputerWebsafe",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
+     * Delete the designated resource object from the model
+     *
+     * @param mixed|null $id
+     */
+    public function delete($id = null)
     {
         $computer = new ComputerModel();
 

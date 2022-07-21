@@ -109,15 +109,6 @@ class Osimage extends ResourceController
     }
 
     /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    public function new()
-    {
-    }
-
-    /**
      * @OA\Post(
      *     path="/osimage",
      *     tags={"OsImage"},
@@ -165,22 +156,43 @@ class Osimage extends ResourceController
     }
 
     /**
-     * Return the editable properties of a resource object
-     *
-     * @param mixed|null $id
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-    }
-
-    /**
      * @OA\Put(
      *     path="/osimage/{id}",
      *     tags={"OsImage"},
      *     summary="Update an existing OsImage",
      *     operationId="updateOsImage",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="OsImage id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="OsImage not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/OsImage"}
+     * )
+     *
+     * @OA\Post(
+     *     path="/osimage/update{id}",
+     *     tags={"OsImage"},
+     *     summary="Update an existing OsImage (Websafe alternative)",
+     *     operationId="updateOsImageWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -240,6 +252,33 @@ class Osimage extends ResourceController
      *     tags={"OsImage"},
      *     summary="Deletes a OsImage",
      *     operationId="deleteOsImage",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="OsImage id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="OsImage not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
+     * @OA\Post(
+     *     path="/osimage/delete/{id}",
+     *     tags={"OsImage"},
+     *     summary="Deletes a OsImage (Websafe alternative)",
+     *     operationId="deleteOsImageWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

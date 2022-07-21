@@ -111,15 +111,6 @@ class User extends ResourceController
     }
 
     /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    public function new()
-    {
-    }
-
-    /**
      * @OA\Post(
      *     path="/user",
      *     tags={"User"},
@@ -166,22 +157,43 @@ class User extends ResourceController
     }
 
     /**
-     * Return the editable properties of a resource object
-     *
-     * @param mixed|null $id
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-    }
-
-    /**
      * @OA\Put(
      *     path="/user/{id}",
      *     tags={"User"},
      *     summary="Update an existing User",
      *     operationId="updateUser",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="User id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/User"}
+     * )
+     *
+     * @OA\Post(
+     *     path="/user/update/{id}",
+     *     tags={"User"},
+     *     summary="Update an existing User (Websafe alternative)",
+     *     operationId="updateUserWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -240,6 +252,33 @@ class User extends ResourceController
      *     tags={"User"},
      *     summary="Deletes a User",
      *     operationId="deleteUser",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="User id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     * )
+     *
+     * @OA\Post(
+     *     path="/user/delete/{id}",
+     *     tags={"User"},
+     *     summary="Deletes a User (Websafe alternative)",
+     *     operationId="deleteUserWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
