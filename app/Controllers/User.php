@@ -58,8 +58,8 @@ class User extends BaseController
             $user = $model->where('username', $username)->orWhere('email', $username)->first();
 
             // Get user's API token
-            $apiUserModel  = new Api\User();
-            $user['token'] = $apiUserModel->login($username, $password)['token'];
+            $apiUser       = new Api\User();
+            $user['token'] = $apiUser->login($username, $password)['token'];
 
             // Storing session values
             $this->setUserSession($user);
@@ -82,6 +82,16 @@ class User extends BaseController
         ];
 
         session()->set($data);
+    }
+
+    public function refreshUserToken()
+    {
+        $user = session()->get('user');
+
+        $apiUser       = new Api\User();
+        $user['token'] = $apiUser->refreshUserToken($user['token']);
+
+        session()->set('user', $user);
     }
 
     public function registerAdmin()
@@ -178,11 +188,11 @@ class User extends BaseController
         $model = new UserModel();
 
         $model->where('email', $email_address)->where('md5(CONCAT(email, created_at))', $email_code)->set(['verifiedEmail' => 1])->update();
-		$userSession = session()->get('user');
-		if(! empty($userSession)){
-			$userSession['verifiedEmail'] = true;
-			session()->set('user', $userSession);
-		}
+        $userSession = session()->get('user');
+        if (! empty($userSession)) {
+            $userSession['verifiedEmail'] = true;
+            session()->set('user', $userSession);
+        }
 
         return redirect()->to('login');
     }
