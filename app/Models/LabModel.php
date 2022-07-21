@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class LabModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'buildings';
+    protected $table            = 'labs';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
