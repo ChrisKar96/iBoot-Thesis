@@ -101,15 +101,15 @@ class User extends Entity
 
     /**
      * @OA\Property(
-     *     description="admin",
-     *     title="admin",
+     *     description="isAdmin",
+     *     title="isAdmin",
      *     type="integer",
      * 	   format="-",
      * 	   nullable=false,
      * 	   maxLength=1,
      * )
      */
-    private $admin;
+    private $isAdmin;
 
     /**
      * @OA\Property(
