@@ -44,6 +44,12 @@
               SwaggerUIBundle.presets.apis,
               SwaggerUIStandalonePreset
           ]
+          <?php if (session()->has('user')): ?>
+          ,onComplete: function() {
+              // Default API key
+              ui.preauthorizeApiKey("bearerAuth", "<?=session()->get('user')['token']; ?>")
+          }
+          <?php endif; ?>
       })
       // End Swagger UI call region
     }
