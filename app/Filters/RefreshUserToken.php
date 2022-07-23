@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use iBoot\Controllers\User;
 
-class refreshUserToken implements FilterInterface
+class RefreshUserToken implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.

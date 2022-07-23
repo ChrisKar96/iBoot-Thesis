@@ -10,7 +10,7 @@ class InitDB extends Migration
     {
         $this->db->disableForeignKeyChecks();
 
-		// BOOT MENU
+        // BOOT MENU
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -21,13 +21,21 @@ class InitDB extends Migration
             'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '20',
-                'null'       => false,
+            ],
+            'description' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '50',
+            ],
+            'ipxe_block' => [
+                'type' => 'TEXT',
+                'null' => true,
             ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->createTable('boot_menu', true);
+        // END BOOT MENU
 
-        // BOOT MENU x OS_IMAGES
+        // BOOT MENU x IPXE_BLOCKS
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -40,17 +48,23 @@ class InitDB extends Migration
                 'constraint' => 10,
                 'unsigned'   => true,
             ],
-            'image_id' => [
+            'block_id' => [
                 'type'       => 'INT',
                 'constraint' => 10,
                 'unsigned'   => true,
+            ],
+            'key' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '1',
+                'null'       => true,
             ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->addUniqueKey(['boot_menu_id', 'image_id']);
         $this->forge->addForeignKey('boot_menu_id', 'boot_menu', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('image_id', 'os_images', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('boot_menu_images', true);
+        $this->forge->addForeignKey('block_id', 'ipxe_blocks', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('boot_menu_blocks', true);
+        // END BOOT MENU x IPXE_BLOCKS
 
         // COMPUTERS
         $this->forge->addField([
@@ -73,6 +87,10 @@ class InitDB extends Migration
                 'type'       => 'CHAR',
                 'constraint' => '17',
             ],
+            'notes' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
             'lab' => [
                 'type'       => 'INT',
                 'constraint' => 10,
@@ -83,7 +101,7 @@ class InitDB extends Migration
         $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('lab', 'labs', 'id', 'CASCADE', 'SET NULL');
         $this->forge->createTable('computers', true);
-		// END COMPUTERS
+        // END COMPUTERS
 
         // COMPUTERS x GROUPS
         $this->forge->addField([
@@ -109,7 +127,7 @@ class InitDB extends Migration
         $this->forge->addForeignKey('group_id', 'groups', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('computer_id', 'computers', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('computer_groups', true);
-		// END COMPUTERS x GROUPS
+        // END COMPUTERS x GROUPS
 
         // FORGOT PASSWORD TOKENS
         $this->forge->addField([
@@ -132,6 +150,7 @@ class InitDB extends Migration
         $this->forge->addUniqueKey('token');
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('forgot_password_tokens', true);
+        // END FORGOT PASSWORD TOKENS
 
         // GROUPS
         $this->forge->addField([
@@ -156,7 +175,27 @@ class InitDB extends Migration
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->createTable('groups', true);
-		// END GROUPS
+        // END GROUPS
+
+        // IPXE_BLOCKS
+        $this->forge->addField([
+            'id' => [
+                'type'           => 'INT',
+                'constraint'     => 10,
+                'unsigned'       => true,
+                'auto_increment' => true,
+            ],
+            'name' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '30',
+            ],
+            'ipxe_block' => [
+                'type' => 'TEXT',
+            ],
+        ]);
+        $this->forge->addPrimaryKey('id');
+        $this->forge->createTable('ipxe_blocks', true);
+        // END IPXE_BLOCKS
 
         // LABS
         $this->forge->addField([
@@ -183,25 +222,7 @@ class InitDB extends Migration
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->createTable('labs', true);
-
-        // OS_IMAGES
-        $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 10,
-                'unsigned'       => true,
-                'auto_increment' => true,
-            ],
-            'name' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '30',
-            ],
-            'ipxe_entry' => [
-                'type' => 'TEXT',
-            ],
-        ]);
-        $this->forge->addPrimaryKey('id');
-        $this->forge->createTable('os_images', true);
+        // END LABS
 
         // SCHEDULES
         $this->forge->addField([
@@ -238,7 +259,19 @@ class InitDB extends Migration
                 'constraint' => 10,
                 'unsigned'   => true,
             ],
-
+            'isActive' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 1,
+            ],
+            'created_at' => [
+                'type' => 'TIMESTAMP',
+                'null' => true,
+            ],
+            'updated_at' => [
+                'type' => 'TIMESTAMP',
+                'null' => true,
+            ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('boot_menu_id', 'boot_menu', 'id', 'CASCADE', 'RESTRICT');
@@ -246,7 +279,7 @@ class InitDB extends Migration
         $this->forge->addUniqueKey(['time_from', 'time_to', 'date', 'group_id']);
         $this->forge->addUniqueKey(['time_from', 'time_to', 'day_of_week', 'group_id']);
         $this->forge->createTable('schedules', true);
-		// END SCHEDULES
+        // END SCHEDULES
 
         // USERS
         $this->forge->addField([
@@ -300,7 +333,7 @@ class InitDB extends Migration
         $this->forge->addUniqueKey('username');
         $this->forge->addUniqueKey('email');
         $this->forge->createTable('users', true);
-		// END USERS
+        // END USERS
 
         // USERS x LABS
         $this->forge->addField([
@@ -326,23 +359,23 @@ class InitDB extends Migration
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('lab_id', 'labs', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('user_labs', true);
-		// END USERS x LABS
+        // END USERS x LABS
 
         $this->db->enableForeignKeyChecks();
     }
 
     public function down()
     {
-        $this->forge->dropTable('users', true);
-        $this->forge->dropTable('forgot_password_tokens', true);
-        $this->forge->dropTable('labs', true);
-        $this->forge->dropTable('user_labs', true);
-        $this->forge->dropTable('os_images', true);
-        $this->forge->dropTable('computers', true);
-        $this->forge->dropTable('groups', true);
-        $this->forge->dropTable('computer_groups', true);
         $this->forge->dropTable('boot_menu', true);
-        $this->forge->dropTable('boot_menu_images', true);
+        $this->forge->dropTable('boot_menu_blocks', true);
+        $this->forge->dropTable('computers', true);
+        $this->forge->dropTable('computer_groups', true);
+        $this->forge->dropTable('forgot_password_tokens', true);
+        $this->forge->dropTable('groups', true);
+        $this->forge->dropTable('ipxe_blocks', true);
+        $this->forge->dropTable('labs', true);
         $this->forge->dropTable('schedules', true);
+        $this->forge->dropTable('users', true);
+        $this->forge->dropTable('user_labs', true);
     }
 }

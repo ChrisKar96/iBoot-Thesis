@@ -97,7 +97,7 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     $routes->resource('computer', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('lab', ['websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('osimage', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('ipxeblock', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('schedule', ['websafe' => true, 'filter' => 'apiauth']);
 });
 

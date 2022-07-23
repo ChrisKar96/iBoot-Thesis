@@ -5,27 +5,27 @@ namespace iBoot\Entities;
 use CodeIgniter\Entity\Entity;
 
 /**
- * Class OsImage
+ * Class IpxeBlock
  *
  * @OA\Schema(
- *     title="OsImage"
+ *     title="IpxeBlock"
  * )
  *
  * @OA\Tag(
- *     name="OsImage"
+ *     name="IpxeBlock"
  * )
  *
  * @OA\RequestBody(
- *     request="Osimage",
- *     description="OsImage object",
- *     @OA\JsonContent(ref="#/components/schemas/Osimage"),
+ *     request="IpxeBlock",
+ *     description="IpxeBlock object",
+ *     @OA\JsonContent(ref="#/components/schemas/IpxeBlock"),
  *     @OA\MediaType(
  *         mediaType="application/x-www-form-urlencoded",
- *         @OA\Schema(ref="#/components/schemas/Osimage")
+ *         @OA\Schema(ref="#/components/schemas/IpxeBlock")
  *     )
  * )
  */
-class Osimage extends Entity
+class IpxeBlock extends Entity
 {
     /**
      * @OA\Property(
@@ -53,12 +53,12 @@ class Osimage extends Entity
 
     /**
      * @OA\Property(
-     *     description="ipxe_entry",
-     *     title="ipxe_entry",
+     *     description="ipxe_block",
+     *     title="ipxe_block",
      *     type="string",
      * 	   format="-",
      * 	   nullable=false,
      * )
      */
-    private $ipxe_entry;
+    private $ipxe_block;
 }

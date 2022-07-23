@@ -4,10 +4,10 @@ namespace iBoot\Models;
 
 use CodeIgniter\Model;
 
-class OsimageModel extends Model
+class IpxeBlockModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'os_images';
+    protected $table            = 'ipxe_blocks';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
@@ -16,7 +16,7 @@ class OsimageModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
-        'ipxe_entry',
+        'ipxe_block',
     ];
 
     // Dates
@@ -28,9 +28,9 @@ class OsimageModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'         => 'numeric|max_length[10]|permit_empty|is_unique[os_images.id,id,{id}]',
+        'id'         => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
         'name'       => 'max_length[30]|required',
-        'ipxe_entry' => 'required',
+        'ipxe_block' => 'required',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

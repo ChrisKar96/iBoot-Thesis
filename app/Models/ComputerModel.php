@@ -18,6 +18,7 @@ class ComputerModel extends Model
         'name',
         'uuid',
         'mac',
+        'notes',
         'lab',
     ];
 
@@ -30,11 +31,12 @@ class ComputerModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'   => 'numeric|max_length[10]|permit_empty|is_unique[computers.id,id,{id}]',
-        'name' => 'max_length[20]',
-        'uuid' => 'max_length[36]|required',
-        'mac'  => 'max_length[17]|required',
-        'lab'  => 'numeric|max_length[10]|permit_empty',
+        'id'    => 'numeric|max_length[10]|permit_empty|is_unique[computers.id,id,{id}]',
+        'name'  => 'max_length[20]',
+        'uuid'  => 'max_length[36]|required',
+        'mac'   => 'max_length[17]|required',
+        'notes' => 'permit_empty',
+        'lab'   => 'numeric|max_length[10]|permit_empty',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

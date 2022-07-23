@@ -4,28 +4,28 @@ namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
-use iBoot\Models\OsimageModel;
+use iBoot\Models\IpxeBlockModel;
 use ReflectionException;
 
-class Osimage extends ResourceController
+class Ipxeblock extends ResourceController
 {
     /**
      * @OA\Get(
-     *     path="/osimage",
-     *     tags={"OsImage"},
-     *     summary="Find OsImages",
-     *     description="Returns list of OsImage objects",
-     *     operationId="getOsImages",
+     *     path="/ipxeblock",
+     *     tags={"IpxeBlock"},
+     *     summary="Find IpxeBlocks",
+     *     description="Returns list of IpxeBlock objects",
+     *     operationId="getIpxeBlocks",
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
      *         @OA\JsonContent(type="object",
-     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Osimage")),
+     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/IpxeBlock")),
      *         ),
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="OsImage objects not found"
+     *         description="IpxeBlock objects not found"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -36,14 +36,14 @@ class Osimage extends ResourceController
      */
     public function index(): Response
     {
-        $os_image = new OsimageModel();
+        $os_image = new IpxeBlockModel();
 
         $data = $os_image->findAll();
 
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => count($data) . ' OS Images Found',
+            'messages' => count($data) . ' Ipxe Blocks Found',
             'data'     => $data,
         ];
 
@@ -52,15 +52,15 @@ class Osimage extends ResourceController
 
     /**
      * @OA\Get(
-     *     path="/osimage/{id}",
-     *     tags={"OsImage"},
-     *     summary="Find OsImage by ID",
-     *     description="Returns a single OsImage",
-     *     operationId="getOsImageById",
+     *     path="/ipxeblock/{id}",
+     *     tags={"IpxeBlock"},
+     *     summary="Find IpxeBlock by ID",
+     *     description="Returns a single IpxeBlock",
+     *     operationId="getIpxeBlockById",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID of OsImage to return",
+     *         description="ID of IpxeBlock to return",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -69,7 +69,7 @@ class Osimage extends ResourceController
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Osimage"),
+     *         @OA\JsonContent(ref="#/components/schemas/IpxeBlock"),
      *     ),
      *     @OA\Response(
      *         response=400,
@@ -77,7 +77,7 @@ class Osimage extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="OsImage not found"
+     *         description="IpxeBlock not found"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -90,7 +90,7 @@ class Osimage extends ResourceController
      */
     public function show($id = null): Response
     {
-        $os_image = new OsimageModel();
+        $os_image = new IpxeBlockModel();
 
         $data = $os_image->where(['id' => $id])->first();
 
@@ -98,26 +98,26 @@ class Osimage extends ResourceController
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OS Image with id ' . $id . ' Found',
+                'messages' => 'Ipxe Block with id ' . $id . ' Found',
                 'data'     => $data,
             ];
 
             return $this->respond($response);
         }
 
-        return $this->failNotFound('No OS Image Found with id ' . $id);
+        return $this->failNotFound('No Ipxe Block Found with id ' . $id);
     }
 
     /**
      * @OA\Post(
-     *     path="/osimage",
-     *     tags={"OsImage"},
-     *     summary="Add a new OsImage",
-     *     operationId="addOsImage",
+     *     path="/ipxeblock",
+     *     tags={"IpxeBlock"},
+     *     summary="Add a new IpxeBlock",
+     *     operationId="addIpxeBlock",
      *     @OA\Response(
      *         response=201,
-     *         description="Created OsImage",
-     *         @OA\JsonContent(ref="#/components/schemas/Osimage"),
+     *         description="Created IpxeBlock",
+     *         @OA\JsonContent(ref="#/components/schemas/IpxeBlock"),
      *     ),
      *     @OA\Response(
      *         response=405,
@@ -126,7 +126,7 @@ class Osimage extends ResourceController
      *     security={
      *         {"bearerAuth": {}}
      *     },
-     *     requestBody={"$ref": "#/components/requestBodies/OsImage"}
+     *     requestBody={"$ref": "#/components/requestBodies/IpxeBlock"}
      * )
      *
      * Create a new resource object, from "posted" parameters
@@ -135,11 +135,11 @@ class Osimage extends ResourceController
      */
     public function create()
     {
-        $os_image = new OsimageModel();
+        $os_image = new IpxeBlockModel();
 
         $data = [
             'name'       => $this->request->getVar('name'),
-            'ipxe_entry' => $this->request->getVar('ipxe_entry'),
+            'ipxe_block' => $this->request->getVar('ipxe_block'),
         ];
 
         $os_image->insert($data);
@@ -149,7 +149,7 @@ class Osimage extends ResourceController
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OS Image Saved with id ' . $id,
+            'messages' => 'Ipxe Block Saved with id ' . $id,
         ];
 
         return $this->respondCreated($response);
@@ -157,14 +157,14 @@ class Osimage extends ResourceController
 
     /**
      * @OA\Put(
-     *     path="/osimage/{id}",
-     *     tags={"OsImage"},
-     *     summary="Update an existing OsImage",
-     *     operationId="updateOsImage",
+     *     path="/ipxeblock/{id}",
+     *     tags={"IpxeBlock"},
+     *     summary="Update an existing IpxeBlock",
+     *     operationId="updateIpxeBlock",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="OsImage id to update",
+     *         description="IpxeBlock id to update",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -176,7 +176,7 @@ class Osimage extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="OsImage not found"
+     *         description="IpxeBlock not found"
      *     ),
      *     @OA\Response(
      *         response=405,
@@ -185,18 +185,18 @@ class Osimage extends ResourceController
      *     security={
      *         {"bearerAuth": {}}
      *     },
-     *     requestBody={"$ref": "#/components/requestBodies/OsImage"}
+     *     requestBody={"$ref": "#/components/requestBodies/IpxeBlock"}
      * )
      *
      * @OA\Post(
-     *     path="/osimage/update{id}",
-     *     tags={"OsImage"},
-     *     summary="Update an existing OsImage (Websafe alternative)",
-     *     operationId="updateOsImageWebsafe",
+     *     path="/ipxeblock/update{id}",
+     *     tags={"IpxeBlock"},
+     *     summary="Update an existing IpxeBlock (Websafe alternative)",
+     *     operationId="updateIpxeBlockWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="OsImage id to update",
+     *         description="IpxeBlock id to update",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -208,7 +208,7 @@ class Osimage extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="OsImage not found"
+     *         description="IpxeBlock not found"
      *     ),
      *     @OA\Response(
      *         response=405,
@@ -217,7 +217,7 @@ class Osimage extends ResourceController
      *     security={
      *         {"bearerAuth": {}}
      *     },
-     *     requestBody={"$ref": "#/components/requestBodies/OsImage"}
+     *     requestBody={"$ref": "#/components/requestBodies/IpxeBlock"}
      * )
      *
      * Add or update a model resource, from "posted" properties
@@ -228,11 +228,11 @@ class Osimage extends ResourceController
      */
     public function update($id = null)
     {
-        $os_image = new OsimageModel();
+        $os_image = new IpxeBlockModel();
 
         $data = [
             'name'       => $this->request->getVar('name'),
-            'ipxe_entry' => $this->request->getVar('ipxe_entry'),
+            'ipxe_block' => $this->request->getVar('ipxe_block'),
         ];
 
         $os_image->update($id, $data);
@@ -240,7 +240,7 @@ class Osimage extends ResourceController
         $response = [
             'status'   => 200,
             'error'    => null,
-            'messages' => 'OS Image with id ' . $id . ' Updated',
+            'messages' => 'Ipxe Block with id ' . $id . ' Updated',
         ];
 
         return $this->respondUpdated($response);
@@ -248,14 +248,14 @@ class Osimage extends ResourceController
 
     /**
      * @OA\Delete(
-     *     path="/osimage/{id}",
-     *     tags={"OsImage"},
-     *     summary="Deletes a OsImage",
-     *     operationId="deleteOsImage",
+     *     path="/ipxeblock/{id}",
+     *     tags={"IpxeBlock"},
+     *     summary="Deletes a IpxeBlock",
+     *     operationId="deleteIpxeBlock",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="OsImage id to delete",
+     *         description="IpxeBlock id to delete",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -267,7 +267,7 @@ class Osimage extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="OsImage not found",
+     *         description="IpxeBlock not found",
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -275,14 +275,14 @@ class Osimage extends ResourceController
      * )
      *
      * @OA\Post(
-     *     path="/osimage/delete/{id}",
-     *     tags={"OsImage"},
-     *     summary="Deletes a OsImage (Websafe alternative)",
-     *     operationId="deleteOsImageWebsafe",
+     *     path="/ipxeblock/delete/{id}",
+     *     tags={"IpxeBlock"},
+     *     summary="Deletes a IpxeBlock (Websafe alternative)",
+     *     operationId="deleteIpxeBlockWebsafe",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="OsImage id to delete",
+     *         description="IpxeBlock id to delete",
      *         required=true,
      *         @OA\Schema(
      *             type="integer"
@@ -294,7 +294,7 @@ class Osimage extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="OsImage not found",
+     *         description="IpxeBlock not found",
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -307,7 +307,7 @@ class Osimage extends ResourceController
      */
     public function delete($id = null)
     {
-        $os_image = new OsimageModel();
+        $os_image = new IpxeBlockModel();
 
         $data = $os_image->find($id);
 
@@ -317,12 +317,12 @@ class Osimage extends ResourceController
             $response = [
                 'status'   => 200,
                 'error'    => null,
-                'messages' => 'OS Image with id ' . $id . ' Deleted',
+                'messages' => 'Ipxe Block with id ' . $id . ' Deleted',
             ];
 
             return $this->respondDeleted($response);
         }
 
-        return $this->failNotFound('No OS Image Found with id ' . $id);
+        return $this->failNotFound('No Ipxe Block Found with id ' . $id);
     }
 }

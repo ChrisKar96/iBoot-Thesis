@@ -50,4 +50,27 @@ class BootMenu extends Entity
      * )
      */
     private $name;
+
+    /**
+     * @OA\Property(
+     *     description="description",
+     *     title="description",
+     *     type="string",
+     * 	   format="-",
+     * 	   nullable=false,
+     * 	   maxLength=50,
+     * )
+     */
+    private $description;
+
+    /**
+     * @OA\Property(
+     *     description="ipxe_block",
+     *     title="ipxe_block",
+     *     type="string",
+     * 	   format="-",
+     * 	   nullable=true,
+     * )
+     */
+    private $ipxe_block;
 }

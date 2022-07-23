@@ -77,6 +77,17 @@ class Computer extends Entity
 
     /**
      * @OA\Property(
+     *     description="notes",
+     *     title="notes",
+     *     type="string",
+     * 	   format="-",
+     * 	   nullable=true,
+     * )
+     */
+    private $notes;
+
+    /**
+     * @OA\Property(
      *     description="lab",
      *     title="lab",
      *     type="integer",

@@ -14,7 +14,11 @@ class BootMenuModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name'];
+    protected $allowedFields    = [
+        'name',
+        'description',
+        'ipxe_block',
+    ];
 
     // Dates
     protected $useTimestamps = false;
@@ -25,8 +29,10 @@ class BootMenuModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'   => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
-        'name' => 'max_length[20]|required',
+        'id'          => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
+        'name'        => 'max_length[20]|required',
+        'description' => 'max_length[50]|required',
+        'ipxe_block'  => 'required',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

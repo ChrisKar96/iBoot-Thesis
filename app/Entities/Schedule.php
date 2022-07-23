@@ -107,4 +107,38 @@ class Schedule extends Entity
      * )
      */
     private $group_id;
+
+    /**
+     * @OA\Property(
+     *     description="isActive",
+     *     title="isActive",
+     *     type="integer",
+     * 	   format="-",
+     * 	   nullable=false,
+     * 	   maxLength=1,
+     * )
+     */
+    private $isActive;
+
+    /**
+     * @OA\Property(
+     *     description="created_at",
+     *     title="created_at",
+     *     type="string",
+     * 	   format="-",
+     * 	   nullable=true,
+     * )
+     */
+    private $created_at;
+
+    /**
+     * @OA\Property(
+     *     description="updated_at",
+     *     title="updated_at",
+     *     type="string",
+     * 	   format="-",
+     * 	   nullable=true,
+     * )
+     */
+    private $updated_at;
 }

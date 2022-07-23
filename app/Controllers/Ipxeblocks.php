@@ -2,7 +2,7 @@
 
 namespace iBoot\Controllers;
 
-class Osimages extends BaseController
+class Ipxeblocks extends BaseController
 {
     public function index()
     {
@@ -11,8 +11,8 @@ class Osimages extends BaseController
             [
                 'title'     => lang('Text.os_images'),
                 'tabulator' => true,
-                'apiTarget' => base_url('/api/osimage'),
-                'columns'   => '{title:"' . lang('Text.os_image') . '", field:"name", sorter:"string", width: 200, editor:"input", validator:["required", "maxLength:30"]},
+                'apiTarget' => base_url('/api/ipxeblock'),
+                'columns'   => '{title:"' . lang('Text.ipxe_block') . '", field:"name", sorter:"string", width: 200, editor:"input", validator:["required", "maxLength:30"]},
                                 {title:"' . lang('Text.ipxe_entry') . '", field:"ipxe_entry", formatter:"textarea", editor:"textarea", validator:["required"]},',
                 'JS_bef_tb' => '',
             ]

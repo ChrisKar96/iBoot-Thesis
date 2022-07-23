@@ -12,7 +12,7 @@ use iBoot\Filters\Auth;
 use iBoot\Filters\ApiAuth;
 use iBoot\Filters\Locale;
 use iBoot\Filters\Noauth;
-use iBoot\Filters\refreshUserToken;
+use iBoot\Filters\RefreshUserToken;
 
 class Filters extends BaseConfig
 {
@@ -32,7 +32,7 @@ class Filters extends BaseConfig
         'apiauth'          => ApiAuth::class,
         'noauth'           => Noauth::class,
         'locale'           => Locale::class,
-        'refreshUserToken' => refreshUserToken::class,
+        'refreshUserToken' => RefreshUserToken::class,
     ];
 
     /**

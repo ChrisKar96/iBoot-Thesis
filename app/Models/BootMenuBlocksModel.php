@@ -4,17 +4,21 @@ namespace iBoot\Models;
 
 use CodeIgniter\Model;
 
-class BootMenuImagesModel extends Model
+class BootMenuBlocksModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'boot_menu_images';
+    protected $table            = 'boot_menu_blocks';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name'];
+    protected $allowedFields    = [
+        'boot_menu_id',
+        'block_id',
+        'key',
+    ];
 
     // Dates
     protected $useTimestamps = false;
@@ -27,7 +31,8 @@ class BootMenuImagesModel extends Model
     protected $validationRules = [
         'id'           => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
         'boot_menu_id' => 'numeric|max_length[10]|required',
-        'image_id'     => 'numeric|max_length[10]|required',
+        'block_id'     => 'numeric|max_length[10]|required',
+        'key'          => 'max_length[1]|permit_empty',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
