@@ -3,9 +3,7 @@
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
-use Exception;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use iBoot\Models\UserModel;
 use ReflectionException;
 
@@ -455,40 +453,4 @@ class User extends ResourceController
         return $response;
     }
 
-    public function refreshUserToken($token)
-    {
-        try {
-            $key      = getenv('JWT_SECRET');
-            $decoded  = JWT::decode($token, new Key($key, 'HS256'));
-            $response = service('response');
-
-            $userModel = new UserModel();
-            $user      = $userModel->where('username', $decoded->username)->first();
-
-            if ($decoded->iss !== 'iBoot' || $decoded->aud !== base_url() || $decoded->sub !== 'iBoot API' || empty($user)) {
-                $response->setBody('Token not valid. Access denied');
-                $response->setStatusCode(401);
-
-                return null;
-            }
-
-            $iat = time(); // current timestamp value
-            $nbf = $iat;
-            $exp = $iat + 7200;
-
-            $payload = [
-                'iss'      => 'iBoot',
-                'aud'      => base_url(),
-                'sub'      => 'iBoot API',
-                'iat'      => $iat, //Time the JWT issued at
-                'nbf'      => $nbf, //not before in seconds
-                'exp'      => $exp, // Expiration time of token
-                'username' => $user['username'],
-            ];
-
-            return JWT::encode($payload, $key, 'HS256');
-        } catch (Exception $ex) {
-            return $ex;
-        }
-    }
 }
