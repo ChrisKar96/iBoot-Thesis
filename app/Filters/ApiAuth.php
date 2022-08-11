@@ -41,24 +41,24 @@ class ApiAuth implements FilterInterface
             }
         }
 
+        $response = service('response');
+
         // check if token is null or empty
         if (empty($token)) {
-            $response = service('response');
-            $response->setBody('Access denied');
+            $response->setBody('Unauthorized');
             $response->setStatusCode(401);
 
             return $response;
         }
 
         try {
-            $decoded  = JWT::decode($token, new Key($key, 'HS256'));
-            $response = service('response');
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
             $userModel = new UserModel();
             $user      = $userModel->where('username', $decoded->username)->first();
 
             if ($decoded->iss !== 'iBoot' || $decoded->aud !== base_url() || $decoded->sub !== 'iBoot API' || empty($user)) {
-                $response->setBody('Token not valid. Access denied');
+                $response->setBody('Access denied. Token is not valid.');
                 $response->setStatusCode(401);
 
                 return $response;
@@ -67,19 +67,18 @@ class ApiAuth implements FilterInterface
             if (! $user['isAdmin']) {
                 $userLabsModel = new UserLabsModel();
                 $userLabs      = $userLabsModel->select('lab_id')->where('user_id', $user['id'])->findAll();
-                $userLabAccess = array_column($userLabs,'lab_id');
+                $userLabAccess = array_column($userLabs, 'lab_id');
                 session()->setFlashdata('userLabAccess', $userLabAccess);
+                session()->setFlashdata('userID', $user['id']);
             }
             session()->setFlashdata('userIsAdmin', $user['isAdmin']);
         } catch (ExpiredException $ex) {
-            $response = service('response');
             $response->setBody('Access denied. Token is expired.');
             $response->setStatusCode(401);
 
             return $response;
         } catch (Exception $ex) {
-            $response = service('response');
-            $response->setBody('Access denied');
+            $response->setBody('Unauthorized');
             $response->setStatusCode(401);
 
             return $response;
