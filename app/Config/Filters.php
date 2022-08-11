@@ -50,7 +50,7 @@ class Filters extends BaseConfig
             'refreshUserToken' => ['except' => ['api/*']],
         ],
         'after' => [
-            'toolbar',
+            'toolbar' => ['except' => ['api/*']],
             'honeypot',
             'secureheaders',
         ],
