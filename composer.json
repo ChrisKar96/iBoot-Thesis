@@ -44,7 +44,8 @@
         "symfony/var-exporter": "^5.4",
         "symfony/deprecation-contracts": "^2.5",
         "symfony/service-contracts": "^2.5",
-        "symfony/event-dispatcher-contracts": "^2.5"
+        "symfony/event-dispatcher-contracts": "^2.5",
+        "ext-json": "*"
     },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
