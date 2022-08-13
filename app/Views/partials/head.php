@@ -8,19 +8,16 @@
     <link rel="icon" href="<?= base_url('/favicon.ico'); ?>" type="image/x-icon"/>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css'); ?>"/>
 
     <!-- FontAwesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="<?= base_url('/assets/font-awesome/all.min.css'); ?>"/>
 
 	<?php
     if (isset($tabulator) && $tabulator) : ?>
         <!-- Tabulator Assets -->
-        <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@5.2.5/dist/css/tabulator.min.css">
-        <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.2.5/dist/js/tabulator.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@5.3.1/dist/css/tabulator_bootstrap5.min.css">
+        <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.3.1/dist/js/tabulator.min.js"></script>
 	<?php
     endif; ?>
 

@@ -130,3 +130,8 @@ nb-configuration.xml
 service-start.sh
 
 composer.phar
+
+# Vendor copied front-end libs
+public/assets/bootstrap/
+public/assets/font-awesome/
+public/assets/webfonts/

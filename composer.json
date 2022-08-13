@@ -45,7 +45,9 @@
         "symfony/deprecation-contracts": "^2.5",
         "symfony/service-contracts": "^2.5",
         "symfony/event-dispatcher-contracts": "^2.5",
-        "ext-json": "*"
+        "ext-json": "*",
+        "twbs/bootstrap": "^5.2",
+        "components/font-awesome": "^6.1"
     },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
@@ -74,6 +76,22 @@
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "post-update-cmd": [
+            "rm -rf public/assets/bootstrap",
+            "cp -R vendor/twbs/bootstrap/dist public/assets/bootstrap",
+            "rm -rf public/assets/font-awesome",
+            "cp -R vendor/components/font-awesome/css public/assets/font-awesome",
+            "rm -rf public/assets/webfonts",
+            "cp -R vendor/components/font-awesome/webfonts public/assets/webfonts"
+        ],
+        "post-install-cmd": [
+            "rm -rf public/assets/bootstrap",
+            "cp -R vendor/twbs/bootstrap/dist public/assets/bootstrap",
+            "rm -rf public/assets/font-awesome",
+            "cp -R vendor/components/font-awesome/css public/assets/font-awesome",
+            "rm -rf public/assets/webfonts",
+            "cp -R vendor/components/font-awesome/webfonts public/assets/webfonts"
+        ]
     }
 }
