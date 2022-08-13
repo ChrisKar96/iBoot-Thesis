@@ -2,9 +2,10 @@
 
 namespace iBoot\Controllers\Api;
 
+use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
-use Firebase\JWT\JWT;
 use iBoot\Models\UserModel;
+use OpenApi\Annotations as OA;
 use ReflectionException;
 
 class User extends ResourceController
@@ -24,12 +25,8 @@ class User extends ResourceController
      *         ),
      *     ),
      *     @OA\Response(
-     *         response=404,
-     *         description="User objects not found"
-     *     ),
-     *     @OA\Response(
      *         response=401,
-     *         description="Access Denied"
+     *         description="Access denied"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -47,19 +44,10 @@ class User extends ResourceController
 
             $data = $user->findAll();
 
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => count($data) . ' Users Found',
-                'data'     => $data,
-            ];
-
-            return $this->respond($response);
+            return $this->respond($data, 200, count($data) . ' Users Found');
         }
 
-        $response = service('response');
-
-        $this->respond($response, 401, 'Access denied');
+        return $this->respond(null, 401, 'Access denied');
     }
 
     /**
@@ -85,11 +73,15 @@ class User extends ResourceController
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Invalid ID supplier"
+     *         description="Invalid ID supplied"
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Access denied"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -99,27 +91,28 @@ class User extends ResourceController
      * Return the properties of a resource object
      *
      * @param mixed|null $id
-     *
-     * @return mixed
      */
-    public function show($id = null)
+    public function show($id = null): Response
     {
-        $user = new UserModel();
-
-        $data = $user->where(['id' => $id])->first();
-
-        if ($data) {
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'User with id ' . $id . ' Found',
-                'data'     => $data,
-            ];
-
-            return $this->respond($response);
+        if (! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
         }
 
-        return $this->failNotFound('No User Found with id ' . $id);
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+
+        if ($userIsAdmin) {
+            $user = new UserModel();
+
+            $data = $user->where(['id' => $id])->first();
+
+            if ($data) {
+                return $this->respond($data, 200, 'User with id ' . $id . ' Found');
+            }
+
+            return $this->failNotFound('No User Found with id ' . $id);
+        }
+
+        return $this->respond(null, 401, 'Access denied');
     }
 
     /**
@@ -163,13 +156,7 @@ class User extends ResourceController
 
         $id = $user->getInsertID();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'User Saved with id ' . $id,
-        ];
-
-        return $this->respondCreated($response);
+        return $this->respondCreated($data, 'User Saved with id ' . $id);
     }
 
     /**
@@ -198,6 +185,10 @@ class User extends ResourceController
      *     @OA\Response(
      *         response=405,
      *         description="Validation exception"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Access denied"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -231,6 +222,10 @@ class User extends ResourceController
      *         response=405,
      *         description="Validation exception"
      *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Access denied"
+     *     ),
      *     security={
      *         {"bearerAuth": {}}
      *     },
@@ -245,21 +240,31 @@ class User extends ResourceController
      */
     public function update($id = null)
     {
-        $user = new UserModel();
+        if (! empty($id) && ! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
+        }
 
-        $data = [
-            'name' => $this->request->getVar('name'),
-        ];
+        $user        = new UserModel();
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        $userID      = session()->getFlashdata('userID');
 
-        $user->update($id, $data);
+        if ($id === null || $userIsAdmin || $id === $userID) {
+            $data = [
+                'name'     => $this->request->getVar('name'),
+                'email'    => $this->request->getVar('email'),
+                'phone'    => (empty($this->request->getVar('phone')) ? null : $this->request->getVar('phone')),
+                'username' => $this->request->getVar('username'),
+                'password' => $this->request->getVar('password'),
+            ];
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'User with id ' . $id . ' Updated',
-        ];
+            if ($user->update($id, $data)) {
+                return $this->respondUpdated($data, 'User with id ' . $id . ' Updated');
+            }
 
-        return $this->respondUpdated($response);
+            return $this->failNotFound('No User Found with id ' . $id);
+        }
+
+        return $this->respond(null, 401, 'Access denied');
     }
 
     /**
@@ -284,6 +289,10 @@ class User extends ResourceController
      *     @OA\Response(
      *         response=404,
      *         description="User not found",
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Access denied"
      *     ),
      *     security={
      *         {"bearerAuth": {}}
@@ -312,6 +321,10 @@ class User extends ResourceController
      *         response=404,
      *         description="User not found",
      *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Access denied"
+     *     ),
      *     security={
      *         {"bearerAuth": {}}
      *     },
@@ -323,23 +336,27 @@ class User extends ResourceController
      */
     public function delete($id = null)
     {
-        $user = new UserModel();
-
-        $data = $user->find($id);
-
-        if ($data) {
-            $user->delete($id);
-
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'User with id ' . $id . ' Deleted',
-            ];
-
-            return $this->respondDeleted($response);
+        if (! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
         }
 
-        return $this->failNotFound('No User Found with id ' . $id);
+        $user        = new UserModel();
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        $userID      = session()->getFlashdata('userID');
+
+        if ($userIsAdmin || $id === $userID) {
+            $data = $user->find($id);
+
+            if ($data) {
+                $user->delete($id);
+
+                return $this->respondDeleted(null, 'User with id ' . $id . ' Deleted');
+            }
+
+            return $this->failNotFound('No User Found with id ' . $id);
+        }
+
+        return $this->respond(null, 401, 'Access denied');
     }
 
     /**
@@ -350,14 +367,14 @@ class User extends ResourceController
      *     operationId="userLogin",
      *     @OA\Response(
      *         response=200,
-     *         description="User Logged In",
+     *         description="Login Successful",
      *         @OA\JsonContent(type="object",
-     *            @OA\Property(property="token",type="string"),
+     *            @OA\Property(property="token",type="string",description="User's API token"),
      *         ),
      *     ),
      *     @OA\Response(
-     *         response=405,
-     *         description="Invalid input"
+     *         response=400,
+     *         description="Invalid credentials"
      *     ),
      *     @OA\RequestBody(
      *         @OA\MediaType(
@@ -365,11 +382,13 @@ class User extends ResourceController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="username",
-     *         			   description="username or email",
+     *                       description="username or email",
+     *                       required=true,
      *                     type="string"
      *                 ),
      *                 @OA\Property(
      *                     property="password",
+     *                     required=true,
      *                     type="string"
      *                 )
      *             )
@@ -378,79 +397,28 @@ class User extends ResourceController
      * )
      *
      * Login with User credentials and receive API token
-     *
-     * @param mixed|null $username
-     * @param mixed|null $password
      */
-    public function login($username = null, $password = null)
+    public function login(): Response
     {
-        $userModel = new UserModel();
-
-        if (empty($username)) {
-            $username = $this->request->getVar('username');
-        }
-        if (empty($password)) {
-            $password = $this->request->getVar('password');
-        }
+        $username = $this->request->getPost('username');
+        $password = $this->request->getPost('password');
 
         if (empty($username) || empty($password)) {
-            if (! empty($this->request)) {
-                return $this->respond(['error' => 'Username or Password is empty.'], 401);
-            }
-
-            return null;
+            return $this->failValidationErrors('Username or Password is empty');
         }
+
+        $userModel = new UserModel();
 
         $user = $userModel->where('username', $username)->orWhere('email', $username)->first();
 
-        if ($user === null) {
-            if (! empty($this->request)) {
-                return $this->respond([
-                    'error'    => 'Invalid credentials.',
-                    'username' => $username,
-                ], 401);
-            }
-
-            return null;
+        if ($user === null || ! password_verify($password, $user['password'])) {
+            return $this->failValidationErrors('Invalid credentials');
         }
 
-        $pwd_verify = password_verify($password, $user['password']);
+        $token = \iBoot\Controllers\User::generateAPItoken($username);
 
-        if (! $pwd_verify) {
-            if (! empty($this->request)) {
-                return $this->respond(['error' => 'Invalid credentials.'], 401);
-            }
+        log_message('info', 'User {username} logged into the system using the API from {ip}', ['username' => $username, 'ip' => $this->request->getIPAddress()]);
 
-            return null;
-        }
-
-        $key = getenv('JWT_SECRET');
-        $iat = time(); // current timestamp value
-        $nbf = $iat;
-        $exp = $iat + 7200;
-
-        $payload = [
-            'iss'      => 'iBoot',
-            'aud'      => base_url(),
-            'sub'      => 'iBoot API',
-            'iat'      => $iat, //Time the JWT issued at
-            'nbf'      => $nbf, //not before in seconds
-            'exp'      => $exp, // Expiration time of token
-            'username' => $user['username'],
-        ];
-
-        $token = JWT::encode($payload, $key, 'HS256');
-
-        $response = [
-            'message' => 'Login Successful',
-            'token'   => $token,
-        ];
-
-        if (! empty($this->request)) {
-            return $this->respond($response, 200);
-        }
-
-        return $response;
+        return $this->respond($token, 200, 'Login Successful');
     }
-
 }

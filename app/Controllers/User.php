@@ -7,7 +7,6 @@ use CodeIgniter\I18n\Time;
 use Config\Services;
 use Exception;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use iBoot\Models\ForgotPasswordTokenModel;
 use iBoot\Models\UserModel;
 use ReflectionException;
@@ -51,15 +50,13 @@ class User extends BaseController
 
             $model = new UserModel();
 
-            $username = $this->request->getVar('username');
-            $password = $this->request->getVar('password');
+            $username = $this->request->getPost('username');
 
             // Support authenticating with email as well
             $user = $model->where('username', $username)->orWhere('email', $username)->first();
 
             // Get user's API token
-            $apiUser       = new Api\User();
-            $user['token'] = $apiUser->login($username, $password)['token'];
+            $user['token'] = $this->generateAPItoken($username);
 
             // Storing session values
             $this->setUserSession($user);
@@ -91,41 +88,30 @@ class User extends BaseController
     {
         $user = session()->get('user');
 
-        try {
-            $key      = getenv('JWT_SECRET');
-            $decoded  = JWT::decode($user['token'], new Key($key, 'HS256'));
-            $response = service('response');
-
-            $userModel = new UserModel();
-            $user      = $userModel->where('username', $decoded->username)->first();
-
-            if ($decoded->iss !== 'iBoot' || $decoded->aud !== base_url() || $decoded->sub !== 'iBoot API' || empty($user)) {
-                $response->setBody('Token not valid. Access denied');
-                $response->setStatusCode(401);
-
-                return null;
-            }
-
-            $iat = time(); // current timestamp value
-            $nbf = $iat;
-            $exp = $iat + 7200;
-
-            $payload = [
-                'iss'      => 'iBoot',
-                'aud'      => base_url(),
-                'sub'      => 'iBoot API',
-                'iat'      => $iat, //Time the JWT issued at
-                'nbf'      => $nbf, //not before in seconds
-                'exp'      => $exp, // Expiration time of token
-                'username' => $user['username'],
-            ];
-
-            $user['token'] = JWT::encode($payload, $key, 'HS256');
-        } catch (Exception $ex) {
-            return $ex;
-        }
+        $user['token'] = $this->generateAPItoken($user['username']);
 
         session()->set('user', $user);
+    }
+
+    public static function generateAPItoken($username): string
+    {
+        $key = getenv('JWT_SECRET');
+
+        $iat = time(); // current timestamp value
+        $nbf = $iat;
+        $exp = $iat + 7200;
+
+        $payload = [
+            'iss'      => 'iBoot',
+            'aud'      => base_url(),
+            'sub'      => 'iBoot API',
+            'iat'      => $iat, //Time the JWT issued at
+            'nbf'      => $nbf, //not before in seconds
+            'exp'      => $exp, // Expiration time of token
+            'username' => $username,
+        ];
+
+        return JWT::encode($payload, $key, 'HS256');
     }
 
     public function registerAdmin()
