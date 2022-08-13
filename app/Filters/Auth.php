@@ -25,7 +25,7 @@ class Auth implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (! session()->get('isLoggedIn')) {
-            session()->setFlashdata('referred_from', current_url());
+            session()->set('referred_from', current_url());
 
             return redirect()->to(site_url('login'));
         }

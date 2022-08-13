@@ -27,8 +27,6 @@ class User extends BaseController
             return redirect()->to(base_url());
         }
 
-        session()->keepFlashdata('referred_from');
-
         if ($this->request->getPost('username')
             && $this->request->getPost('password')) {
             helper('form');
@@ -66,7 +64,10 @@ class User extends BaseController
             // Storing session values
             $this->setUserSession($user);
             // Redirecting to dashboard after login
-            if ($referred_from = (string) session()->getFlashdata('referred_from')) {
+            $referred_from = (string) session()->get('referred_from');
+            if ($referred_from) {
+                session()->remove($referred_from);
+
                 return redirect()->to($referred_from);
             }
 
