@@ -8,7 +8,7 @@ use Exception;
 
 class LogViewerController extends BaseController
 {
-    public const LOG_LINE_HEADER_PATTERN = '/^([A-Z]+)\s*\-\s*([\-\d]+\s+[\:\d]+)\s*\-\->\s*(.+)$/';
+    public const LOG_LINE_HEADER_PATTERN = '/^([A-Z]+)\s*-\s*([\-\d]+\s+[:\d]+)\s*-->\s*(.+)$/';
     public const MAX_LOG_SIZE            = 52428800; //50MB
     public const MAX_STRING_LENGTH       = 300; //300 chars
 
@@ -25,18 +25,16 @@ class LogViewerController extends BaseController
     private const API_CMD_DELETE            = 'delete';
 
     private static array $levelsIcon = [
-        'CRITICAL' => 'fa-solid fa-bug',
-        'INFO'     => 'fa-solid fa-circle-info',
-        'ERROR'    => 'fa-solid fa-xmark',
         'DEBUG'    => 'fa-solid fa-triangle-exclamation',
-        'ALL'      => 'fa-solid fa-minus',
+        'INFO'     => 'fa-solid fa-circle-info',
+        'CRITICAL' => 'fa-solid fa-bug',
+        'ERROR'    => 'fa-solid fa-xmark',
     ];
     private static array $levelClasses = [
-        'CRITICAL' => 'danger',
-        'INFO'     => 'info',
-        'ERROR'    => 'danger',
         'DEBUG'    => 'warning',
-        'ALL'      => 'muted',
+        'INFO'     => 'info',
+        'CRITICAL' => 'danger',
+        'ERROR'    => 'danger',
     ];
 
     //this is the path (folder) on the system where the log files are stored
