@@ -51,4 +51,13 @@ return [
     'instructions_to_reissue_your_password'  => 'instructions to reissue your password',
     'your_password_was_changed_successfully' => 'Your password was changed successfully.',
     'back_to_login'                          => 'Back to login page',
+    'log_viewer'                             => 'Log Viewer',
+    'no_log_files_found'                     => 'No log files found',
+    'level'                                  => 'Level',
+    'date'                                   => 'Date',
+    'content'                                => 'Content',
+	'download_file'                          => 'Download file',
+	'delete_file'                            => 'Delete file',
+	'delete_all_files'                       => 'Delete all files',
+    'log_too_big'                            => 'The log file is bigger than 50MB, please download it.',
 ];

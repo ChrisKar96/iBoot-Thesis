@@ -62,6 +62,8 @@ $routes->get('schedules', 'Schedules::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout');
 $routes->get('boot', 'Home::boot');
 $routes->get('initboot', 'Home::initboot');
+
+$routes->add('logs', 'LogViewerController::index', ['filter' => 'auth']);
 /*
  * --------------------------------------------------------------------
  * Additional Routing
