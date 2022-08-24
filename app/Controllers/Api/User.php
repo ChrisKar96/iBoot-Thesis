@@ -138,7 +138,7 @@ class User extends ResourceController
      *
      * Create a new resource object, from "posted" parameters
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function create()
     {
@@ -236,7 +236,7 @@ class User extends ResourceController
      *
      * @param mixed|null $id
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function update($id = null)
     {
@@ -380,15 +380,14 @@ class User extends ResourceController
      *         @OA\MediaType(
      *             mediaType="application/x-www-form-urlencoded",
      *             @OA\Schema(
+     *                 required={"username", "password"},
      *                 @OA\Property(
      *                     property="username",
-     *                       description="username or email",
-     *                       required=true,
+     *                     description="username or email",
      *                     type="string"
      *                 ),
      *                 @OA\Property(
      *                     property="password",
-     *                     required=true,
      *                     type="string"
      *                 )
      *             )
