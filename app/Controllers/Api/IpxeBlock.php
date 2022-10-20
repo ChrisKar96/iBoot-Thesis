@@ -5,9 +5,10 @@ namespace iBoot\Controllers\Api;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\IpxeBlockModel;
+use OpenApi\Annotations as OA;
 use ReflectionException;
 
-class Ipxeblock extends ResourceController
+class IpxeBlock extends ResourceController
 {
     /**
      * @OA\Get(

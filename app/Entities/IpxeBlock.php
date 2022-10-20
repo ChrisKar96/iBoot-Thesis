@@ -3,6 +3,7 @@
 namespace iBoot\Entities;
 
 use CodeIgniter\Entity\Entity;
+use OpenApi\Annotations as OA;
 
 /**
  * Class IpxeBlock

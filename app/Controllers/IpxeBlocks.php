@@ -2,7 +2,7 @@
 
 namespace iBoot\Controllers;
 
-class Ipxeblocks extends BaseController
+class IpxeBlocks extends BaseController
 {
     public function index()
     {

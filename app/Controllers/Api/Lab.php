@@ -5,6 +5,7 @@ namespace iBoot\Controllers\Api;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\LabModel;
+use OpenApi\Annotations as OA;
 use ReflectionException;
 
 class Lab extends ResourceController

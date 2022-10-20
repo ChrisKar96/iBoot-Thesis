@@ -4,6 +4,7 @@ namespace iBoot\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\GroupModel;
+use OpenApi\Annotations as OA;
 use ReflectionException;
 
 class Group extends ResourceController

@@ -5,6 +5,7 @@ namespace iBoot\Controllers\Api;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\BootMenuModel;
+use OpenApi\Annotations as OA;
 use ReflectionException;
 
 class BootMenu extends ResourceController
