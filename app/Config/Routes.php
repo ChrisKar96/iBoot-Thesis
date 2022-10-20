@@ -56,7 +56,7 @@ $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('computers', 'Computers::index', ['filter' => 'auth']);
 $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
 $routes->get('labs', 'Labs::index', ['filter' => 'auth']);
-$routes->get('osimages', 'Osimages::index', ['filter' => 'auth']);
+$routes->get('ipxeblocks', 'IpxeBlocks::index', ['filter' => 'auth']);
 $routes->get('boot_menu', 'BootMenu::index', ['filter' => 'auth']);
 $routes->get('schedules', 'Schedules::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout');
@@ -91,7 +91,7 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
         $routes->post('login', 'User::login');
     });
     $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('bootmenu', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('bootmenu', ['controller' => 'BootMenu', 'websafe' => true, 'filter' => 'apiauth']);
     $routes->group('computer', static function ($routes) {
         $routes->put('(:segment)/lab', 'Computer::updateComputerLab/$1');
         $routes->post('update/(:segment)/lab', 'Computer::updateComputerLab/$1');
@@ -99,7 +99,7 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     $routes->resource('computer', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('lab', ['websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('ipxeblock', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('ipxeblock', ['controller' => 'IpxeBlock', 'websafe' => true, 'filter' => 'apiauth']);
     $routes->resource('schedule', ['websafe' => true, 'filter' => 'apiauth']);
 });
 

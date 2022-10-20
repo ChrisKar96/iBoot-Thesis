@@ -38,43 +38,21 @@ class Computers extends BaseController
                                     formatterParams: groups,
                                 },
                                 {
-                                    title:"' . lang('Text.location') . '", headerHozAlign:"center",
-                                    columns:[
-                                        {title:"' . lang('Text.building') . '", field:"building", editor:"list",
-                                            editorParams:{
-                                                values:buildings
-                                            },
-                                            cellEdited:function(cell){
-												updateBuildingRooms(cell);
-											},
-                                            formatter:function (cell, formatterParams, onRendered) {
-                                                if(typeof cell.getValue() !== "undefined"){
-                                                    if(typeof formatterParams[cell.getValue()] === "undefined") {
-                                                        console.warn(\'Missing display value for \' + cell.getValue());
-                                                        return cell.getValue();
-                                                    }
-                                                    return formatterParams[cell.getValue()];
-                                                }
-                                            },
-                                            formatterParams: buildings,
-                                        },
-                                        {title:"' . lang('Text.room') . '", field:"room", editor:"list",
-                                            editorParams:{
-                                                values:building_rooms,
-												disabled:true,
-                                            },
-                                            formatter:function (cell, formatterParams, onRendered) {
-                                                if(typeof cell.getValue() !== "undefined"){
-                                                    if(typeof formatterParams[cell.getValue()] === "undefined") {
-                                                        console.warn(\'Missing display value for \' + cell.getValue());
-                                                        return cell.getValue();
-                                                    }
-                                                    return formatterParams[cell.getValue()];
-                                                }
-                                            },
-                                            formatterParams: rooms,
-                                        },
-                                    ],
+                                    title:"' . lang('Text.lab') . '", field:"room", editor:"list",
+									editorParams:{
+										values:labs,
+										disabled:true,
+									},
+									formatter:function (cell, formatterParams, onRendered) {
+										if(typeof cell.getValue() !== "undefined"){
+											if(typeof formatterParams[cell.getValue()] === "undefined") {
+												console.warn(\'Missing display value for \' + cell.getValue());
+												return cell.getValue();
+											}
+											return formatterParams[cell.getValue()];
+										}
+									},
+									formatterParams: labs,
                                 },',
                 'JS_bef_tb' => 'let groups = {};
 
@@ -88,36 +66,18 @@ class Computers extends BaseController
 
                                 getGroups();
 
-                                let buildings = {};
+                                let labs = {};
 
-                                async function getBuildings(){
-                                    await api_call("' . base_url('/api/building') . '", "GET").then(function(response) {
+                                async function getLabs(){
+                                    await api_call("' . base_url('/api/lab') . '", "GET").then(function(response) {
                                         for (i = 0; i < response.data.length; i++) {
-                                            buildings[response.data[i].id] = response.data[i].name;
-                                            building_rooms[response.data[i].id] = [];
+                                            labs[response.data[i].id] = response.data[i].name;
                                         }
-                                        buildings[null] = "";
+                                        labs[null] = "";
                                     });
                                 }
 
-                                getBuildings();
-
-                                let rooms = {};
-
-                                let building_rooms = {};
-
-                                async function getRooms(){
-                                    await api_call("' . base_url('/api/room') . '", "GET").then(function(response) {
-                                        for (i = 0; i < response.data.length; i++) {
-                                            rooms[response.data[i].id] = response.data[i].name;
-                                            building_rooms[response.data[i].building][response.data[i].id] = response.data[i].name;
-                                        }
-                                        rooms[null] = "";
-                                        building_rooms[null] = "";
-                                    });
-                                }
-
-                                getRooms();
+                                getLabs();
 
                                 function updateBuildingRooms(cell){
 									

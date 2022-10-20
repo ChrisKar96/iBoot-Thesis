@@ -30,17 +30,17 @@ if (! isset($title)) {
                            href="<?= site_url('labs'); ?>"><?= lang('Text.labs'); ?></a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle <?= ($title === lang('Text.os_images') || $title === lang('Text.os_image_archs') || $title === lang('Text.configurations')) ? ' active' : ''; ?>"
+                        <a class="nav-link dropdown-toggle <?= ($title === lang('Text.ipxe_blocks') || $title === lang('Text.schedules')) ? ' active' : ''; ?>"
                            href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <?= lang('Text.boot_menu_options'); ?>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="dropdown-item <?= ($title === lang('Text.os_images')) ? ' active' : ''; ?>"
-                                   href="<?= site_url('osimages'); ?>"><?= lang('Text.os_images'); ?></a>
+                                <a class="dropdown-item <?= ($title === lang('Text.ipxe_blocks')) ? ' active' : ''; ?>"
+                                   href="<?= site_url('ipxeblocks'); ?>"><?= lang('Text.ipxe_blocks'); ?></a>
                             </li>
                             <li>
-                                <a class="dropdown-item <?= ($title === lang('Text.configurations')) ? ' active' : ''; ?>"
+                                <a class="dropdown-item <?= ($title === lang('Text.schedules')) ? ' active' : ''; ?>"
                                    href="<?= site_url('schedules'); ?>"><?= lang('Text.schedules'); ?></a>
                             </li>
                         </ul>
