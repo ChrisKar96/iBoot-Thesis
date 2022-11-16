@@ -67,6 +67,7 @@ class User extends BaseController
 
                 return redirect()->to($referred_from);
             }
+            log_message('info', 'User {username} logged into the system using the web interface from {ip}', ['username' => $username, 'ip' => $this->request->getIPAddress()]);
 
             return redirect()->to(base_url('dashboard'));
         }
@@ -192,7 +193,9 @@ class User extends BaseController
 
     public function logout(): RedirectResponse
     {
+        $user = session()->get('user');
         session()->destroy();
+        log_message('info', 'User {username} logged out', ['username' => $user['username']]);
 
         return redirect()->to('login');
     }

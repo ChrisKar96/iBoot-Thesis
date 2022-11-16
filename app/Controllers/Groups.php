@@ -12,7 +12,7 @@ class Groups extends BaseController
                 'title'     => lang('Text.groups'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/group'),
-                'columns'   => '{title:"' . lang('Text.group') . '", field:"name", sorter:"string"},
+                'columns'   => '{title:"' . lang('Text.group') . '", field:"name", sorter:"string", editor:"input"},
                                 {title:"' . lang('Text.computers') . '", field:"computers", editor:"list",
                                     editorParams:{
                                         multiselect:true,

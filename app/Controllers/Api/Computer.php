@@ -42,16 +42,11 @@ class Computer extends ResourceController
 
         $computer = new ComputerModel();
         $computer->builder()->select(
-            'computers.*, labs.id as lab, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
         );
         $computer->builder()->join(
             'computer_groups',
             'computers.id = computer_groups.computer_id',
-            'LEFT'
-        );
-        $computer->builder()->join(
-            'labs',
-            'computers.lab = labs.id',
             'LEFT'
         );
 
@@ -61,7 +56,11 @@ class Computer extends ResourceController
 
         $computer->builder()->groupBy('computers.id');
 
+        log_message('debug', "computer api index query:\n{query}", ['query' => $computer->builder()->getCompiledSelect(false)]);
+
         $data = $computer->findAll();
+
+        log_message('debug', "computer api index query return:\n{data}", ['data' => var_export($data, true)]);
 
         // Explode groups as json array
         for ($i = 0; $i < count($data); $i++) {
@@ -122,16 +121,11 @@ class Computer extends ResourceController
     {
         $computer = new ComputerModel();
         $computer->builder()->select(
-            'computers.*, labs.id as lab, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
         );
         $computer->builder()->join(
             'computer_groups',
             'computers.id = computer_groups.computer_id',
-            'LEFT'
-        );
-        $computer->builder()->join(
-            'labs',
-            'computers.lab = labs.id',
             'LEFT'
         );
         $computer->builder()->groupBy('computers.id');

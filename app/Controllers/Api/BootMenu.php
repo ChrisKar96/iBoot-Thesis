@@ -37,9 +37,9 @@ class BootMenu extends ResourceController
      */
     public function index(): Response
     {
-        $os_image = new BootMenuModel();
+        $boot_menu = new BootMenuModel();
 
-        $data = $os_image->findAll();
+        $data = $boot_menu->findAll();
 
         $response = [
             'status'   => 200,
@@ -93,9 +93,9 @@ class BootMenu extends ResourceController
      */
     public function show($id = null): Response
     {
-        $os_image = new BootMenuModel();
+        $boot_menu = new BootMenuModel();
 
-        $data = $os_image->where(['id' => $id])->first();
+        $data = $boot_menu->where(['id' => $id])->first();
 
         if ($data) {
             $response = [
@@ -138,15 +138,15 @@ class BootMenu extends ResourceController
      */
     public function create(): Response
     {
-        $os_image = new BootMenuModel();
+        $boot_menu = new BootMenuModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
         ];
 
-        $os_image->insert($data);
+        $boot_menu->insert($data);
 
-        $id = $os_image->getInsertID();
+        $id = $boot_menu->getInsertID();
 
         $response = [
             'status'   => 200,
@@ -230,13 +230,13 @@ class BootMenu extends ResourceController
      */
     public function update($id = null): Response
     {
-        $os_image = new BootMenuModel();
+        $boot_menu = new BootMenuModel();
 
         $data = [
             'name' => $this->request->getVar('name'),
         ];
 
-        $os_image->update($id, $data);
+        $boot_menu->update($id, $data);
 
         $response = [
             'status'   => 200,
@@ -308,12 +308,12 @@ class BootMenu extends ResourceController
      */
     public function delete($id = null): Response
     {
-        $os_image = new BootMenuModel();
+        $boot_menu = new BootMenuModel();
 
-        $data = $os_image->find($id);
+        $data = $boot_menu->find($id);
 
         if ($data) {
-            $os_image->delete($id);
+            $boot_menu->delete($id);
 
             $response = [
                 'status'   => 200,

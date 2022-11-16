@@ -70,10 +70,10 @@ class Computers extends BaseController
 
                                 async function getLabs(){
                                     await api_call("' . base_url('/api/lab') . '", "GET").then(function(response) {
+                                        labs[null] = "-";
                                         for (i = 0; i < response.data.length; i++) {
                                             labs[response.data[i].id] = response.data[i].name;
                                         }
-                                        labs[null] = "";
                                     });
                                 }
 
