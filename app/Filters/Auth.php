@@ -29,6 +29,14 @@ class Auth implements FilterInterface
 
             return redirect()->to(site_url('login'));
         }
+
+        $user = session()->get('user');
+
+        if (in_array('adminOnly', ($arguments !== null) ? $arguments : [], true) && ! $user['isAdmin']) {
+            log_message('notice', 'User {username} tried to illegally access {cur_url}', ['username' => $user['username'], 'cur_url' => current_url()]);
+
+            return redirect()->to(site_url('dashboard'));
+        }
     }
 
     /**
@@ -43,6 +51,5 @@ class Auth implements FilterInterface
      */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-
     }
 }
