@@ -124,10 +124,14 @@
                         headerFilterParams: {
                             multiselect: true,
                             values: {
-                                '<div class="text-info"><span class="fa-solid fa-circle-info" aria-hidden="true"></span>&nbsp;INFO</div>': 'INFO',
-                                '<div class="text-danger"><span class="fa-solid fa-bug" aria-hidden="true"></span>&nbsp;CRITICAL</div>': 'CRITICAL',
-                                '<div class="text-danger"><span class="fa-solid fa-xmark" aria-hidden="true"></span>&nbsp;ERROR</div>': 'ERROR',
                                 '<div class="text-warning"><span class="fa-solid fa-triangle-exclamation" aria-hidden="true"></span>&nbsp;DEBUG</div>': 'DEBUG',
+                                '<div class="text-info"><span class="fa-solid fa-circle-info" aria-hidden="true"></span>&nbsp;INFO</div>': 'INFO',
+                                '<div class="text-warning"><span class="fa-solid fa-flag" aria-hidden="true"></span>&nbsp;NOTICE</div>': 'NOTICE',
+                                '<div class="text-warning"><span class="fa-solid fa-circle-exclamation" aria-hidden="true"></span>&nbsp;WARNING</div>': 'WARNING',
+                                '<div class="text-danger"><span class="fa-solid fa-xmark" aria-hidden="true"></span>&nbsp;ERROR</div>': 'ERROR',
+                                '<div class="text-danger"><span class="fa-solid fa-bug" aria-hidden="true"></span>&nbsp;CRITICAL</div>': 'CRITICAL',
+                                '<div class="text-danger"><span class="fa-solid fa-triangle-exclamation" aria-hidden="true"></span>&nbsp;ALERT</div>': 'ALERT',
+                                '<div class="text-danger"><span class="fa-solid fa-dumpster-fire" aria-hidden="true"></span>&nbsp;EMERGENCY</div>': 'EMERGENCY',
                             },
                         },
                         headerFilterFunc: "in",

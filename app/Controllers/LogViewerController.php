@@ -25,16 +25,24 @@ class LogViewerController extends BaseController
     private const API_CMD_DELETE            = 'delete';
 
     private static array $levelsIcon = [
-        'DEBUG'    => 'fa-solid fa-triangle-exclamation',
-        'INFO'     => 'fa-solid fa-circle-info',
-        'CRITICAL' => 'fa-solid fa-bug',
-        'ERROR'    => 'fa-solid fa-xmark',
+        'DEBUG'     => 'fa-solid fa-triangle-exclamation',
+        'INFO'      => 'fa-solid fa-circle-info',
+        'NOTICE'    => 'fa-solid fa-flag',
+        'WARNING'   => 'fa-solid fa-circle-exclamation',
+        'ERROR'     => 'fa-solid fa-xmark',
+        'CRITICAL'  => 'fa-solid fa-bug',
+        'ALERT'     => 'fa-solid fa-triangle-exclamation',
+        'EMERGENCY' => 'fa-solid fa-dumpster-fire',
     ];
     private static array $levelClasses = [
-        'DEBUG'    => 'warning',
-        'INFO'     => 'info',
-        'CRITICAL' => 'danger',
-        'ERROR'    => 'danger',
+        'DEBUG'     => 'warning',
+        'INFO'      => 'info',
+        'NOTICE'    => 'warning',
+        'WARNING'   => 'warning',
+        'ERROR'     => 'danger',
+        'CRITICAL'  => 'danger',
+        'ALERT'     => 'danger',
+        'EMERGENCY' => 'danger',
     ];
 
     //this is the path (folder) on the system where the log files are stored
@@ -355,7 +363,7 @@ class LogViewerController extends BaseController
     {
         $size = filesize($fileName);
         if (! $size || $size > self::MAX_LOG_SIZE) {
-            return 'File Size too Large. Please donwload it locally';
+            return 'File Size too Large. Please download it locally';
         }
 
         return (! $singleLine) ? file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : file_get_contents($fileName);
