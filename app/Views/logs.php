@@ -152,6 +152,9 @@
                     },
                 ],
                 columnHeaderVertAlign: "bottom",
+                initialSort:[
+                    {column:"date", dir:"desc"}, //sort initially by most recent date
+                ],
                 pagination: "local",
                 paginationSize: 10,
                 paginationSizeSelector: [10, 25, 50, 100],
