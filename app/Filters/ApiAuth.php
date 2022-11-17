@@ -64,6 +64,12 @@ class ApiAuth implements FilterInterface
                 return $response;
             }
 
+            if (in_array('adminOnly', ($arguments !== null) ? $arguments : [], true) && ! $user['isAdmin']) {
+                log_message('notice', 'User {username} tried to perform unauthorized API call {cur_url}', ['username' => $user['username'], 'cur_url' => current_url()]);
+
+                throw new Exception('Access Denied', 401);
+            }
+
             if (! $user['isAdmin']) {
                 $userLabsModel = new UserLabsModel();
                 $userLabs      = $userLabsModel->select('lab_id')->where('user_id', $user['id'])->findAll();
@@ -78,8 +84,8 @@ class ApiAuth implements FilterInterface
 
             return $response;
         } catch (Exception $ex) {
-            $response->setBody('Unauthorized');
-            $response->setStatusCode(401);
+            $response->setBody(! empty($ex->getMessage()) ? $ex->getMessage() : 'Unauthorized');
+            $response->setStatusCode(! empty($ex->getCode()) ? $ex->getCode() : 401);
 
             return $response;
         }

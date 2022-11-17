@@ -180,10 +180,11 @@ class Computer extends ResourceController
         $computer = new ComputerModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'uuid' => $this->request->getVar('uuid'),
-            'mac'  => $this->request->getVar('mac'),
-            'lab'  => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
+            'name'  => $this->request->getVar('name'),
+            'uuid'  => $this->request->getVar('uuid'),
+            'mac'   => $this->request->getVar('mac'),
+            'notes' => $this->request->getVar('notes'),
+            'lab'   => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
         ];
 
         $computer->insert($data);
@@ -231,7 +232,6 @@ class Computer extends ResourceController
      *     },
      *     requestBody={"$ref": "#/components/requestBodies/Computer"}
      * )
-     *
      * @OA\Post(
      *     path="/computer/update/{id}",
      *     tags={"Computer"},
@@ -275,10 +275,11 @@ class Computer extends ResourceController
         $computer = new ComputerModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
-            'uuid' => $this->request->getVar('uuid'),
-            'mac'  => $this->request->getVar('mac'),
-            'room' => $this->request->getVar('room'),
+            'name'  => $this->request->getVar('name'),
+            'uuid'  => $this->request->getVar('uuid'),
+            'mac'   => $this->request->getVar('mac'),
+            'notes' => $this->request->getVar('notes'),
+            'lab'   => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
         ];
 
         $computer->update($id, $data);
@@ -319,7 +320,6 @@ class Computer extends ResourceController
      *         {"bearerAuth": {}}
      *     },
      * )
-     *
      * @OA\Post(
      *     path="/computer/delete/{id}",
      *     tags={"Computer"},
@@ -415,7 +415,6 @@ class Computer extends ResourceController
      *         {"bearerAuth": {}}
      *     }
      * )
-     *
      * @OA\Post(
      *     path="/computer/update/{id}/lab",
      *     tags={"Computer"},

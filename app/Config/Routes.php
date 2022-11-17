@@ -40,15 +40,15 @@ $routes->get('/', 'Home::index');
 $routes->get('locale/(:segment)', 'Locale::set/$1');
 $routes->get('verifyEmail/(:segment)/(:hash)', 'User::verifyEmail/$1/$2');
 
-$routes->match(['get', 'post'], 'registerAdmin', 'User::registerAdmin', ['filter' => 'noauth']);
-$routes->match(['get', 'post'], 'signup', 'User::signup', ['filter' => 'noauth']);
-$routes->match(['get', 'post'], 'login', 'User::login', ['filter' => 'noauth']);
-$routes->get('forgotCredentials', 'User::forgotCredentials', ['filter' => 'noauth']);
-$routes->post('forgotUsername', 'User::forgotUsername', ['filter' => 'noauth']);
-$routes->get('forgotUsername', 'User::forgotCredentials', ['filter' => 'noauth']);
-$routes->get('forgotPassword', 'User::forgotCredentials', ['filter' => 'noauth']);
-$routes->match(['get', 'post'], 'forgotPassword/token/(:hash)', 'User::forgotPasswordToken/$1', ['filter' => 'noauth']);
-$routes->post('forgotPassword', 'User::forgotPassword', ['filter' => 'noauth']);
+$routes->match(['get', 'post'], 'registerAdmin', 'User::registerAdmin', ['filter' => 'no-auth']);
+$routes->match(['get', 'post'], 'signup', 'User::signup', ['filter' => 'no-auth']);
+$routes->match(['get', 'post'], 'login', 'User::login', ['filter' => 'no-auth']);
+$routes->get('forgotCredentials', 'User::forgotCredentials', ['filter' => 'no-auth']);
+$routes->post('forgotUsername', 'User::forgotUsername', ['filter' => 'no-auth']);
+$routes->get('forgotUsername', 'User::forgotCredentials', ['filter' => 'no-auth']);
+$routes->get('forgotPassword', 'User::forgotCredentials', ['filter' => 'no-auth']);
+$routes->match(['get', 'post'], 'forgotPassword/token/(:hash)', 'User::forgotPasswordToken/$1', ['filter' => 'no-auth']);
+$routes->post('forgotPassword', 'User::forgotPassword', ['filter' => 'no-auth']);
 
 $routes->get('sendEmailVerification/(:segment)', 'User::sendValidationEmail/$1', ['filter' => 'auth']);
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
@@ -63,7 +63,7 @@ $routes->get('logout', 'User::logout', ['filter' => 'auth']);
 $routes->get('boot', 'Home::boot');
 $routes->get('initboot', 'Home::initboot');
 
-$routes->add('logs', 'LogViewerController::index', ['filter' => 'auth:adminOnly']);
+$routes->add('logs', 'LogViewer::index', ['filter' => 'auth:adminOnly']);
 /*
  * --------------------------------------------------------------------
  * Additional Routing
@@ -85,22 +85,27 @@ $routes->add('logs', 'LogViewerController::index', ['filter' => 'auth:adminOnly'
  */
 $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
     $routes->get('', 'Swagger::index');
-    $routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'apiauth']);
+    $routes->group('logs', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth:adminOnly'], static function ($routes) {
+        $routes->get('', 'ApiLogViewer::index');
+        $routes->get('view/(:segment)', 'ApiLogViewer::index/view/$1');
+        $routes->get('delete/(:segment)', 'ApiLogViewer::index/delete/$1');
+    });
+    $routes->get('sendEmailVerification/(:segment)', 'User::send_validation_email/$1', ['filter' => 'api-auth']);
     $routes->group('user', static function ($routes) {
         $routes->post('register', 'User::register');
         $routes->post('login', 'User::login');
     });
-    $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('bootmenu', ['controller' => 'BootMenu', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->group('computer', static function ($routes) {
+    $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'api-auth']);
+    $routes->resource('bootmenu', ['controller' => 'BootMenu', 'websafe' => true, 'filter' => 'api-auth']);
+    $routes->group('computer', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
         $routes->put('(:segment)/lab', 'Computer::updateComputerLab/$1');
         $routes->post('update/(:segment)/lab', 'Computer::updateComputerLab/$1');
     });
-    $routes->resource('computer', ['websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('group', ['websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('lab', ['websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('ipxeblock', ['controller' => 'IpxeBlock', 'websafe' => true, 'filter' => 'apiauth']);
-    $routes->resource('schedule', ['websafe' => true, 'filter' => 'apiauth']);
+    $routes->resource('computer', ['websafe' => true, 'filter' => 'api-auth']);
+    $routes->resource('group', ['websafe' => true, 'filter' => 'api-auth']);
+    $routes->resource('lab', ['websafe' => true, 'filter' => 'api-auth']);
+    $routes->resource('ipxeblock', ['controller' => 'IpxeBlock', 'websafe' => true, 'filter' => 'api-auth']);
+    $routes->resource('schedule', ['websafe' => true, 'filter' => 'api-auth']);
 });
 
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {

@@ -6,11 +6,11 @@ use CodeIgniter\HTTP\RedirectResponse;
 use Config\Services;
 use Exception;
 
-class LogViewerController extends BaseController
+class LogViewer extends BaseController
 {
     public const LOG_LINE_HEADER_PATTERN = '/^([A-Z]+)\s*-\s*([\-\d]+\s+[:\d]+)\s*-->\s*(.+)$/';
-    public const MAX_LOG_SIZE            = 52428800; //50MB
-    public const MAX_STRING_LENGTH       = 300; //300 chars
+    public const MAX_LOG_SIZE            = 52428800; // 50MB
+    public const MAX_STRING_LENGTH       = 300; // 300 chars
 
     /**
      * These are the constants representing the
@@ -20,7 +20,7 @@ class LogViewerController extends BaseController
 
     private const API_FILE_QUERY_PARAM      = 'f';
     private const API_LOG_STYLE_QUERY_PARAM = 'sline';
-    private const API_CMD_LIST              = 'list';
+    public const API_CMD_LIST               = 'list';
     private const API_CMD_VIEW              = 'view';
     private const API_CMD_DELETE            = 'delete';
 
@@ -45,21 +45,21 @@ class LogViewerController extends BaseController
         'EMERGENCY' => 'danger',
     ];
 
-    //this is the path (folder) on the system where the log files are stored
+    // this is the path (folder) on the system where the log files are stored
     private string $logFolderPath = WRITEPATH . 'logs/';
 
-    //this is the pattern to pick all log files in the $logFilePath
+    // this is the pattern to pick all log files in the $logFilePath
     private string $logFilePattern = 'log-*.log';
 
-    //this is a combination of the LOG_FOLDER_PATH and LOG_FILE_PATTERN
+    // this is a combination of the LOG_FOLDER_PATH and LOG_FILE_PATTERN
     private string $fullLogFilePath = '';
 
     /**
      * Name of the view to pass to the renderer
-     * Note that for it allows namespaced views if your view is outside
+     * Note that it allows namespaced views if your view is outside
      * the View folder.
      */
-    private string $viewName = '\\iBoot\\Views\\logs';
+    private string $viewName = 'iBoot\\Views\\logs';
 
     public function index()
     {
@@ -82,13 +82,22 @@ class LogViewerController extends BaseController
      */
     private function init()
     {
-        //configure the log folder path and the file pattern for all the logs in the folder
-        $loggerConfig = config('Logger');
-        if (isset($loggerConfig->path)) {
-            $this->logFolderPath = $loggerConfig->path;
+        $viewerConfig = config('Logger');
+
+        // configure the log folder path and the file pattern for all the logs in the folder
+        if ($viewerConfig) {
+            if (isset($viewerConfig->viewName)) {
+                $this->viewName = $viewerConfig->viewName;
+            }
+            if (isset($viewerConfig->logFilePattern)) {
+                $this->logFilePattern = $viewerConfig->logFilePattern;
+            }
+            if (isset($viewerConfig->logFolderPath)) {
+                $this->logFolderPath = $viewerConfig->logFolderPath;
+            }
         }
 
-        //concatenate to form Full Log Path
+        // concatenate to form Full Log Path
         $this->fullLogFilePath = $this->logFolderPath . $this->logFilePattern;
     }
 
@@ -109,9 +118,9 @@ class LogViewerController extends BaseController
             return redirect()->to('/' . $uri);
         }
 
-        //process download of log file command
-        //if the supplied file exists, then perform download
-        //otherwise, just ignore which will resolve to page reloading
+        // process download of log file command
+        // if the supplied file exists, then perform download
+        // otherwise, just ignore which will resolve to page reloading
         $dlFile = $request->getGet('dl');
         if (null !== $dlFile && file_exists($this->logFolderPath . basename(base64_decode($dlFile, true)))) {
             $file = $this->logFolderPath . basename(base64_decode($dlFile, true));
@@ -122,13 +131,13 @@ class LogViewerController extends BaseController
             return $this->processAPIRequests($request->getGet(self::API_QUERY_PARAM));
         }
 
-        //it will either get the value of f or return null
+        // it will either get the value of f or return null
         $fileName = $request->getGet('f');
 
-        //get the log files from the log directory
+        // get the log files from the log directory
         $files = $this->getFiles();
 
-        //let's determine what the current log file is
+        // let's determine what the current log file is
         if (null !== $fileName) {
             $currentFile = $this->logFolderPath . basename(base64_decode($fileName, true));
         } elseif (! empty($files)) {
@@ -137,15 +146,15 @@ class LogViewerController extends BaseController
             $currentFile = null;
         }
 
-        //if the resolved current file is too big
-        //just trigger a download of the file
-        //otherwise process its content as log
+        // if the resolved current file is too big
+        // just trigger a download of the file
+        // otherwise process its content as log
 
         if (null !== $currentFile && file_exists($currentFile)) {
             $fileSize = filesize($currentFile);
 
             if (is_int($fileSize) && $fileSize > self::MAX_LOG_SIZE) {
-                //trigger a download of the current file instead
+                // trigger a download of the current file instead
                 $logs = null;
             } else {
                 $logs = $this->processLogs($this->getLogs($currentFile));
@@ -163,49 +172,49 @@ class LogViewerController extends BaseController
         return view($this->viewName, $data);
     }
 
-    private function processAPIRequests($command)
+    public function processAPIRequests($command = self::API_CMD_LIST, $file = null)
     {
         $request = Services::request();
         if ($command === self::API_CMD_LIST) {
-            //respond with a list of all the files
+            // respond with a list of all the files
             $response['status']    = true;
             $response['log_files'] = $this->getFilesBase64Encoded();
         } elseif ($command === self::API_CMD_VIEW) {
-            //respond to view the logs of a particular file
-            $file                  = $request->getGet(self::API_FILE_QUERY_PARAM);
-            $response['log_files'] = $this->getFilesBase64Encoded();
-
-            if (empty($file)) {
-                $response['status']           = false;
-                $response['error']['message'] = 'Invalid File Name Supplied: [' . json_encode($file) . ']';
-                $response['error']['code']    = 400;
-            } else {
+            // respond to view the logs of a particular file
+            // $file                  = $request->getGet(self::API_FILE_QUERY_PARAM);
+            // $response['log_files'] = $this->getFilesBase64Encoded();
+            $fileName   = basename(base64_decode($file, true));
+            $fileExists = file_exists($this->logFolderPath . $fileName);
+            if (! empty($file) && ! empty($fileName) && $fileExists) {
                 $singleLine         = $request->getGet(self::API_LOG_STYLE_QUERY_PARAM);
                 $singleLine         = $singleLine === true || $singleLine === 'true' || $singleLine === '1';
                 $logs               = $this->processLogsForAPI($file, $singleLine);
                 $response['status'] = true;
                 $response['logs']   = $logs;
+            } else {
+                $response['status']           = false;
+                $response['error']['message'] = 'Invalid File Name Supplied: [' . json_encode($file) . ']';
+                $response['error']['code']    = 400;
             }
         } elseif ($command === self::API_CMD_DELETE) {
-            $file = $request->getGet(self::API_FILE_QUERY_PARAM);
+            // $file = $request->getGet(self::API_FILE_QUERY_PARAM);
 
             if (null === $file) {
                 $response['status']           = false;
                 $response['error']['message'] = 'NULL value is not allowed for file param';
                 $response['error']['code']    = 400;
             } else {
-
-                //decode file if necessary
+                // decode file if necessary
 
                 if ($file !== 'all') {
                     $file       = basename(base64_decode($file, true));
                     $fileExists = file_exists($this->logFolderPath . $file);
                 } else {
-                    //check if the directory exists
+                    // check if the directory exists
                     $fileExists = file_exists($this->logFolderPath);
                 }
 
-                if ($fileExists) {
+                if (! empty($file) && $fileExists) {
                     $this->deleteFiles($file);
                     $response['status']  = true;
                     $response['message'] = 'File [' . $file . '] deleted';
@@ -221,10 +230,10 @@ class LogViewerController extends BaseController
             $response['error']['code']    = 400;
         }
 
-        //convert response to json and respond
+        // convert response to json and respond
         header('Content-Type: application/json');
         if (! $response['status']) {
-            //set a generic bad request code
+            // set a generic bad request code
             http_response_code(400);
         } else {
             http_response_code(200);
@@ -253,7 +262,7 @@ class LogViewerController extends BaseController
 
         foreach ($logs as $log) {
             if ($this->getLogHeaderLine($log, $level, $logDate, $logMessage)) {
-                //this is actually the start of a new log and not just another line from previous log
+                // this is actually the start of a new log and not just another line from previous log
                 $data = [
                     'level' => $level,
                     'date'  => $logDate,
@@ -270,8 +279,8 @@ class LogViewerController extends BaseController
 
                 $superLog[] = $data;
             } elseif (! empty($superLog)) {
-                //this log line is a continuation of previous logline
-                //so let's add them as extra
+                // this log line is a continuation of previous logline
+                // so let's add them as extra
                 $prevLog                        = $superLog[count($superLog) - 1];
                 $extra                          = (array_key_exists('extra', $prevLog)) ? $prevLog['extra'] : '';
                 $prevLog['extra']               = $extra . '<br>' . $log;
@@ -286,7 +295,7 @@ class LogViewerController extends BaseController
      * This function will extract the logs in the supplied
      * fileName
      *
-     * @param $fileNameInBase64
+     * @param mixed $fileNameInBase64
      *
      * @return bool|string|null
      *
@@ -296,12 +305,12 @@ class LogViewerController extends BaseController
     {
         $logs = null;
 
-        //let's prepare the log file name sent from the client
+        // let's prepare the log file name sent from the client
         $currentFile = $this->prepareRawFileName($fileNameInBase64);
 
-        //if the resolved current file is too big
-        //just return null
-        //otherwise process its content as log
+        // if the resolved current file is too big
+        // just return null
+        // otherwise process its content as log
         if (null !== $currentFile) {
             $fileSize = filesize($currentFile);
 
@@ -310,6 +319,7 @@ class LogViewerController extends BaseController
             }
         }
 
+        // trigger a download of the current file instead
         return $logs;
     }
 
@@ -330,7 +340,8 @@ class LogViewerController extends BaseController
      * each element in the array is a line
      * in the underlying log file
      *
-     * @returns array each line of file contents is an entry in the returned array.
+     * @returns array | each line of file contents is an entry in the returned array.
+     *
      * @params complete fileName
      *
      * @param mixed $fileName
@@ -350,12 +361,12 @@ class LogViewerController extends BaseController
      * file as a string. It will first check for the
      * size of the file before attempting to get the contents.
      *
-     * By default, it will return all the log contents as an array where the
+     * By default it will return all the log contents as an array where the
      * elements of the array is the individual lines of the files
      * otherwise, it will return all file content as a single string with each line ending
      * in line break character "\n"
      *
-     * @param $fileName
+     * @param mixed $fileName
      *
      * @return bool|string
      */
@@ -374,11 +385,11 @@ class LogViewerController extends BaseController
      * It will reverse the files fetched and
      * make sure the latest log file is in the first index
      *
-     * @param mixed $basename
+     * @param bool $basename If true returns the basename of the files otherwise full path
      *
-     * @return array|false
-     */
-    private function getFiles($basename = true)
+     * @returns array of file
+     * */
+    private function getFiles(bool $basename = true)
     {
         $files = glob($this->fullLogFilePath);
 
@@ -396,8 +407,8 @@ class LogViewerController extends BaseController
     /**
      * This function will return an array of available log
      * files
-     * The array will containt the base64encoded name
-     * as well as the real name of the fiile
+     * The array will contain the base64encoded name
+     * as well as the real name of the file
      *
      * @internal param bool $appendURL
      * @internal param bool $basename
@@ -411,8 +422,8 @@ class LogViewerController extends BaseController
 
         $finalFiles = [];
 
-        //if we're to return the base name of the files
-        //let's do that here
+        // if we're to return the base name of the files
+        // let's do that here
         foreach ($files as $file) {
             $finalFiles[] = ['file_b64' => base64_encode(basename($file)), 'file_name' => basename($file)];
         }
@@ -423,7 +434,7 @@ class LogViewerController extends BaseController
     /**
      * Delete one or more log file in the logs directory
      *
-     * @param mixed $fileName
+     * @param mixed $fileName It can be all - to delete all log files - or specific for a file
      */
     private function deleteFiles($fileName)
     {
@@ -439,7 +450,7 @@ class LogViewerController extends BaseController
      * This should only be called if the file exists
      * hence, the file exist check has ot be done by the caller
      *
-     * @param mixed $file
+     * @param mixed $file the complete file path
      */
     private function downloadFile($file)
     {
@@ -460,14 +471,13 @@ class LogViewerController extends BaseController
      * name as sent from the browser/client
      * and append the LOG_FOLDER_PREFIX and decode it from base64
      *
-     * @param $fileNameInBase64
-     *
      * @internal param $fileName
+     *
+     * @param mixed $fileNameInBase64
      */
     private function prepareRawFileName($fileNameInBase64): ?string
     {
-
-        //let's determine what the current log file is
+        // let's determine what the current log file is
         if (! empty($fileNameInBase64)) {
             $currentFile = $this->logFolderPath . basename(base64_decode($fileNameInBase64, true));
         } else {
