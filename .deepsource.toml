@@ -1,5 +1,13 @@
 version = 1
 
+exclude_patterns = [
+  "app/Views/errors/**"
+]
+
+test_patterns = [
+  "**/tests/**"
+]
+
 [[analyzers]]
 name = "php"
 enabled = true
@@ -7,3 +15,7 @@ enabled = true
 [[analyzers]]
 name = "javascript"
 enabled = true
+
+  [analyzers.meta]
+  bootstrap_files = ["public/index.php"]
+  skip_doc_coverage = ["class", "magic", "nonpublic"]
