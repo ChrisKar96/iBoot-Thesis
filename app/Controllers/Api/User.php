@@ -49,8 +49,8 @@ class User extends ResourceController
         $user = new UserModel();
 
         $data = $user->findAll();
-
-        for ($i = 0; $i < count($data); $i++) {
+        $data_num = count($data);
+        for ($i = 0; $i < $data_num; $i++) {
             unset($data[$i]['password']);
         }
 
@@ -110,7 +110,8 @@ class User extends ResourceController
         $data = $user->where(['id' => $id])->first();
 
         if ($data) {
-            for ($i = 0; $i < count($data); $i++) {
+            $data_num = count($data);
+            for ($i = 0; $i < $data_num; $i++) {
                 unset($data[$i]['password']);
             }
 

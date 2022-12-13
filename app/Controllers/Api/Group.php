@@ -58,7 +58,8 @@ class Group extends ResourceController
         $data = $group->findAll();
 
         // Explode groups as json array
-        for ($i = 0; $i < count($data); $i++) {
+        $data_num = count($data);
+        for ($i = 0; $i < $data_num; $i++) {
             $data[$i]['computers'] = explode(',', $data[$i]['computers']);
         }
 

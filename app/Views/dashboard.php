@@ -15,7 +15,8 @@
                     [lang('Text.schedules'), 'schedule.png', 'schedules'],
                 ];
 
-                for ($i = 0; $i <= count($items) - 1; $i++) {
+                $item_num = count($items);
+                for ($i = 0; $i < $item_num; $i++) {
                     if ($i % 2 === 0) {
                         echo '<div class="col-xs-12 col-md-4"><ul class="list-group h-100">';
                     } ?>

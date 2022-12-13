@@ -74,7 +74,8 @@ class Computer extends ResourceController
         log_message('debug', "computer api index query return:\n{data}", ['data' => var_export($data, true)]);
 
         // Explode groups as json array
-        for ($i = 0; $i < count($data); $i++) {
+        $data_num = count($data);
+        for ($i = 0; $i < $data_num; $i++) {
             $data[$i]['groups'] = explode(',', $data[$i]['groups']);
         }
 
