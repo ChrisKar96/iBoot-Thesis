@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers;
 
 class Computers extends BaseController
@@ -38,7 +47,7 @@ class Computers extends BaseController
                                     formatterParams: groups,
                                 },
                                 {
-                                    title:"' . lang('Text.lab') . '", field:"room", editor:"list",
+                                    title:"' . lang('Text.lab') . '", field:"lab", editor:"list",
 									editorParams:{
 										values:labs,
 										disabled:true,
@@ -58,8 +67,8 @@ class Computers extends BaseController
 
                                 async function getGroups(){
                                     await api_call("' . base_url('/api/group') . '", "GET").then(function(response) {
-                                        for (i = 0; i < response.data.length; i++) {
-                                            groups[response.data[i].id] = response.data[i].name;
+                                        for (i = 0; i < response.length; i++) {
+                                            groups[response[i].id] = response[i].name;
                                         }
                                     });
                                 }
@@ -71,17 +80,13 @@ class Computers extends BaseController
                                 async function getLabs(){
                                     await api_call("' . base_url('/api/lab') . '", "GET").then(function(response) {
                                         labs[null] = "-";
-                                        for (i = 0; i < response.data.length; i++) {
-                                            labs[response.data[i].id] = response.data[i].name;
+                                        for (i = 0; i < response.length; i++) {
+                                            labs[response[i].id] = response[i].name;
                                         }
                                     });
                                 }
 
                                 getLabs();
-
-                                function updateBuildingRooms(cell){
-									
-                                }
                 ',
             ]
         );

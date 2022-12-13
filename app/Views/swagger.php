@@ -1,3 +1,6 @@
+<?php
+
+if (isset($apiSpecPath)):?>
 <!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +40,7 @@
     window.onload = function() {
       // Begin Swagger UI call region
       window.ui = SwaggerUIBundle({
-          spec: <?= session()->get('iBootAPISpec') ?>,
+          spec: <?= file_get_contents($apiSpecPath); ?>,
           dom_id: '#swagger-ui',
           deepLinking: true,
           presets: [
@@ -47,7 +50,7 @@
           <?php if (session()->has('user')): ?>
           ,onComplete: function() {
               // Default API key
-              ui.preauthorizeApiKey("bearerAuth", "<?=session()->get('user')['token']; ?>")
+              ui.preauthorizeApiKey("bearerAuth", "<?= session()->get('user')['token']; ?>")
           }
           <?php endif; ?>
       })
@@ -57,3 +60,7 @@
 </body>
 
 </html>
+
+<?php
+endif; ?>
+

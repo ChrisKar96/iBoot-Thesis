@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers;
 
 use CodeIgniter\HTTP\RedirectResponse;
@@ -13,6 +22,58 @@ use ReflectionException;
 
 class User extends BaseController
 {
+    public function index(): string
+    {
+        return view(
+            'table',
+            [
+                'title'     => lang('Text.users'),
+                'tabulator' => true,
+                'apiTarget' => base_url('/api/user'),
+                'columns'   => '{title:"' . lang('Text.fullname') . '", field:"name", sorter:"string", editor:"input"},
+                                {title:"' . lang('Text.email') . '", field:"email", sorter:"string", editor:"input"},
+                                {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string", editor:"input"},
+                                {title:"' . lang('Text.username') . '", field:"username", sorter:"string", editor:"input"},
+                                {title:"' . lang('Text.password') . '", field:"password", editor:"input"},
+                                {title:"' . lang('Text.administrator') . '", field:"isAdmin", sorter:"string", editor:"tickCross", formatter:"tickCross"},
+                                {title:"' . lang('Text.verifiedEmail') . '", field:"verifiedEmail", sorter:"string", editor:"tickCross", formatter:"tickCross"},
+                                {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", formatter:"datetime"},
+                                {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", formatter:"datetime"},
+                                {
+                                    title:"' . lang('Text.lab') . '", field:"lab", editor:"list",
+									editorParams:{
+                                        multiselect:true,
+										values:labs,
+										disabled:true,
+									},
+									formatter:function (cell, formatterParams, onRendered) {
+										if(typeof cell.getValue() !== "undefined"){
+											if(typeof formatterParams[cell.getValue()] === "undefined") {
+												console.warn(\'Missing display value for \' + cell.getValue());
+												return cell.getValue();
+											}
+											return formatterParams[cell.getValue()];
+										}
+									},
+									formatterParams: labs,
+                                },',
+                'JS_bef_tb' => 'let labs = {};
+
+                                async function getLabs(){
+                                    await api_call("' . base_url('/api/lab') . '", "GET").then(function(response) {
+                                        labs[null] = "-";
+                                        for (i = 0; i < response.length; i++) {
+                                            labs[response[i].id] = response[i].name;
+                                        }
+                                    });
+                                }
+
+                                getLabs();
+                ',
+            ]
+        );
+    }
+
     /**
      * @throws Exception
      */
@@ -106,8 +167,8 @@ class User extends BaseController
             'iss'      => 'iBoot',
             'aud'      => base_url(),
             'sub'      => 'iBoot API',
-            'iat'      => $iat, //Time the JWT issued at
-            'nbf'      => $nbf, //not before in seconds
+            'iat'      => $iat, // Time the JWT issued at
+            'nbf'      => $nbf, // not before in seconds
             'exp'      => $exp, // Expiration time of token
             'username' => $username,
         ];

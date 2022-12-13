@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers;
 
 class Groups extends BaseController
@@ -39,8 +48,8 @@ class Groups extends BaseController
 
                                 async function getComputers(){
                                     await api_call("' . base_url('/api/computer') . '", "GET").then(function(response) {
-                                        for (i = 0; i < response.data.length; ++i) {
-                                            computers[response.data[i].id] = response.data[i].name;
+                                        for (i = 0; i < response.length; ++i) {
+                                            computers[response[i].id] = response[i].name;
                                         }
                                     });
                                 }

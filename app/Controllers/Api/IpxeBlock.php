@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
@@ -41,14 +50,7 @@ class IpxeBlock extends ResourceController
 
         $data = $os_image->findAll();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => count($data) . ' Ipxe Blocks Found',
-            'data'     => $data,
-        ];
-
-        return $this->respond($response);
+        return $this->respond($data, 200, count($data) . ' Ipxe Blocks Found');
     }
 
     /**
@@ -96,14 +98,7 @@ class IpxeBlock extends ResourceController
         $data = $os_image->where(['id' => $id])->first();
 
         if ($data) {
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Ipxe Block with id ' . $id . ' Found',
-                'data'     => $data,
-            ];
-
-            return $this->respond($response);
+            return $this->respond($data, 200, 'Ipxe Block with id ' . $id . ' Found');
         }
 
         return $this->failNotFound('No Ipxe Block Found with id ' . $id);
@@ -147,13 +142,7 @@ class IpxeBlock extends ResourceController
 
         $id = $os_image->getInsertID();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Ipxe Block Saved with id ' . $id,
-        ];
-
-        return $this->respondCreated($response);
+        return $this->respondCreated(null, 'Ipxe Block Saved with id ' . $id);
     }
 
     /**
@@ -188,9 +177,8 @@ class IpxeBlock extends ResourceController
      *     },
      *     requestBody={"$ref": "#/components/requestBodies/IpxeBlock"}
      * )
-     *
      * @OA\Post(
-     *     path="/ipxeblock/update{id}",
+     *     path="/ipxeblock/{id}",
      *     tags={"IpxeBlock"},
      *     summary="Update an existing IpxeBlock (Websafe alternative)",
      *     operationId="updateIpxeBlockWebsafe",
@@ -238,13 +226,7 @@ class IpxeBlock extends ResourceController
 
         $os_image->update($id, $data);
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Ipxe Block with id ' . $id . ' Updated',
-        ];
-
-        return $this->respondUpdated($response);
+        return $this->respondUpdated(null, 'Ipxe Block with id ' . $id . ' Updated');
     }
 
     /**
@@ -274,9 +256,8 @@ class IpxeBlock extends ResourceController
      *         {"bearerAuth": {}}
      *     },
      * )
-     *
      * @OA\Post(
-     *     path="/ipxeblock/delete/{id}",
+     *     path="/ipxeblock/{id}/delete",
      *     tags={"IpxeBlock"},
      *     summary="Deletes a IpxeBlock (Websafe alternative)",
      *     operationId="deleteIpxeBlockWebsafe",
@@ -315,13 +296,7 @@ class IpxeBlock extends ResourceController
         if ($data) {
             $os_image->delete($id);
 
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Ipxe Block with id ' . $id . ' Deleted',
-            ];
-
-            return $this->respondDeleted($response);
+            return $this->respondDeleted(null, 'Ipxe Block with id ' . $id . ' Deleted');
         }
 
         return $this->failNotFound('No Ipxe Block Found with id ' . $id);

@@ -51,7 +51,7 @@ if (isset($columns, $apiTarget)): ?>
                 if (isset($JS_bef_tb)) {
                     echo $JS_bef_tb;
                 }
-                ?>
+    ?>
 
                 var eventlist = [{"title":"Conference","start":"2022-05-26","end":"2022-05-28"},{"title":"Meeting","start":"2022-05-27T10:30:00+00:00","end":"2022-05-27T12:30:00+00:00"},{"title":"Lunch","start":"2022-05-27T12:00:00+00:00"},{"title":"Birthday Party","start":"2022-05-28T07:00:00+00:00"},{"url":"http:\/\/google.com\/","title":"Click for Google","start":"2022-05-28"}];
 
@@ -85,10 +85,10 @@ if (isset($columns, $apiTarget)): ?>
                 });
 
 				<?php
-                if (isset($JS_aft_tb)) {
-                    echo $JS_aft_tb;
-                }
-                ?>
+    if (isset($JS_aft_tb)) {
+        echo $JS_aft_tb;
+    }
+?>
 
             </script>
         </div>

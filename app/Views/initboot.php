@@ -114,7 +114,7 @@ item --gap Filename:
 item filename ${space} ${netX/filename}
 choose empty ||
 goto main_menu
-		<?php
+<?php
         } catch (ReflectionException $e) {
             echo $e->getMessage();
         }
@@ -133,7 +133,5 @@ goto main_menu
         }
     }
 ?>
-
-
 
 <?php endif; ?>

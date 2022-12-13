@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
@@ -41,14 +50,7 @@ class BootMenu extends ResourceController
 
         $data = $boot_menu->findAll();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => count($data) . ' Boot Menu Found',
-            'data'     => $data,
-        ];
-
-        return $this->respond($response);
+        return $this->respond($data, 200, count($data) . ' Boot Menu Found');
     }
 
     /**
@@ -98,14 +100,7 @@ class BootMenu extends ResourceController
         $data = $boot_menu->where(['id' => $id])->first();
 
         if ($data) {
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Boot Menu with id ' . $id . ' Found',
-                'data'     => $data,
-            ];
-
-            return $this->respond($response);
+            return $this->respond($data, 200, 'Boot Menu with id ' . $id . ' Found');
         }
 
         return $this->failNotFound('No Boot Menu Found with id ' . $id);
@@ -148,13 +143,7 @@ class BootMenu extends ResourceController
 
         $id = $boot_menu->getInsertID();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Boot Menu Saved with id ' . $id,
-        ];
-
-        return $this->respondCreated($response);
+        return $this->respondCreated(null, 'Boot Menu Saved with id ' . $id);
     }
 
     /**
@@ -189,9 +178,8 @@ class BootMenu extends ResourceController
      *     },
      *     requestBody={"$ref": "#/components/requestBodies/BootMenu"}
      * )
-     *
      * @OA\Post(
-     *     path="/bootmenu/update/{id}",
+     *     path="/bootmenu/{id}",
      *     tags={"BootMenu"},
      *     summary="Update an existing BootMenu (Websafe alternative)",
      *     operationId="updateBootMenuWebsafe",
@@ -238,13 +226,7 @@ class BootMenu extends ResourceController
 
         $boot_menu->update($id, $data);
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Boot Menu with id ' . $id . ' Updated',
-        ];
-
-        return $this->respondUpdated($response);
+        return $this->respondUpdated(null, 'Boot Menu with id ' . $id . ' Updated');
     }
 
     /**
@@ -274,9 +256,8 @@ class BootMenu extends ResourceController
      *         {"bearerAuth": {}}
      *     },
      * )
-     *
      * @OA\Post(
-     *     path="/bootmenu/delete/{id}",
+     *     path="/bootmenu/{id}/delete",
      *     tags={"BootMenu"},
      *     summary="Deletes a BootMenu (Websafe alternative)",
      *     operationId="deleteBootMenuWebsafe",
@@ -315,13 +296,7 @@ class BootMenu extends ResourceController
         if ($data) {
             $boot_menu->delete($id);
 
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Boot Menu with id ' . $id . ' Deleted',
-            ];
-
-            return $this->respondDeleted($response);
+            return $this->respondDeleted(null, 'Boot Menu with id ' . $id . ' Deleted');
         }
 
         return $this->failNotFound('No Boot Menu Found with id ' . $id);

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Filters;
 
 use CodeIgniter\Filters\FilterInterface;
@@ -8,6 +17,11 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Locale implements FilterInterface
 {
+    /**
+     * Set the user's chosen locale.
+     *
+     * @return void
+     */
     public function before(RequestInterface $request, $arguments = null)
     {
         if (session()->has('locale')) {
@@ -19,10 +33,12 @@ class Locale implements FilterInterface
         }
     }
 
-    //--------------------------------------------------------------------
-
+    /**
+     * Empty, just for interface satisfaction.
+     *
+     * @return void
+     */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // Do something here
     }
 }

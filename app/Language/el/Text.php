@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 // Greek App Text
 return [
     'christos_karamolegkos'                  => 'Χρήστος Καραμολέγκος',
@@ -24,6 +33,8 @@ return [
     'computer'                               => 'Υπολογιστής',
     'computers'                              => 'Υπολογιστές',
     'toggle_navigation_bar'                  => 'Εναλλαγή μπάρας πλοήγησης',
+    'user'                                   => 'Χρήστης',
+    'users'                                  => 'Χρήστες',
     'username'                               => 'Όνομα Χρήστη',
     'username_or_email'                      => 'Όνομα Χρήστη ή Email',
     'password'                               => 'Κωδικός',
@@ -31,6 +42,10 @@ return [
     'name'                                   => 'Όνομα',
     'fullname'                               => 'Ονοματεπώνυμο',
     'phone'                                  => 'Τηλέφωνο',
+    'administrator'                          => 'Διαχειριστής',
+    'verifiedEmail'                          => 'Επιβεβαιωμένο Email',
+    'created_at'                             => 'Δημιουργήθηκε στις',
+    'updated_at'                             => 'Ενημερώθηκε στις',
     'retype_password'                        => 'Επαλήθευση Κωδικού',
     'address'                                => 'Διεύθυνση',
     'delete'                                 => 'Διαγραφή',

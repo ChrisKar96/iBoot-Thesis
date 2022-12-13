@@ -48,6 +48,10 @@ if (! isset($title)) {
 					<?php
                     if (session()->get('user')['isAdmin']) : ?>
                         <li class="nav-item">
+                            <a class="nav-link <?= ($title === lang('Text.users')) ? ' active' : ''; ?>" aria-current="page"
+                               href="<?= site_url('users'); ?>"><?= lang('Text.users'); ?></a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link <?= ($title === lang('Text.log_viewer')) ? ' active' : ''; ?>" aria-current="page"
                                href="<?= site_url('logs'); ?>"><?= lang('Text.log_viewer'); ?></a>
                         </li>

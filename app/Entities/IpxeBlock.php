@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Entities;
 
 use CodeIgniter\Entity\Entity;
@@ -11,11 +20,9 @@ use OpenApi\Annotations as OA;
  * @OA\Schema(
  *     title="IpxeBlock"
  * )
- *
  * @OA\Tag(
  *     name="IpxeBlock"
  * )
- *
  * @OA\RequestBody(
  *     request="IpxeBlock",
  *     description="IpxeBlock object",

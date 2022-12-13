@@ -1,25 +1,20 @@
 <?php
 
-namespace iBoot\Controllers;
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
 
-use Config\Services;
-use Exception;
+namespace iBoot\Controllers;
 
 class Labs extends BaseController
 {
     public function index()
     {
-        $client    = Services::curlrequest();
-        $apiTarget = base_url('api/lab');
-
-        try {
-            //$response = $client->get($apiTarget, ['header' => ['Authorization' => 'Bearer ' . session()->get('apiToken')]]);
-            $client->appendHeader('Authorization', 'Bearer ' . session()->get('apiToken'));
-            $response = $client->get($apiTarget);
-        } catch (Exception $exception) {
-            $response = $exception->getMessage();
-        }
-
         return view(
             'table',
             [

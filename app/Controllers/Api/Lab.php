@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
@@ -41,14 +50,7 @@ class Lab extends ResourceController
 
         $data = $lab->findAll();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => count($data) . ' Labs Found',
-            'data'     => $data,
-        ];
-
-        return $this->respond($response);
+        return $this->respond($data, 200, count($data) . ' Labs Found');
     }
 
     /**
@@ -98,14 +100,7 @@ class Lab extends ResourceController
         $data = $lab->where(['id' => $id])->first();
 
         if ($data) {
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Lab with id ' . $id . ' Found',
-                'data'     => $data,
-            ];
-
-            return $this->respond($response);
+            return $this->respond($data, 200, 'Lab with id ' . $id . ' Found');
         }
 
         return $this->failNotFound('No Lab Found with id ' . $id);
@@ -138,35 +133,19 @@ class Lab extends ResourceController
      */
     public function create(): Response
     {
-        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        $lab = new LabModel();
 
-        if ($userIsAdmin) {
-            $lab = new LabModel();
+        $data = [
+            'name'    => $this->request->getVar('name'),
+            'address' => $this->request->getVar('address'),
+            'phone'   => $this->request->getVar('phone'),
+        ];
 
-            $data = [
-                'name'    => $this->request->getVar('name'),
-                'address' => $this->request->getVar('address'),
-                'phone'   => $this->request->getVar('phone'),
-            ];
+        $lab->insert($data);
 
-            $lab->insert($data);
+        $id = $lab->getInsertID();
 
-            $id = $lab->getInsertID();
-
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Lab Saved with id ' . $id,
-            ];
-
-            return $this->respondCreated($response);
-        }
-
-        $response = service('response');
-        $response->setBody('Access denied');
-        $response->setStatusCode(401);
-
-        return $response;
+        return $this->respondCreated(null, 'Lab Saved with id ' . $id);
     }
 
     /**
@@ -201,9 +180,8 @@ class Lab extends ResourceController
      *     },
      *     requestBody={"$ref": "#/components/requestBodies/Lab"}
      * )
-     *
      * @OA\Post(
-     *     path="/lab/update/{id}",
+     *     path="/lab/{id}",
      *     tags={"Lab"},
      *     summary="Update an existing Lab (Websafe alternative)",
      *     operationId="updateLabWebsafe",
@@ -252,13 +230,7 @@ class Lab extends ResourceController
 
         $lab->update($id, $data);
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Lab with id ' . $id . ' Updated',
-        ];
-
-        return $this->respondUpdated($response);
+        return $this->respondUpdated(null, 'Lab with id ' . $id . ' Updated');
     }
 
     /**
@@ -288,9 +260,8 @@ class Lab extends ResourceController
      *         {"bearerAuth": {}}
      *     },
      * )
-     *
      * @OA\Post(
-     *     path="/lab/delete/{id}",
+     *     path="/lab/{id}/delete",
      *     tags={"Lab"},
      *     summary="Deletes a Lab (Websafe alternative)",
      *     operationId="deleteLabWebsafe",
@@ -329,13 +300,7 @@ class Lab extends ResourceController
         if ($data) {
             $lab->delete($id);
 
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Lab with id ' . $id . ' Deleted',
-            ];
-
-            return $this->respondDeleted($response);
+            return $this->respondDeleted(null, 'Lab with id ' . $id . ' Deleted');
         }
 
         return $this->failNotFound('No Lab Found with id ' . $id);

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 // English App Text
 return [
     'christos_karamolegkos'                  => 'Christos Karamolegkos',
@@ -24,6 +33,8 @@ return [
     'computer'                               => 'Computer',
     'computers'                              => 'Computers',
     'toggle_navigation_bar'                  => 'Toggle navigation bar',
+    'user'                                   => 'User',
+    'users'                                  => 'Users',
     'username'                               => 'Username',
     'username_or_email'                      => 'Username or Email',
     'password'                               => 'Password',
@@ -31,6 +42,10 @@ return [
     'name'                                   => 'Name',
     'fullname'                               => 'Fullname',
     'phone'                                  => 'Phone',
+    'administrator'                          => 'Administrator',
+    'verifiedEmail'                          => 'Verified Email',
+    'created_at'                             => 'Created at',
+    'updated_at'                             => 'Updated at',
     'retype_password'                        => 'Retype Password',
     'address'                                => 'Address',
     'delete'                                 => 'Delete',

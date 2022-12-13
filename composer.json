@@ -53,7 +53,7 @@
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.1",
         "friendsofphp/php-cs-fixer": "*",
-        "codeigniter/coding-standard": "^1.1",
+        "codeigniter/coding-standard": "^1.7",
         "roave/security-advisories": "dev-latest",
         "ext-xdebug": "*",
         "tatter/patches": "^2.0"

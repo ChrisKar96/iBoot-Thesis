@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
@@ -53,14 +62,7 @@ class Group extends ResourceController
             $data[$i]['computers'] = explode(',', $data[$i]['computers']);
         }
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => count($data) . ' Groups Found',
-            'data'     => $data,
-        ];
-
-        return $this->respond($response);
+        return $this->respond($data, 200, count($data) . ' Groups Found');
     }
 
     /**
@@ -121,14 +123,7 @@ class Group extends ResourceController
         }
 
         if ($data) {
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Group with id ' . $id . ' Found',
-                'data'     => $data,
-            ];
-
-            return $this->respond($response);
+            return $this->respond($data, 200, 'Group with id ' . $id . ' Found');
         }
 
         return $this->failNotFound('No Group Found with id ' . $id);
@@ -172,13 +167,7 @@ class Group extends ResourceController
 
         $id = $group->getInsertID();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Group Saved with id ' . $id,
-        ];
-
-        return $this->respondCreated($response);
+        return $this->respondCreated(null, 'Group Saved with id ' . $id);
     }
 
     /**
@@ -213,9 +202,8 @@ class Group extends ResourceController
      *     },
      *     requestBody={"$ref": "#/components/requestBodies/Group"}
      * )
-     *
      * @OA\Post(
-     *     path="/group/update/{id}",
+     *     path="/group/{id}",
      *     tags={"Group"},
      *     summary="Update an existing Group (Websafe alternative)",
      *     operationId="updateGroupWebsafe",
@@ -263,13 +251,7 @@ class Group extends ResourceController
 
         $group->update($id, $data);
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Group with id ' . $id . ' Updated',
-        ];
-
-        return $this->respondUpdated($response);
+        return $this->respondUpdated(null, 'Group with id ' . $id . ' Updated');
     }
 
     /**
@@ -299,9 +281,8 @@ class Group extends ResourceController
      *         {"bearerAuth": {}}
      *     },
      * )
-     *
      * @OA\Post(
-     *     path="/group/delete/{id}",
+     *     path="/group/{id}/delete",
      *     tags={"Group"},
      *     summary="Deletes a Group (Websafe alternative)",
      *     operationId="deleteGroupWebsafe",
@@ -340,13 +321,7 @@ class Group extends ResourceController
         if ($data) {
             $group->delete($id);
 
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Group with id ' . $id . ' Deleted',
-            ];
-
-            return $this->respondDeleted($response);
+            return $this->respondDeleted(null, 'Group with id ' . $id . ' Deleted');
         }
 
         return $this->failNotFound('No Group Found with id ' . $id);

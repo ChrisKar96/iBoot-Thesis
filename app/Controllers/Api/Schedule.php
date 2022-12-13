@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
@@ -41,14 +50,7 @@ class Schedule extends ResourceController
 
         $data = $schedule->findAll();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => count($data) . ' Schedules Found',
-            'data'     => $data,
-        ];
-
-        return $this->respond($response);
+        return $this->respond($data, 200, count($data) . ' Schedules Found');
     }
 
     /**
@@ -96,14 +98,7 @@ class Schedule extends ResourceController
         $data = $schedule->where(['id' => $id])->first();
 
         if ($data) {
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Schedule with id ' . $id . ' Found',
-                'data'     => $data,
-            ];
-
-            return $this->respond($response);
+            return $this->respond($data, 200, 'Schedule with id ' . $id . ' Found');
         }
 
         return $this->failNotFound('No Schedule Found with id ' . $id);
@@ -146,13 +141,7 @@ class Schedule extends ResourceController
 
         $id = $schedule->getInsertID();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Schedule Saved with id ' . $id,
-        ];
-
-        return $this->respondCreated($response);
+        return $this->respondCreated(null, 'Schedule Saved with id ' . $id);
     }
 
     /**
@@ -187,9 +176,8 @@ class Schedule extends ResourceController
      *     },
      *     requestBody={"$ref": "#/components/requestBodies/Schedule"}
      * )
-     *
      * @OA\Post(
-     *     path="/schedule/update/{id}",
+     *     path="/schedule/{id}",
      *     tags={"Schedule"},
      *     summary="Update an existing Schedule (Websafe alternative)",
      *     operationId="updateScheduleWebsafe",
@@ -236,13 +224,7 @@ class Schedule extends ResourceController
 
         $schedule->update($id, $data);
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Schedule with id ' . $id . ' Updated',
-        ];
-
-        return $this->respondUpdated($response);
+        return $this->respondUpdated(null, 'Schedule with id ' . $id . ' Updated');
     }
 
     /**
@@ -272,9 +254,8 @@ class Schedule extends ResourceController
      *         {"bearerAuth": {}}
      *     },
      * )
-     *
      * @OA\Post(
-     *     path="/schedule/delete/{id}",
+     *     path="/schedule/{id}/delete",
      *     tags={"Schedule"},
      *     summary="Deletes a Schedule (Websafe alternative)",
      *     operationId="deleteScheduleWebsafe",
@@ -313,13 +294,7 @@ class Schedule extends ResourceController
         if ($data) {
             $schedule->delete($id);
 
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Schedule with id ' . $id . ' Deleted',
-            ];
-
-            return $this->respondDeleted($response);
+            return $this->respondDeleted(null, 'Schedule with id ' . $id . ' Deleted');
         }
 
         return $this->failNotFound('No Schedule Found with id ' . $id);

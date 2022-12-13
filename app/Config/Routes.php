@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Config;
 
 // Create a new instance of our RouteCollection class.
@@ -53,6 +62,7 @@ $routes->post('forgotPassword', 'User::forgotPassword', ['filter' => 'no-auth'])
 $routes->get('sendEmailVerification/(:segment)', 'User::sendValidationEmail/$1', ['filter' => 'auth']);
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
+$routes->get('users', 'User::index', ['filter' => 'auth:adminOnly']);
 $routes->get('computers', 'Computers::index', ['filter' => 'auth']);
 $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
 $routes->get('labs', 'Labs::index', ['filter' => 'auth']);
@@ -103,7 +113,11 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     });
     $routes->resource('computer', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'api-auth']);
-    $routes->resource('lab', ['websafe' => true, 'filter' => 'api-auth']);
+    $routes->group('lab', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
+        $routes->get('', 'Lab::index');
+        $routes->get('(:segment)', 'Lab::show/$1');
+    });
+    $routes->resource('lab', ['except' => 'index,show', 'websafe' => true, 'filter' => 'api-auth:adminOnly']);
     $routes->resource('ipxeblock', ['controller' => 'IpxeBlock', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('schedule', ['websafe' => true, 'filter' => 'api-auth']);
 });

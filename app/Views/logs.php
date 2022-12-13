@@ -53,7 +53,7 @@
                             <br><br>
                         </div>
 					<?php else: ?>
-                        <table id="table-log" class="table-striped table-sm">
+                        <table id="table-log" class="table-striped table-bordered">
                             <thead>
                             <tr>
                                 <th><?= lang('Text.level'); ?></th>

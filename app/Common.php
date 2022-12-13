@@ -1,6 +1,14 @@
 <?php
 
 /**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+/**
  * The goal of this file is to allow developers a location
  * where they can overwrite core procedural functions and
  * replace them with their own. This file is loaded during

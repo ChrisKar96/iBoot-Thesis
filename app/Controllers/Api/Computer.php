@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
@@ -40,6 +49,10 @@ class Computer extends ResourceController
         $userIsAdmin   = session()->getFlashdata('userIsAdmin');
         $userLabAccess = session()->getFlashdata('userLabAccess');
 
+        if (! $userIsAdmin && empty($userLabAccess)) {
+            return $this->respond(null, 401, 'Access denied');
+        }
+
         $computer = new ComputerModel();
         $computer->builder()->select(
             'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
@@ -49,11 +62,9 @@ class Computer extends ResourceController
             'computers.id = computer_groups.computer_id',
             'LEFT'
         );
-
-        if (! $userIsAdmin) {
-            $computer->builder()->whereIn('lab', $userLabAccess)->orWhere('lab', null);
+        if (! empty($userLabAccess)) {
+            $computer->builder()->orWhereIn('lab', $userLabAccess)->orWhere('lab', null);
         }
-
         $computer->builder()->groupBy('computers.id');
 
         log_message('debug', "computer api index query:\n{query}", ['query' => $computer->builder()->getCompiledSelect(false)]);
@@ -67,14 +78,7 @@ class Computer extends ResourceController
             $data[$i]['groups'] = explode(',', $data[$i]['groups']);
         }
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => count($data) . ' Computers Found',
-            'data'     => $data,
-        ];
-
-        return $this->respond($response);
+        return $this->respond($data, 200, count($data) . ' Computers Found');
     }
 
     /**
@@ -119,6 +123,13 @@ class Computer extends ResourceController
      */
     public function show($id = null)
     {
+        $userIsAdmin   = session()->getFlashdata('userIsAdmin');
+        $userLabAccess = session()->getFlashdata('userLabAccess');
+
+        if (! $userIsAdmin && empty($userLabAccess)) {
+            return $this->respond(null, 401, 'Access denied');
+        }
+
         $computer = new ComputerModel();
         $computer->builder()->select(
             'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
@@ -128,6 +139,9 @@ class Computer extends ResourceController
             'computers.id = computer_groups.computer_id',
             'LEFT'
         );
+        if (! empty($userLabAccess)) {
+            $computer->builder()->orWhereIn('lab', $userLabAccess)->orWhere('lab', null);
+        }
         $computer->builder()->groupBy('computers.id');
         $data = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
 
@@ -137,14 +151,7 @@ class Computer extends ResourceController
         }
 
         if ($data) {
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Computer with id ' . $id . ' Found',
-                'data'     => $data,
-            ];
-
-            return $this->respond($response);
+            return $this->respond($data, 200, 'Computer with id ' . $id . ' Found');
         }
 
         return $this->failNotFound('No Computer Found with id ' . $id);
@@ -191,13 +198,7 @@ class Computer extends ResourceController
 
         $id = $computer->getInsertID();
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Computer Saved with id ' . $id,
-        ];
-
-        return $this->respondCreated($response);
+        return $this->respondCreated(null, 'Computer Saved with id ' . $id);
     }
 
     /**
@@ -233,7 +234,7 @@ class Computer extends ResourceController
      *     requestBody={"$ref": "#/components/requestBodies/Computer"}
      * )
      * @OA\Post(
-     *     path="/computer/update/{id}",
+     *     path="/computer/{id}",
      *     tags={"Computer"},
      *     summary="Update an existing Computer (Websafe alternative)",
      *     operationId="updateComputerWebsafe",
@@ -284,13 +285,7 @@ class Computer extends ResourceController
 
         $computer->update($id, $data);
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Computer with id ' . $id . ' Updated',
-        ];
-
-        return $this->respondUpdated($response);
+        return $this->respondUpdated(null, 'Computer with id ' . $id . ' Updated');
     }
 
     /**
@@ -321,7 +316,7 @@ class Computer extends ResourceController
      *     },
      * )
      * @OA\Post(
-     *     path="/computer/delete/{id}",
+     *     path="/computer/{id}/delete",
      *     tags={"Computer"},
      *     summary="Deletes a Computer (Websafe alternative)",
      *     operationId="deleteComputerWebsafe",
@@ -360,13 +355,7 @@ class Computer extends ResourceController
         if ($data) {
             $computer->delete($id);
 
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => 'Computer with id ' . $id . ' Deleted',
-            ];
-
-            return $this->respondDeleted($response);
+            return $this->respondDeleted(null, 'Computer with id ' . $id . ' Deleted');
         }
 
         return $this->failNotFound('No Computer Found with id ' . $id);
@@ -416,7 +405,7 @@ class Computer extends ResourceController
      *     }
      * )
      * @OA\Post(
-     *     path="/computer/update/{id}/lab",
+     *     path="/computer/{id}/lab",
      *     tags={"Computer"},
      *     summary="Update Lab for an existing Computer (Websafe alternative)",
      *     operationId="updateComputerLabWebsafe",
@@ -475,12 +464,6 @@ class Computer extends ResourceController
 
         $computer->save($data);
 
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => 'Set Lab ' . $data['lab'] . ' for Computer with id ' . $id,
-        ];
-
-        return $this->respondUpdated($response);
+        return $this->respondUpdated(null, 'Set Lab ' . $data['lab'] . ' for Computer with id ' . $id);
     }
 }

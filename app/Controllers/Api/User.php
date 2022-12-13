@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
@@ -37,17 +46,15 @@ class User extends ResourceController
      */
     public function index()
     {
-        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        $user = new UserModel();
 
-        if ($userIsAdmin) {
-            $user = new UserModel();
+        $data = $user->findAll();
 
-            $data = $user->findAll();
-
-            return $this->respond($data, 200, count($data) . ' Users Found');
+        for ($i = 0; $i < count($data); $i++) {
+            unset($data[$i]['password']);
         }
 
-        return $this->respond(null, 401, 'Access denied');
+        return $this->respond($data, 200, count($data) . ' Users Found');
     }
 
     /**
@@ -98,21 +105,19 @@ class User extends ResourceController
             return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
         }
 
-        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        $user = new UserModel();
 
-        if ($userIsAdmin) {
-            $user = new UserModel();
+        $data = $user->where(['id' => $id])->first();
 
-            $data = $user->where(['id' => $id])->first();
-
-            if ($data) {
-                return $this->respond($data, 200, 'User with id ' . $id . ' Found');
+        if ($data) {
+            for ($i = 0; $i < count($data); $i++) {
+                unset($data[$i]['password']);
             }
 
-            return $this->failNotFound('No User Found with id ' . $id);
+            return $this->respond($data, 200, 'User with id ' . $id . ' Found');
         }
 
-        return $this->respond(null, 401, 'Access denied');
+        return $this->failNotFound('No User Found with id ' . $id);
     }
 
     /**
@@ -195,9 +200,8 @@ class User extends ResourceController
      *     },
      *     requestBody={"$ref": "#/components/requestBodies/User"}
      * )
-     *
      * @OA\Post(
-     *     path="/user/update/{id}",
+     *     path="/user/{id}",
      *     tags={"User"},
      *     summary="Update an existing User (Websafe alternative)",
      *     operationId="updateUserWebsafe",
@@ -244,24 +248,40 @@ class User extends ResourceController
             return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
         }
 
-        $user        = new UserModel();
+        $userModel   = new UserModel();
         $userIsAdmin = session()->getFlashdata('userIsAdmin');
         $userID      = session()->getFlashdata('userID');
 
-        if ($id === null || $userIsAdmin || $id === $userID) {
-            $data = [
-                'name'     => $this->request->getVar('name'),
-                'email'    => $this->request->getVar('email'),
-                'phone'    => (empty($this->request->getVar('phone')) ? null : $this->request->getVar('phone')),
-                'username' => $this->request->getVar('username'),
-                'password' => $this->request->getVar('password'),
-            ];
-
-            if ($user->update($id, $data)) {
-                return $this->respondUpdated($data, 'User with id ' . $id . ' Updated');
+        if ($userIsAdmin || $id === $userID) {
+            $user = $userModel->where('id', $id)->first();
+            if (empty($user)) {
+                return $this->failNotFound('No User Found with id ' . $id);
+            }
+            if (! empty($this->request->getVar('name')) && $user['name'] !== $this->request->getVar('name')) {
+                $data['name'] = $this->request->getVar('name');
+            }
+            if (! empty($this->request->getVar('email')) && $user['email'] !== $this->request->getVar('email')) {
+                $data['email'] = $this->request->getVar('email');
+            }
+            if ($user['phone'] !== $this->request->getVar('phone')) {
+                $data['phone'] = (empty($this->request->getVar('phone')) ? null : $this->request->getVar('phone'));
+            }
+            if ($user['username'] !== $this->request->getVar('username')) {
+                $data['username'] = $this->request->getVar('username');
+            }
+            if (! empty($this->request->getVar('password'))) {
+                $data['password'] = $this->request->getVar('password');
             }
 
-            return $this->failNotFound('No User Found with id ' . $id);
+            if (! empty($data)) {
+                if ($userModel->update($id, $data)) {
+                    return $this->respondUpdated($data, 'User with id ' . $id . ' Updated');
+                }
+
+                return $this->respond($userModel->errors(), 401, 'Error Updating User with id ' . $id);
+            }
+
+            return $this->respond('Nothing to update');
         }
 
         return $this->respond(null, 401, 'Access denied');
@@ -298,9 +318,8 @@ class User extends ResourceController
      *         {"bearerAuth": {}}
      *     },
      * )
-     *
      * @OA\Post(
-     *     path="/user/delete/{id}",
+     *     path="/user/{id}/delete",
      *     tags={"User"},
      *     summary="Deletes a User (Websafe alternative)",
      *     operationId="deleteUserWebsafe",
@@ -349,6 +368,8 @@ class User extends ResourceController
 
             if ($data) {
                 $user->delete($id);
+
+                log_message('info', 'User {username} was deleted by user with id {uid} using the API from {ip}', ['username' => $data['username'], 'uid' => $userID, 'ip' => $this->request->getIPAddress()]);
 
                 return $this->respondDeleted(null, 'User with id ' . $id . ' Deleted');
             }

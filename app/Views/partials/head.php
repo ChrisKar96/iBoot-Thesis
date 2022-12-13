@@ -16,17 +16,23 @@
 	<?php
     if (isset($tabulator) && $tabulator) : ?>
         <!-- Tabulator Assets -->
-        <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@5.3.1/dist/css/tabulator_bootstrap5.min.css">
-        <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.3.1/dist/js/tabulator.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@5.4.3/dist/css/tabulator_bootstrap5.min.css">
+        <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.4.3/dist/js/tabulator.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/luxon@3.1.1/build/global/luxon.min.js" integrity="sha256-EyD7akNMqhJB13TabqvIVtego8LX1P5+qkBXgqtPAIE=" crossorigin="anonymous"></script>
+        <style>
+            .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+                white-space: normal;
+            }
+        </style>
 	<?php
     endif; ?>
 
 	<?php
     if (isset($calendar) && $calendar) : ?>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
         <!-- FullCalendar Assets -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.css">
-        <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5,npm/fullcalendar@5/locales-all.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+        <script src="https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.11.3,npm/fullcalendar@5.11.3/locales-all.min.js"></script>
 	<?php
     endif; ?>
 

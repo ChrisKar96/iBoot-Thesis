@@ -60,6 +60,7 @@ if (! session()->get('iBootIsInstalled')) {
     try {
         // Perform migrations
         Config\Services::migrations()->latest();
+        \iBoot\Controllers\Api\Swagger::generateAPISpec();
         session()->set('iBootIsInstalled', true);
     } catch (Throwable $e) {
         echo $e->getMessage();

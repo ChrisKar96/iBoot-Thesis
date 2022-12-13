@@ -12,7 +12,7 @@ if (isset($columns, $apiTarget)): ?>
                 <button class="btn btn-danger" style="float: right; display: none;" id="reset" disabled><?= lang('Text.reset_table'); ?></button>
             </div>
 
-            <div class="my-2" id="table"></div>
+            <div class="my-2 table-bordered" id="table"></div>
 
             <div class="my-2">
                 <button class="btn btn-success" style="float: right; display: none;" id="save" disabled><?= lang('Text.save_table'); ?></button>
@@ -52,7 +52,7 @@ if (isset($columns, $apiTarget)): ?>
                         await api_call("<?= $apiTarget ?>", "POST", data);
                     }
                     else{
-                        await api_call("<?= $apiTarget ?>/" + data.id + "/update", "POST", data);
+                        await api_call("<?= $apiTarget ?>/" + data.id, "POST", data);
                     }
                 }
 
@@ -60,7 +60,7 @@ if (isset($columns, $apiTarget)): ?>
                 if (isset($JS_bef_tb)) {
                     echo $JS_bef_tb;
                 }
-                ?>
+    ?>
 
                 let table = new Tabulator("#table", {
                     index: "id",
@@ -95,9 +95,6 @@ if (isset($columns, $apiTarget)): ?>
                         },
                     ],
                     ajaxURL: "<?= $apiTarget ?>",
-                    ajaxResponse: function (url, params, response) {
-                        return response.data;
-                    },
                     ajaxConfig: {
                         headers: {
                             "Authorization": "Bearer <?= session()->get('user')['token'] ?>"
@@ -185,10 +182,10 @@ if (isset($columns, $apiTarget)): ?>
                 });
 
 				<?php
-                if (isset($JS_aft_tb)) {
-                    echo $JS_aft_tb;
-                }
-                ?>
+    if (isset($JS_aft_tb)) {
+        echo $JS_aft_tb;
+    }
+    ?>
 
             </script>
         </div>
