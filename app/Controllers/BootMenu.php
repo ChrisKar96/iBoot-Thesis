@@ -19,7 +19,8 @@ class BootMenu extends BaseController
             'table',
             [
                 'title'     => lang('Text.boot_menu'),
-                'apiTarget' => base_url('/api/boot_menu'),
+                'tabulator' => true,
+                'apiTarget' => base_url('/api/bootmenu'),
                 'columns'   => '{title:"' . lang('Text.boot_menu') . '", field:"name", sorter:"string"},',
                 'JS_bef_tb' => '',
             ]

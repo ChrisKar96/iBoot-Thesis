@@ -40,6 +40,10 @@ if (! isset($title)) {
                                    href="<?= site_url('ipxeblocks'); ?>"><?= lang('Text.ipxe_blocks'); ?></a>
                             </li>
                             <li>
+                                <a class="dropdown-item <?= ($title === lang('Text.boot_menu')) ? ' active' : ''; ?>"
+                                   href="<?= site_url('boot_menu'); ?>"><?= lang('Text.boot_menu'); ?></a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item <?= ($title === lang('Text.schedules')) ? ' active' : ''; ?>"
                                    href="<?= site_url('schedules'); ?>"><?= lang('Text.schedules'); ?></a>
                             </li>

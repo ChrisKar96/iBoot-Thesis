@@ -10,7 +10,7 @@
                     [lang('Text.computers'), 'computer.png', 'computers'],
                     [lang('Text.groups'), 'groups.png', 'groups'],
                     [lang('Text.labs'), 'lab.png', 'labs'],
-                    [lang('Text.os_images'), 'osimage.png', 'osimages'],
+                    [lang('Text.ipxe_blocks'), 'osimage.png', 'ipxeblocks'],
                     [lang('Text.boot_menu'), 'boot-menu.png', 'boot_menu'],
                     [lang('Text.schedules'), 'schedule.png', 'schedules'],
                 ];
