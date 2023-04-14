@@ -22,8 +22,6 @@ class Cookie extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * Set a cookie name prefix if you need to avoid collisions.
-     *
-     * @var string
      */
     public $prefix = 'iboot';
 
@@ -46,10 +44,8 @@ class Cookie extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * Typically will be a forward slash.
-     *
-     * @var string
      */
-    public $path = '/';
+    public string $path = '/';
 
     /**
      * --------------------------------------------------------------------------
@@ -57,10 +53,8 @@ class Cookie extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * Set to `.your-domain.com` for site-wide cookies.
-     *
-     * @var string
      */
-    public $domain = '';
+    public string $domain = '';
 
     /**
      * --------------------------------------------------------------------------
@@ -68,10 +62,8 @@ class Cookie extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * Cookie will only be set if a secure HTTPS connection exists.
-     *
-     * @var bool
      */
-    public $secure = false;
+    public bool $secure = false;
 
     /**
      * --------------------------------------------------------------------------
@@ -79,10 +71,8 @@ class Cookie extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * Cookie will only be accessible via HTTP(S) (no JavaScript).
-     *
-     * @var bool
      */
-    public $httponly = true;
+    public bool $httponly = true;
 
     /**
      * --------------------------------------------------------------------------
@@ -103,10 +93,8 @@ class Cookie extends BaseConfig
      * Defaults to `Lax` for compatibility with modern browsers. Setting `''`
      * (empty string) means default SameSite attribute set by browsers (`Lax`)
      * will be set on cookies. If set to `None`, `$secure` must also be set.
-     *
-     * @var string
      */
-    public $samesite = 'Lax';
+    public string $samesite = 'Lax';
 
     /**
      * --------------------------------------------------------------------------
@@ -119,10 +107,8 @@ class Cookie extends BaseConfig
      * If this is set to `true`, cookie names should be compliant of RFC 2616's
      * list of allowed characters.
      *
-     * @var bool
-     *
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes
      * @see https://tools.ietf.org/html/rfc2616#section-2.2
      */
-    public $raw = false;
+    public bool $raw = false;
 }
