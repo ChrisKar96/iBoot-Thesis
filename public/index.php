@@ -1,7 +1,7 @@
 <?php
 
 // Check PHP version.
-$minPhpVersion = '7.4'; // If you update this, don't forget to update `spark`.
+$minPhpVersion = '8.1'; // If you update this, don't forget to update `spark`.
 if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
     $message = sprintf(
         'Your PHP version must be %s or higher to run CodeIgniter. Current version: %s',
@@ -47,7 +47,7 @@ require_once SYSTEMPATH . 'Config/DotEnv.php';
  * ---------------------------------------------------------------
  *
  * The CodeIgniter class contains the core functionality to make
- * the application run, and does all of the dirty work to get
+ * the application run, and does all the dirty work to get
  * the pieces all working together.
  */
 
@@ -71,7 +71,7 @@ if (! session()->get('iBootIsInstalled')) {
  *---------------------------------------------------------------
  * LAUNCH THE APPLICATION
  *---------------------------------------------------------------
- * Now that everything is setup, it's time to actually fire
+ * Now that everything is set up, it's time to actually fire
  * up the engines and make this app do its thang.
  */
 

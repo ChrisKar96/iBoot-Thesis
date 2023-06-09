@@ -103,6 +103,8 @@ class App extends BaseConfig
      * by the application in descending order of priority. If no match is
      * found, the first locale will be used.
      *
+     * IncomingRequest::setLocale() also uses this list.
+     *
      * @var string[]
      */
     public $supportedLocales = ['el', 'en'];
@@ -114,6 +116,8 @@ class App extends BaseConfig
      *
      * The default timezone that will be used in your application to display
      * dates with the date helper, and can be retrieved through app_timezone()
+     *
+     * @see https://www.php.net/manual/en/timezones.php for list of timezones supported by PHP.
      */
     public $appTimezone = 'Europe/Athens';
 
