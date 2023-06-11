@@ -41,7 +41,7 @@ class Swagger extends BaseController
     public function index(): string
     {
         $paths       = new Config\Paths();
-        $apiSpecPath = $paths->writableDirectory . '/swagger.json';
+        $apiSpecPath = $paths->writableDirectory . '/cache/swagger.json';
 
         try {
             new File($apiSpecPath, true);
@@ -56,7 +56,7 @@ class Swagger extends BaseController
     {
         helper('filesystem');
         $paths       = new Config\Paths();
-        $apiSpecPath = $paths->writableDirectory . '/swagger.json';
+        $apiSpecPath = $paths->writableDirectory . '/cache/swagger.json';
 
         // Export API Spec JSON session variable
         $paths   = new Config\Paths();
