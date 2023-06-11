@@ -48,7 +48,7 @@ class UserModel extends Model
         'name'          => 'min_length[3]|max_length[40]|required',
         'email'         => 'valid_email|max_length[320]|required|is_unique[users.email,id,{id}]',
         'phone'         => 'min_length[3]|max_length[15]|permit_empty',
-        'username'      => 'alpha_numeric_punct|min_length[3]|max_length[40]|required',
+        'username'      => 'alpha_numeric_punct|min_length[3]|max_length[40]|required|is_unique[users.username,id,{id}]',
         'password'      => 'alpha_numeric_punct|min_length[5]|max_length[255]|required',
         'isAdmin'       => 'numeric|max_length[1]|permit_empty',
         'verifiedEmail' => 'numeric|max_length[1]|permit_empty',

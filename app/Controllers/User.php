@@ -224,11 +224,17 @@ class User extends BaseController
                 'phone'    => $this->request->getVar('phone'),
                 'username' => $this->request->getVar('username'),
                 'password' => $this->request->getVar('password'),
-                'isAdmin'  => $globalAdmin,
+                'isAdmin'  => $globalAdmin ? 1 : 0,
             ];
 
             try {
-                $model->save($newData);
+                if($model->save($newData)) {
+                    $newData['password'] = '********';
+                    log_message('debug', "new user registration: {username}\n{data}", ['username' => $newData['username'], 'data' => var_export($newData, true)]);
+                }
+                else {
+                    log_message('debug', "new user {username} registration errors:\n{data}", ['username' => $newData['username'], 'data' => var_export($model->errors(), TRUE)]);
+                }
                 $session = session();
                 $session->setFlashdata('success', 'Successful Registration');
 
