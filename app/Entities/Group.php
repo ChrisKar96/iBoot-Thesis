@@ -73,13 +73,13 @@ class Group extends Entity
 
     /**
      * @OA\Property(
-     *     description="image_server_prefix_path",
-     *     title="image_server_prefix_path",
+     *     description="image_server_path_prefix",
+     *     title="image_server_path_prefix",
      *     type="string",
      * 	   format="-",
      * 	   nullable=false,
      * 	   maxLength=50,
      * )
      */
-    private $image_server_prefix_path;
+    private $image_server_path_prefix;
 }

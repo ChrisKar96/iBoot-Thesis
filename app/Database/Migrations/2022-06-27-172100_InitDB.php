@@ -177,7 +177,7 @@ class InitDB extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '15',
             ],
-            'image_server_prefix_path' => [
+            'image_server_path_prefix' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '50',
             ],

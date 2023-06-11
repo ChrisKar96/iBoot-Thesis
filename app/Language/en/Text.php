@@ -77,4 +77,6 @@ return [
     'delete_file'                            => 'Delete file',
     'delete_all_files'                       => 'Delete all files',
     'log_too_big'                            => 'The log file is bigger than 50MB, please download it.',
+    'image_server_ip'                        => 'OS image server IP',
+    'image_server_path_prefix'               => 'OS image server path prefix',
 ];

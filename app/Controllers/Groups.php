@@ -22,25 +22,28 @@ class Groups extends BaseController
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/group'),
                 'columns'   => '{title:"' . lang('Text.group') . '", field:"name", sorter:"string", editor:"input"},
+                                {title:"' . lang('Text.image_server_ip') . '", field:"image_server_ip", sorter:"string", editor:"input"},
+                                {title:"' . lang('Text.image_server_path_prefix') . '", field:"image_server_path_prefix", sorter:"string", editor:"input"},
                                 {title:"' . lang('Text.computers') . '", field:"computers", editor:"list",
                                     editorParams:{
                                         multiselect:true,
                                         values:computers
                                     },
                                     formatter:function (cell, formatterParams, onRendered) {
-                                        let value = cell.getValue();
-                                        values = value.toString().split(",");
-                                        let formatted = "";
-                                        for(i = 0; i < values.length; ++i) {
-                                            if(typeof formatterParams[values[i]] === "undefined") {
-                                                console.warn(\'Missing display value for \' + values[i]);
-                                                return values[i];
-                                            }
-                                            formatted += formatterParams[values[i]];
-                                            if(i < values.length - 1)
-                                                formatted += ", ";
-                                        }
-                                        return formatted;
+										if(typeof cell.getValue() !== "undefined"){
+											values = cell.getValue().toString().split(",");
+											let formatted = "";
+											for(i = 0; i < values.length; ++i) {
+												if(typeof formatterParams[values[i]] === "undefined") {
+													console.warn(\'Missing display value for \' + values[i]);
+													return values[i];
+												}
+												formatted += formatterParams[values[i]];
+												if(i < values.length - 1)
+													formatted += ", ";
+											}
+											return formatted;
+										}
                                     },
                                     formatterParams: computers,
                                 },',

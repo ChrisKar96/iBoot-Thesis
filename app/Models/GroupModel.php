@@ -26,7 +26,7 @@ class GroupModel extends Model
     protected $allowedFields    = [
         'name',
         'image_server_ip',
-        'image_server_prefix_path',
+        'image_server_path_prefix',
     ];
 
     // Dates
@@ -41,7 +41,7 @@ class GroupModel extends Model
         'id'                       => 'numeric|max_length[10]|permit_empty|is_unique[groups.id,id,{id}]',
         'name'                     => 'max_length[20]|required',
         'image_server_ip'          => 'max_length[15]|required',
-        'image_server_prefix_path' => 'max_length[50]|required',
+        'image_server_path_prefix' => 'max_length[50]|required',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
