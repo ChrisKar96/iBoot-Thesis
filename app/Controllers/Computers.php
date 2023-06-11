@@ -22,7 +22,19 @@ class Computers extends BaseController
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/computer'),
                 'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input"},
-                                {title:"UUID", field:"uuid", sorter:"string", editor:"input"},
+                                {title:"UUID", field:"uuid", sorter:"string", editor:"input",
+                                    editorParams:{
+                                        mask:"********-****-****-****-************",
+                                        maskAutoFill:true
+                                    }
+                                },
+                                {title:"MAC", field:"mac", sorter:"string", editor:"input",
+                                    editorParams:{
+                                        mask:"**-**-**-**-**-**",
+                                        maskAutoFill:true
+                                    }
+                                },
+                                {title:"' . lang('Text.notes') . '", field:"notes", sorter:"string", editor:"textarea"},
                                 {title:"' . lang('Text.groups') . '", field:"groups", editor:"list",
                                     editorParams:{
                                         multiselect:true,
@@ -67,6 +79,7 @@ class Computers extends BaseController
 
                                 async function getGroups(){
                                     await api_call("' . base_url('/api/group') . '", "GET").then(function(response) {
+                                        groups[null] = "-";
                                         for (i = 0; i < response.length; i++) {
                                             groups[response[i].id] = response[i].name;
                                         }

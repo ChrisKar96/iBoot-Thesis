@@ -1,9 +1,9 @@
 <?php
 
-use iBoot\Models\Api\ComputerModel;
+use iBoot\Models\ComputerModel;
 
 if (! (isset($_GET['uuid'], $_GET['mac']))) : ?>
-There was an error. This page should be loaded using a GET request to provide the MAC and UUID of the machine. Make sure your DHCP server / ipxe installation can provide the uuid property.
+There was an error. This page should be loaded using a GET request to provide the MAC and UUID of the machine. Make sure your DHCP server / iPXE installation can provide the uuid property.
 <?php else :
     $uuid     = $_GET['uuid'];
     $mac      = $_GET['mac'];
@@ -12,7 +12,7 @@ There was an error. This page should be loaded using a GET request to provide th
     $id = $computer->where($computer->db->DBPrefix . 'computers.uuid', $uuid)->first()['id'];
     if (! $id) {
         try {
-            $computer->insert(['id' => null, 'name' => null, 'mac' => $mac, 'uuid' => $uuid, 'lab' => null, 'validated' => 0]); ?>
+            $computer->insert(['id' => null, 'name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => null, 'lab' => null]); ?>
 #!ipxe
 
 :start
@@ -44,7 +44,7 @@ isset ${post_boot} || chain --replace --autofree boot.ipxe ||
 isset ${main_menu_cursor} || set main_menu_cursor exit
 clear version
 menu ${main_menu_title} UUID: ${uuid} MAC: ${netX/mac}
-item --gap Use the UUID shown to verify and configure this computer in iBoot
+item --gap Use the UUID and MAC shown to verify and configure this computer in iBoot
 item
 item --gap Default:
 item --key x exit ${space} Boot from hard disk [x]
@@ -120,15 +120,16 @@ goto main_menu
         }
     } else {
         $computer->builder()->select(
-            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups', false
         );
         $computer->builder()->join(
             'computer_groups',
-            'computers.id = computer_groups.computer_id'
+            'computers.id = computer_groups.computer_id',
+            'LEFT'
         );
         $computer->builder()->groupBy('computers.id');
         $computer = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
-        if ($computer && $computer['validated']) {
+        if ($computer) {
             echo 'This would be the computer specific (based on group and time) boot menu.';
         }
     }

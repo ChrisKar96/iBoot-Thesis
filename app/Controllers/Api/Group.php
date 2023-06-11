@@ -47,7 +47,7 @@ class Group extends ResourceController
     {
         $group = new GroupModel();
         $group->builder()->select(
-            'groups.*, GROUP_CONCAT(DISTINCT(' . $group->db->DBPrefix . 'computer_groups.computer_id)) as computers'
+            $group->db->DBPrefix . 'groups.*, GROUP_CONCAT(DISTINCT(' . $group->db->DBPrefix . 'computer_groups.computer_id)) as computers', false
         );
         $group->builder()->join(
             'computer_groups',
@@ -55,7 +55,11 @@ class Group extends ResourceController
         );
         $group->builder()->groupBy('groups.id');
 
+        log_message('debug', "group api index query:\n{query}", ['query' => $group->builder()->getCompiledSelect(false)]);
+
         $data = $group->findAll();
+
+        log_message('debug', "group api index query return:\n{data}", ['data' => var_export($data, true)]);
 
         // Explode groups as json array
         $data_num = count($data);

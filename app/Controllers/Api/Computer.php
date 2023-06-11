@@ -55,7 +55,7 @@ class Computer extends ResourceController
 
         $computer = new ComputerModel();
         $computer->builder()->select(
-            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
+            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups',false
         );
         $computer->builder()->join(
             'computer_groups',
@@ -198,6 +198,8 @@ class Computer extends ResourceController
         $computer->insert($data);
 
         $id = $computer->getInsertID();
+
+        log_message('debug', "computer api create groups var:\n{data}", ['data' => var_export($this->request->getVar('groups'), true)]);
 
         return $this->respondCreated(null, 'Computer Saved with id ' . $id);
     }
