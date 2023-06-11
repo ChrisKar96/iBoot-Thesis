@@ -53,12 +53,13 @@ if (isset($columns, $apiTarget)): ?>
                 }
     ?>
 
-                var eventlist = [{"title":"Conference","start":"2022-05-26","end":"2022-05-28"},{"title":"Meeting","start":"2022-05-27T10:30:00+00:00","end":"2022-05-27T12:30:00+00:00"},{"title":"Lunch","start":"2022-05-27T12:00:00+00:00"},{"title":"Birthday Party","start":"2022-05-28T07:00:00+00:00"},{"url":"http:\/\/google.com\/","title":"Click for Google","start":"2022-05-28"}];
+                var eventlist = [{"title":"Conference","start":"2023-06-26","end":"2023-06-28"},{"title":"Meeting","start":"2023-06-27T10:30:00+00:00","end":"2023-06-27T12:30:00+00:00"},{"title":"Lunch","start":"2023-06-27T12:00:00+00:00"},{"title":"Birthday Party","start":"2023-06-28T07:00:00+00:00"},{"url":"http:\/\/google.com\/","title":"Click for Google","start":"2023-06-28"}];
 
                 document.addEventListener('DOMContentLoaded', function() {
                     var calendarEl = document.getElementById('calendar');
 
                     var calendar = new FullCalendar.Calendar(calendarEl, {
+                        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
                         themeSystem: 'bootstrap5',
                         timeZone: '<?= app_timezone(); ?>',
                         initialView: 'timeGridWeek',
