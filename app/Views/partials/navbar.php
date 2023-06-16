@@ -17,9 +17,21 @@ if (! isset($title)) {
             <?php
             if (session()->get('isLoggedIn')) : ?>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link <?= ($title === lang('Text.computers')) ? ' active' : ''; ?>"
-                           aria-current="page" href="<?= site_url('computers'); ?>"><?= lang('Text.computers'); ?></a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle <?= ($title === lang('Text.computers_managed') || $title === lang('Text.computers_unassigned')) ? ' active' : ''; ?>"
+                           href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?= lang('Text.computers'); ?>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item <?= ($title === lang('Text.computers_managed')) ? ' active' : ''; ?>"
+                                   href="<?= site_url('computers_managed'); ?>"><?= lang('Text.computers_managed'); ?></a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item <?= ($title === lang('Text.computers_unassigned')) ? ' active' : ''; ?>"
+                                   href="<?= site_url('computers_unassigned'); ?>"><?= lang('Text.computers_unassigned'); ?></a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?= ($title === lang('Text.groups')) ? ' active' : ''; ?>" aria-current="page"

@@ -32,6 +32,8 @@ return [
     'group'                                  => 'Ομάδα',
     'computer'                               => 'Υπολογιστής',
     'computers'                              => 'Υπολογιστές',
+    'computers_managed'                      => 'Διαχειριζόμενοι Υπολογιστές',
+    'computers_unassigned'                   => 'Μη Εκχωρημένοι Υπολογιστές',
     'toggle_navigation_bar'                  => 'Εναλλαγή μπάρας πλοήγησης',
     'user'                                   => 'Χρήστης',
     'users'                                  => 'Χρήστες',

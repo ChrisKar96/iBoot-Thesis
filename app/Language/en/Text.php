@@ -32,6 +32,8 @@ return [
     'group'                                  => 'Group',
     'computer'                               => 'Computer',
     'computers'                              => 'Computers',
+    'computers_managed'                      => 'Managed Computers',
+    'computers_unassigned'                   => 'Unassigned Computers',
     'toggle_navigation_bar'                  => 'Toggle navigation bar',
     'user'                                   => 'User',
     'users'                                  => 'Users',

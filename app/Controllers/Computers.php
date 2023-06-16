@@ -13,15 +13,13 @@ namespace iBoot\Controllers;
 
 class Computers extends BaseController
 {
-    public function index(): string
+    private function index($opt): string
     {
-        return view(
-            'table',
-            [
-                'title'     => lang('Text.computers'),
-                'tabulator' => true,
-                'apiTarget' => base_url('/api/computer'),
-                'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input"},
+        $options = [
+            'title'     => $opt['title'],
+            'tabulator' => true,
+            'apiTarget' => base_url('/api/computer'),
+            'columns'   => isset($opt['columns']) ? $opt['columns'] : '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input"},
                                 {title:"UUID", field:"uuid", sorter:"string", editor:"input",
                                     editorParams:{
                                         mask:"********-****-****-****-************",
@@ -75,7 +73,7 @@ class Computers extends BaseController
 									},
 									formatterParams: labs,
                                 },',
-                'JS_bef_tb' => 'let groups = {};
+            'JS_bef_tb' => 'let groups = {};
 
                                 async function getGroups(){
                                     await api_call("' . base_url('/api/group') . '", "GET").then(function(response) {
@@ -101,7 +99,18 @@ class Computers extends BaseController
 
                                 getLabs();
                 ',
-            ]
-        );
+        ];
+
+        return view('table', $options);
+    }
+
+    public function computers_managed(){
+        $options = ['title' => lang('Text.computers_managed')];
+        return $this->index($options);
+    }
+
+    public function computers_unassigned(){
+        $options = ['title' => lang('Text.computers_unassigned')];
+        return $this->index($options);
     }
 }

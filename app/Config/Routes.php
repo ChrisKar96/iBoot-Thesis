@@ -57,7 +57,8 @@ $routes->get('sendEmailVerification/(:segment)', 'User::sendValidationEmail/$1',
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('users', 'User::index', ['filter' => 'auth:adminOnly']);
-$routes->get('computers', 'Computers::index', ['filter' => 'auth']);
+$routes->get('computers_managed', 'Computers::computers_managed', ['filter' => 'auth']);
+$routes->get('computers_unassigned', 'Computers::computers_unassigned', ['filter' => 'auth']);
 $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
 $routes->get('labs', 'Labs::index', ['filter' => 'auth']);
 $routes->get('ipxeblocks', 'IpxeBlocks::index', ['filter' => 'auth']);
