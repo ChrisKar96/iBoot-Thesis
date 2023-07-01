@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -30,7 +39,7 @@ class Session extends BaseConfig
      *
      * The session cookie name, must contain only [0-9a-z_-] characters
      */
-    public string $cookieName = 'ci_session';
+    public string $cookieName = 'iboot_ci_session';
 
     /**
      * --------------------------------------------------------------------------

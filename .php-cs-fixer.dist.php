@@ -11,8 +11,22 @@
 
 use CodeIgniter\CodingStandard\CodeIgniter4;
 use Nexus\CsConfig\Factory;
+use PhpCsFixer\Finder;
 
-return Factory::create(new CodeIgniter4())->forLibrary(
+$finder = Finder::create()
+    ->files()
+    ->in([
+        __DIR__ . '/app',
+        __DIR__ . '/tests',
+        __DIR__ . '/public',
+    ])
+    ->exclude(['Views/errors']);
+
+$options = [
+    'finder' => $finder,
+];
+
+return Factory::create(new CodeIgniter4(), [], $options)->forLibrary(
     'iBoot',
     'Christos Karamolegkos',
     'iboot@ckaramolegkos.gr',

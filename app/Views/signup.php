@@ -12,13 +12,13 @@
                         </div>
                     <?php
                     endif;
-                    if (! isset($title)) {
-                        $title = lang('Text.sign_up');
-                    }
-                    if (! isset($action)) {
-                        $action = base_url('signup');
-                    }
-                    ?>
+if (! isset($title)) {
+    $title = lang('Text.sign_up');
+}
+if (! isset($action)) {
+    $action = base_url('signup');
+}
+?>
 
                     <form action="<?= $action; ?>" method="post" style="margin: 3vmin;">
                         <?= csrf_field() ?>

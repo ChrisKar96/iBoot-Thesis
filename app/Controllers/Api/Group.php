@@ -47,11 +47,13 @@ class Group extends ResourceController
     {
         $group = new GroupModel();
         $group->builder()->select(
-            $group->db->DBPrefix . 'groups.*, GROUP_CONCAT(DISTINCT(' . $group->db->DBPrefix . 'computer_groups.computer_id)) as computers', false
+            $group->db->DBPrefix . 'groups.*, GROUP_CONCAT(DISTINCT(' . $group->db->DBPrefix . 'computer_groups.computer_id)) as computers',
+            false
         );
         $group->builder()->join(
             'computer_groups',
-            'groups.id = computer_groups.group_id'
+            'groups.id = computer_groups.group_id',
+            'LEFT'
         );
         $group->builder()->groupBy('groups.id');
 
@@ -63,8 +65,9 @@ class Group extends ResourceController
 
         // Explode groups as json array
         $data_num = count($data);
+
         for ($i = 0; $i < $data_num; $i++) {
-            $data[$i]['computers'] = explode(',', $data[$i]['computers']);
+            $data[$i]->computers = explode(',', $data[$i]->computers);
         }
 
         return $this->respond($data, 200, count($data) . ' Groups Found');
@@ -157,22 +160,27 @@ class Group extends ResourceController
      *
      * Create a new resource object, from "posted" parameters
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function create()
     {
         $group = new GroupModel();
 
         $data = [
-            'name'      => $this->request->getVar('name'),
-            'boot_menu' => $this->request->getVar('boot_menu'),
+            'name'                     => $this->request->getVar('name'),
+            'image_server_ip'          => $this->request->getVar('image_server_ip'),
+            'image_server_path_prefix' => $this->request->getVar('image_server_path_prefix'),
         ];
 
         $group->insert($data);
 
         $id = $group->getInsertID();
 
-        return $this->respondCreated(null, 'Group Saved with id ' . $id);
+        if ($id) {
+            return $this->respondCreated(null, 'Group Saved with id ' . $id);
+        }
+
+        return $this->fail('Failed to save group');
     }
 
     /**
@@ -243,15 +251,16 @@ class Group extends ResourceController
      *
      * @param mixed|null $id
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function update($id = null)
     {
         $group = new GroupModel();
 
         $data = [
-            'name'      => $this->request->getVar('name'),
-            'boot_menu' => $this->request->getVar('boot_menu'),
+            'name'                     => $this->request->getVar('name'),
+            'image_server_ip'          => $this->request->getVar('image_server_ip'),
+            'image_server_path_prefix' => $this->request->getVar('image_server_path_prefix'),
         ];
 
         $group->update($id, $data);

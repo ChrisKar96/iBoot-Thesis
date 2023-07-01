@@ -27,6 +27,8 @@ class ApiAuth implements FilterInterface
      * Authenticate to the API using the JWT token provided.
      * The username is decoded from the JWT token and then the user object is constructed.
      *
+     * @param mixed|null $arguments
+     *
      * @return ResponseInterface|void
      */
     public function before(RequestInterface $request, $arguments = null)
@@ -65,20 +67,20 @@ class ApiAuth implements FilterInterface
                 return $response;
             }
 
-            if (in_array('adminOnly', ($arguments !== null) ? $arguments : [], true) && ! $user['isAdmin']) {
-                log_message('notice', 'User {username} tried to perform unauthorized API call {cur_url}', ['username' => $user['username'], 'cur_url' => current_url()]);
+            if (in_array('adminOnly', ($arguments !== null) ? $arguments : [], true) && ! $user->isAdmin) {
+                log_message('notice', 'User {username} tried to perform unauthorized API call {cur_url}', ['username' => $user->username, 'cur_url' => current_url()]);
 
                 throw new Exception('Access Denied', 401);
             }
 
-            if (! $user['isAdmin']) {
+            if (! $user->isAdmin) {
                 $userLabsModel = new UserLabsModel();
-                $userLabs      = $userLabsModel->select('lab_id')->where('user_id', $user['id'])->findAll();
+                $userLabs      = $userLabsModel->select('lab_id')->where('user_id', $user->id)->findAll();
                 $userLabAccess = array_column($userLabs, 'lab_id');
                 session()->setFlashdata('userLabAccess', $userLabAccess);
-                session()->setFlashdata('userID', $user['id']);
+                session()->setFlashdata('userID', $user->id);
             }
-            session()->setFlashdata('userIsAdmin', $user['isAdmin']);
+            session()->setFlashdata('userIsAdmin', $user->isAdmin);
         } catch (ExpiredException $ex) {
             $response->setBody('Access denied. Token is expired.');
             $response->setStatusCode(401);
@@ -94,6 +96,8 @@ class ApiAuth implements FilterInterface
 
     /**
      * Empty, just for interface satisfaction.
+     *
+     * @param mixed|null $arguments
      *
      * @return void
      */

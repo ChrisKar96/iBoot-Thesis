@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of iBoot.
+ *
+ * (c) 2021 Christos Karamolegkos <iboot@ckaramolegkos.gr>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 // Check PHP version.
 $minPhpVersion = '8.1'; // If you update this, don't forget to update `spark`.
 if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {

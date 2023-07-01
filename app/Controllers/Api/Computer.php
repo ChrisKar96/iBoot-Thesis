@@ -55,7 +55,8 @@ class Computer extends ResourceController
 
         $computer = new ComputerModel();
         $computer->builder()->select(
-            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups',false
+            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups',
+            false
         );
         $computer->builder()->join(
             'computer_groups',
@@ -75,8 +76,9 @@ class Computer extends ResourceController
 
         // Explode groups as json array
         $data_num = count($data);
+
         for ($i = 0; $i < $data_num; $i++) {
-            $data[$i]['groups'] = explode(',', $data[$i]['groups']);
+            $data[$i]->groups = explode(',', $data[$i]->groups);
         }
 
         return $this->respond($data, 200, count($data) . ' Computers Found');
@@ -148,7 +150,7 @@ class Computer extends ResourceController
 
         // Explode groups as json array
         if ($data) {
-            $data['groups'] = explode(',', $data['groups']);
+            $data->groups = explode(',', $data->groups);
         }
 
         if ($data) {
@@ -181,7 +183,7 @@ class Computer extends ResourceController
      *
      * Create a new resource object, from "posted" parameters
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function create()
     {
@@ -272,7 +274,7 @@ class Computer extends ResourceController
      *
      * @param mixed|null $id
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function update($id = null)
     {
@@ -454,7 +456,7 @@ class Computer extends ResourceController
      *
      * @param mixed|null $id
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function updateComputerLab($id): Response
     {

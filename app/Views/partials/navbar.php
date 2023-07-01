@@ -62,7 +62,7 @@ if (! isset($title)) {
                         </ul>
                     </li>
 					<?php
-                    if (session()->get('user')['isAdmin']) : ?>
+                    if (session()->get('user')->isAdmin) : ?>
                         <li class="nav-item">
                             <a class="nav-link <?= ($title === lang('Text.users')) ? ' active' : ''; ?>" aria-current="page"
                                href="<?= site_url('users'); ?>"><?= lang('Text.users'); ?></a>

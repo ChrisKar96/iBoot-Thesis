@@ -13,18 +13,18 @@
                         </div>
 					<?php
                     endif;
-                    if (isset($userNotFoundReissuePassword)): ?>
+if (isset($userNotFoundReissuePassword)): ?>
                         <div class="alert alert-warning">
                             <p><?= lang('Text.no_user_was_found_with_this', [lang('Text.username_or_email')]); ?>.</p>
                         </div>
 					<?php
-                    endif;
-                    if (isset($tokenInvalid) && $tokenInvalid): ?>
+endif;
+if (isset($tokenInvalid) && $tokenInvalid): ?>
                         <div class="alert alert-danger">
 							<?= 'This token is invalid'; ?>
                         </div>
                     <?php
-                    elseif (isset($passwordChanged) && $passwordChanged): ?>
+elseif (isset($passwordChanged) && $passwordChanged): ?>
                         <div class="alert alert-success">
                             <p><?= lang('Text.your_password_was_changed_successfully'); ?></p>
                         </div>
@@ -32,7 +32,7 @@
                             <a href="<?= base_url('login'); ?>" class="btn btn-primary"><?= lang('Text.back_to_login'); ?></a>
                         </div>
                     <?php
-                    elseif (isset($token)): ?>
+elseif (isset($token)): ?>
                     <form action="<?= base_url('forgotPassword/token/' . $token); ?>" method="post">
 						<?= csrf_field() ?>
                         <h2 class="text-center"><?= lang('Text.forgot_password'); ?></h2>
@@ -51,7 +51,7 @@
                         </div>
                     </form>
                     <?php
-                    endif; ?>
+endif; ?>
                 </div>
             </div>
 

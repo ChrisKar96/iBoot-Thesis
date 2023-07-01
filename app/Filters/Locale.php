@@ -20,6 +20,8 @@ class Locale implements FilterInterface
     /**
      * Set the user's chosen locale.
      *
+     * @param mixed|null $arguments
+     *
      * @return void
      */
     public function before(RequestInterface $request, $arguments = null)
@@ -35,6 +37,8 @@ class Locale implements FilterInterface
 
     /**
      * Empty, just for interface satisfaction.
+     *
+     * @param mixed|null $arguments
      *
      * @return void
      */

@@ -21,6 +21,8 @@ class RefreshUserToken implements FilterInterface
     /**
      * Refresh the user's API token if their session is extended.
      *
+     * @param mixed|null $arguments
+     *
      * @return void
      */
     public function before(RequestInterface $request, $arguments = null)
@@ -38,6 +40,8 @@ class RefreshUserToken implements FilterInterface
 
     /**
      * Empty, just for interface satisfaction.
+     *
+     * @param mixed|null $arguments
      *
      * @return void
      */

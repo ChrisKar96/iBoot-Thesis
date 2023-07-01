@@ -12,13 +12,13 @@
                         </div>
                     <?php
                     endif;
-                    if (isset($validation)): ?>
+if (isset($validation)): ?>
                         <div class="alert alert-warning">
                             <?= $validation->listErrors(); ?>
                         </div>
                     <?php
-                    endif;
-                    ?>
+endif;
+?>
                     <form action="<?= base_url('login'); ?>" method="post" style="margin: 3vmin;">
                         <?= csrf_field() ?>
                         <h2 class="text-center"><?= lang('Text.log_in'); ?></h2>

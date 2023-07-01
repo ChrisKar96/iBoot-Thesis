@@ -15,11 +15,12 @@
                     [lang('Text.schedules'), 'schedule.png', 'schedules'],
                 ];
 
-                $item_num = count($items);
-                for ($i = 0; $i < $item_num; $i++) {
-                    if ($i % 2 === 0) {
-                        echo '<div class="col-xs-12 col-md-4"><ul class="list-group h-100">';
-                    } ?>
+$item_num = count($items);
+
+for ($i = 0; $i < $item_num; $i++) {
+    if ($i % 2 === 0) {
+        echo '<div class="col-xs-12 col-md-4"><ul class="list-group h-100">';
+    } ?>
                     <li class="card m-4 square h-50">
                         <a href="<?= $items[$i][2]; ?>" class="text-dark text-decoration-none box-shadow">
                             <div class="row h-75 justify-content-center align-items-center">
@@ -40,7 +41,7 @@
                         </a>
                     </li>
                     <?= ($i % 2 === 1) ? '</ul> </div>' : '';
-                } ?>
+} ?>
             </div>
         </div>
     </main>

@@ -10,17 +10,17 @@
             <div class="row">
                 <h1 class="panel-heading">Profile</h1>
                 <div class="panel-body">
-                    <h3>Hi, <?= $user['name'] ?></h3>
+                    <h3>Hi, <?= $user->name ?></h3>
                     <hr>
-                    <p><strong>Username:</strong> <?= $user['username'] ?></p>
-                    <p><strong>Email:</strong> <?= $user['email'] ?> <strong>Status:</strong>
-                    <?php if ($user['verifiedEmail']) {
+                    <p><strong>Username:</strong> <?= $user->username ?></p>
+                    <p><strong>Email:</strong> <?= $user->email ?> <strong>Status:</strong>
+                    <?php if ($user->verifiedEmail) {
                         echo "<span style='color:green;'>Verified</span>";
                     } else {
-                        echo "<span style='color:red;'>Not Verified</span> <a href='" . base_url('sendEmailVerification/' . $user['email']) . "'>Send confirmation mail again</a>";
+                        echo "<span style='color:red;'>Not Verified</span> <a href='" . base_url('sendEmailVerification/' . $user->email) . "'>Send confirmation mail again</a>";
                     } ?>
                     </p>
-                    <p><strong>Phone:</strong> <?= $user['phone'] ?></p>
+                    <p><strong>Phone:</strong> <?= $user->phone ?></p>
                 </div>
             </div>
         </div>

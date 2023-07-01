@@ -1,97 +1,98 @@
 {
-    "name": "chriskar96/iboot",
-    "type": "project",
-    "description": "iBoot application for my thesis",
-    "homepage": "https://github.com/ChrisKar96/iBoot-Thesis",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Christos Karamolegkos",
-            "email": "iboot@ckaramolegkos.gr"
-        }
-    ],
-    "support": {
-        "source": "https://github.com/ChrisKar96/iBoot-Thesis",
-        "issues": "https://github.com/ChrisKar96/iBoot-Thesis/issues"
-    },
-    "keywords": [
-        "DHCP",
-        "BOOTP",
-        "TFTP",
-        "IPXE",
-        "PXE",
-        "network boot"
-    ],
-    "minimum-stability": "stable",
-    "require": {
-        "php": "^8.1",
-        "codeigniter4/framework": "^4",
-        "firebase/php-jwt": "^6.2",
-        "symfony/stopwatch": "^5.4",
-        "symfony/console": "^5.4",
-        "symfony/finder": "^5.4",
-        "symfony/string": "^5.4",
-        "symfony/process": "^5.4",
-        "symfony/filesystem": "^5.4",
-        "symfony/event-dispatcher": "^5.4",
-        "symfony/options-resolver": "^5.4",
-        "psr/cache": "^1.0",
-        "psr/log": "^1.1",
-        "psr/container": "^1.1",
-        "symfony/yaml": "^5.4",
-        "zircote/swagger-php": "^4.4",
-        "symfony/cache": "^5.4",
-        "symfony/var-exporter": "^5.4",
-        "symfony/deprecation-contracts": "^2.5",
-        "symfony/service-contracts": "^2.5",
-        "symfony/event-dispatcher-contracts": "^2.5",
-        "ext-json": "*",
-        "twbs/bootstrap": "^5.2",
-        "components/font-awesome": "^6.1"
-    },
-    "require-dev": {
-        "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^9.1",
-        "friendsofphp/php-cs-fixer": "*",
-        "codeigniter/coding-standard": "^1.7",
-        "roave/security-advisories": "dev-latest",
-        "ext-xdebug": "*",
-        "tatter/patches": "^2.0"
-    },
-    "suggest": {
-        "ext-fileinfo": "Improves mime type detection for files"
-    },
-    "autoload": {
-        "psr-4": {
-            "iBoot\\": "app",
-            "Config\\": "app/Config"
-        },
-        "exclude-from-classmap": [
-            "**/Database/Migrations/**"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\Support\\": "tests/_support"
-        }
-    },
-    "scripts": {
-        "test": "phpunit",
-        "post-update-cmd": [
-            "rm -rf public/assets/bootstrap",
-            "cp -R vendor/twbs/bootstrap/dist public/assets/bootstrap",
-            "rm -rf public/assets/font-awesome",
-            "cp -R vendor/components/font-awesome/css public/assets/font-awesome",
-            "rm -rf public/assets/webfonts",
-            "cp -R vendor/components/font-awesome/webfonts public/assets/webfonts"
-        ],
-        "post-install-cmd": [
-            "rm -rf public/assets/bootstrap",
-            "cp -R vendor/twbs/bootstrap/dist public/assets/bootstrap",
-            "rm -rf public/assets/font-awesome",
-            "cp -R vendor/components/font-awesome/css public/assets/font-awesome",
-            "rm -rf public/assets/webfonts",
-            "cp -R vendor/components/font-awesome/webfonts public/assets/webfonts"
-        ]
+  "name": "chriskar96/iboot",
+  "type": "project",
+  "description": "iBoot application for my thesis",
+  "homepage": "https://github.com/ChrisKar96/iBoot-Thesis",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Christos Karamolegkos",
+      "email": "iboot@ckaramolegkos.gr"
     }
+  ],
+  "support": {
+    "source": "https://github.com/ChrisKar96/iBoot-Thesis",
+    "issues": "https://github.com/ChrisKar96/iBoot-Thesis/issues"
+  },
+  "keywords": [
+    "DHCP",
+    "BOOTP",
+    "TFTP",
+    "IPXE",
+    "PXE",
+    "network boot"
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^8.1",
+    "codeigniter4/framework": "^4",
+    "firebase/php-jwt": "^6.2",
+    "symfony/stopwatch": "^5.4",
+    "symfony/console": "^5.4",
+    "symfony/finder": "^5.4",
+    "symfony/string": "^5.4",
+    "symfony/process": "^5.4",
+    "symfony/filesystem": "^5.4",
+    "symfony/event-dispatcher": "^5.4",
+    "symfony/options-resolver": "^5.4",
+    "psr/cache": "^1.0",
+    "psr/log": "^1.1",
+    "psr/container": "^1.1",
+    "symfony/yaml": "^5.4",
+    "zircote/swagger-php": "^4.4",
+    "symfony/cache": "^5.4",
+    "symfony/var-exporter": "^5.4",
+    "symfony/deprecation-contracts": "^2.5",
+    "symfony/service-contracts": "^2.5",
+    "symfony/event-dispatcher-contracts": "^2.5",
+    "ext-json": "*",
+    "twbs/bootstrap": "^5.2",
+    "components/font-awesome": "^6.1"
+  },
+  "require-dev": {
+    "mikey179/vfsstream": "^1.6",
+    "phpunit/phpunit": "^9.1",
+    "friendsofphp/php-cs-fixer": "*",
+    "codeigniter/coding-standard": "^1.7",
+    "roave/security-advisories": "dev-latest",
+    "ext-xdebug": "*",
+    "tatter/patches": "^2.0"
+  },
+  "suggest": {
+    "ext-fileinfo": "Improves mime type detection for files"
+  },
+  "autoload": {
+    "psr-4": {
+      "iBoot\\": "app",
+      "Config\\": "app/Config"
+    },
+    "exclude-from-classmap": [
+      "**/Database/Migrations/**"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Support\\": "tests/_support"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "php-cs-fixer": "php-cs-fixer fix --verbose --config=./.php-cs-fixer.dist.php",
+    "post-update-cmd": [
+      "rm -rf public/assets/bootstrap",
+      "cp -R vendor/twbs/bootstrap/dist public/assets/bootstrap",
+      "rm -rf public/assets/font-awesome",
+      "cp -R vendor/components/font-awesome/css public/assets/font-awesome",
+      "rm -rf public/assets/webfonts",
+      "cp -R vendor/components/font-awesome/webfonts public/assets/webfonts"
+    ],
+    "post-install-cmd": [
+      "rm -rf public/assets/bootstrap",
+      "cp -R vendor/twbs/bootstrap/dist public/assets/bootstrap",
+      "rm -rf public/assets/font-awesome",
+      "cp -R vendor/components/font-awesome/css public/assets/font-awesome",
+      "rm -rf public/assets/webfonts",
+      "cp -R vendor/components/font-awesome/webfonts public/assets/webfonts"
+    ]
+  }
 }

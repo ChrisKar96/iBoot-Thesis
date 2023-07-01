@@ -21,6 +21,8 @@ class NoAuth implements FilterInterface
     /**
      * Require the user is not logged in to access a page.
      *
+     * @param mixed|null $arguments
+     *
      * @return RedirectResponse|void
      */
     public function before(RequestInterface $request, $arguments = null)
@@ -32,6 +34,8 @@ class NoAuth implements FilterInterface
 
     /**
      * Empty, just for interface satisfaction.
+     *
+     * @param mixed|null $arguments
      *
      * @return void
      */

@@ -50,7 +50,7 @@ if (isset($apiSpecPath)):?>
           <?php if (session()->has('user')): ?>
           ,onComplete: function() {
               // Default API key
-              ui.preauthorizeApiKey("bearerAuth", "<?= session()->get('user')['token']; ?>")
+              ui.preauthorizeApiKey("bearerAuth", "<?= session()->get('user')->token; ?>")
           }
           <?php endif; ?>
       })

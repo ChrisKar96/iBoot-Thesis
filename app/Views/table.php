@@ -24,7 +24,7 @@ if (isset($columns, $apiTarget)): ?>
                     return new Promise(function(resolve, reject) {
                         let xhr = new XMLHttpRequest();
                         xhr.open(method, url, true);
-                        xhr.setRequestHeader('Authorization',"Bearer <?= session()->get('user')['token'] ?>");
+                        xhr.setRequestHeader('Authorization',"Bearer <?= session()->get('user')->token ?>");
                         xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
                         xhr.responseType = 'json';
                         xhr.onload = function() {
@@ -97,7 +97,7 @@ if (isset($columns, $apiTarget)): ?>
                     ajaxURL: "<?= $apiTarget ?>",
                     ajaxConfig: {
                         headers: {
-                            "Authorization": "Bearer <?= session()->get('user')['token'] ?>"
+                            "Authorization": "Bearer <?= session()->get('user')->token ?>"
                         },
                     },
                     pagination:"local",

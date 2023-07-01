@@ -30,32 +30,39 @@ class User extends BaseController
                 'title'     => lang('Text.users'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/user'),
-                'columns'   => '{title:"' . lang('Text.fullname') . '", field:"name", sorter:"string", editor:"input"},
-                                {title:"' . lang('Text.email') . '", field:"email", sorter:"string", editor:"input"},
-                                {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string", editor:"input"},
-                                {title:"' . lang('Text.username') . '", field:"username", sorter:"string", editor:"input"},
-                                {title:"' . lang('Text.password') . '", field:"password", editor:"input"},
+                'columns'   => '{title:"' . lang('Text.fullname') . '", field:"name", sorter:"string", editor:"input", validator:["required","string","maxLength:40"]},
+                                {title:"' . lang('Text.email') . '", field:"email", sorter:"string", editor:"input", validator:["required","string","maxLength:320"]},
+                                {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string", editor:"input", validator:["string","maxLength:15"]},
+                                {title:"' . lang('Text.username') . '", field:"username", sorter:"string", editor:"input", validator:["required","string","minLength:3","maxLength:40"]},
+                                {title:"' . lang('Text.password') . '", field:"password", editor:"input", validator:["required","maxLength:255"]},
                                 {title:"' . lang('Text.administrator') . '", field:"isAdmin", sorter:"string", editor:"tickCross", formatter:"tickCross"},
                                 {title:"' . lang('Text.verifiedEmail') . '", field:"verifiedEmail", sorter:"string", editor:"tickCross", formatter:"tickCross"},
                                 {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", formatter:"datetime"},
                                 {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", formatter:"datetime"},
                                 {
-                                    title:"' . lang('Text.lab') . '", field:"lab", editor:"list",
+                                    title:"' . lang('Text.labs') . '", field:"labs", editor:"list",
 									editorParams:{
                                         multiselect:true,
 										values:labs,
 										disabled:true,
 									},
-									formatter:function (cell, formatterParams, onRendered) {
+                                    formatter:function (cell, formatterParams, onRendered) {
 										if(typeof cell.getValue() !== "undefined"){
-											if(typeof formatterParams[cell.getValue()] === "undefined") {
-												console.warn(\'Missing display value for \' + cell.getValue());
-												return cell.getValue();
+											values = cell.getValue().toString().split(",");
+											let formatted = "";
+											for(i = 0; i < values.length; ++i) {
+												if(typeof formatterParams[values[i]] === "undefined") {
+													console.warn(\'Missing display value for \' + values[i]);
+													return values[i];
+												}
+												formatted += formatterParams[values[i]];
+												if(i < values.length - 1)
+													formatted += ", ";
 											}
-											return formatterParams[cell.getValue()];
+											return formatted;
 										}
-									},
-									formatterParams: labs,
+                                    },
+                                    formatterParams: labs,
                                 },',
                 'JS_bef_tb' => 'let labs = {};
 
@@ -117,7 +124,7 @@ class User extends BaseController
             $user = $model->where('username', $username)->orWhere('email', $username)->first();
 
             // Get user's API token
-            $user['token'] = $this->generateAPItoken($username);
+            $user->token = $this->generateAPItoken($username);
 
             // Storing session values
             $this->setUserSession($user);
@@ -150,7 +157,7 @@ class User extends BaseController
     {
         $user = session()->get('user');
 
-        $user['token'] = $this->generateAPItoken($user['username']);
+        $user->token = $this->generateAPItoken($user->username);
 
         session()->set('user', $user);
     }
@@ -228,12 +235,11 @@ class User extends BaseController
             ];
 
             try {
-                if($model->save($newData)) {
+                if ($model->save($newData)) {
                     $newData['password'] = '********';
                     log_message('debug', "new user registration: {username}\n{data}", ['username' => $newData['username'], 'data' => var_export($newData, true)]);
-                }
-                else {
-                    log_message('debug', "new user {username} registration errors:\n{data}", ['username' => $newData['username'], 'data' => var_export($model->errors(), TRUE)]);
+                } else {
+                    log_message('debug', "new user {username} registration errors:\n{data}", ['username' => $newData['username'], 'data' => var_export($model->errors(), true)]);
                 }
                 $session = session();
                 $session->setFlashdata('success', 'Successful Registration');
@@ -262,7 +268,7 @@ class User extends BaseController
     {
         $user = session()->get('user');
         session()->destroy();
-        log_message('info', 'User {username} logged out', ['username' => $user['username']]);
+        log_message('info', 'User {username} logged out', ['username' => $user->username]);
 
         return redirect()->to('login');
     }
@@ -294,7 +300,7 @@ class User extends BaseController
         $user = $model->where('email', $email_address)->first();
 
         if (! empty($user)) {
-            $email_code = md5($email_address . $user['created_at']);
+            $email_code = md5($email_address . $user->created_at);
 
             $email = Services::email();
 
@@ -303,9 +309,9 @@ class User extends BaseController
             $email->setMailType('html');
             $email->setSubject('iBoot email verification');
 
-            $message = '<p>Hi ' . $user['name'] . ',</p>';
+            $message = '<p>Hi ' . $user->name . ',</p>';
 
-            $message .= '<p>Please confirm your email address for your account with username <strong>' . $user['username'] . '</strong>.</p>';
+            $message .= '<p>Please confirm your email address for your account with username <strong>' . $user->username . '</strong>.</p>';
             $message .= '<p>Click the link below to confirm your email address ' . $email_address . '</p>';
             $message .= '<p><a href="' . base_url('verifyEmail/' . $email_address . '/' . $email_code) . '">Confirm your email address</a></p>';
 
@@ -359,14 +365,14 @@ class User extends BaseController
 
             $email = Services::email();
 
-            $email->setTo($user['email']);
+            $email->setTo($user->email);
 
             $email->setMailType('html');
             $email->setSubject('iBoot username reminder');
 
-            $message = '<p>Hi ' . $user['name'] . ',</p>';
+            $message = '<p>Hi ' . $user->name . ',</p>';
 
-            $message .= '<p>Your username is <strong>' . $user['username'] . '</strong>.</p>';
+            $message .= '<p>Your username is <strong>' . $user->username . '</strong>.</p>';
 
             $email->setMessage($message);
 
@@ -410,10 +416,10 @@ class User extends BaseController
                 ]);
             }
 
-            $token      = urlencode(md5($user['id'] . Time::now()));
+            $token      = urlencode(md5($user->id . Time::now()));
             $token_exp  = Time::now()->addMinutes(15);
             $token_data = [
-                'user_id'  => $user['id'],
+                'user_id'  => $user->id,
                 'token'    => $token,
                 'exp_date' => $token_exp,
             ];
@@ -423,12 +429,12 @@ class User extends BaseController
 
             $email = Services::email();
 
-            $email->setTo($user['email']);
+            $email->setTo($user->email);
 
             $email->setMailType('html');
             $email->setSubject('iBoot reissue password');
 
-            $message = '<p>Hi ' . $user['name'] . ',</p>';
+            $message = '<p>Hi ' . $user->name . ',</p>';
 
             $message .= '<p><a href="' . base_url('forgotPassword/token/' . $token) . '">Click here</a> to reissue your password.</p>';
             $message .= '<p>The link will be valid until ' . $token_exp . '</p>';
@@ -479,9 +485,9 @@ class User extends BaseController
                 return view('reissuePassword', $data);
             }
             $userModel = new UserModel();
-            $userModel->where('id', $user['user_id']);
-            $data['passwordChanged'] = $this->changePassword($user['user_id'], $this->request->getVar('password'));
-            $forgotPasswordTokenModel->delete($user['user_id']);
+            $userModel->where('id', $user->user_id);
+            $data['passwordChanged'] = $this->changePassword($user->user_id, $this->request->getVar('password'));
+            $forgotPasswordTokenModel->delete($user->user_id);
         }
 
         return view('reissuePassword', $data);

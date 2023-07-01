@@ -19,60 +19,60 @@ class Computers extends BaseController
             'title'     => $opt['title'],
             'tabulator' => true,
             'apiTarget' => base_url('/api/computer'),
-            'columns'   => isset($opt['columns']) ? $opt['columns'] : '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input"},
-                                {title:"UUID", field:"uuid", sorter:"string", editor:"input",
-                                    editorParams:{
-                                        mask:"********-****-****-****-************",
-                                        maskAutoFill:true
+            'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input"},
+                            {title:"UUID", field:"uuid", sorter:"string", editor:"input", validator:["required", "unique"],
+                                editorParams:{
+                                    mask:"********-****-****-****-************",
+                                    maskAutoFill:true
+                                }
+                            },
+                            {title:"MAC", field:"mac", sorter:"string", editor:"input", validator:["required", "unique"],
+                                editorParams:{
+                                    mask:"**-**-**-**-**-**",
+                                    maskAutoFill:true
+                                }
+                            },
+                            {title:"' . lang('Text.notes') . '", field:"notes", sorter:"string", editor:"textarea"},
+                            {title:"' . lang('Text.groups') . '", field:"groups", editor:"list",
+                                editorParams:{
+                                    multiselect:true,
+                                    values:groups
+                                },
+                                formatter:function (cell, formatterParams, onRendered) {
+                                    if(typeof cell.getValue() !== "undefined"){
+                                        values = cell.getValue().toString().split(",");
+                                        let formatted = "";
+                                        for(i = 0; i < values.length; ++i) {
+                                            if(typeof formatterParams[values[i]] === "undefined") {
+                                                console.warn(\'Missing display value for \' + values[i]);
+                                                return values[i];
+                                            }
+                                            formatted += formatterParams[values[i]];
+                                            if(i < values.length - 1)
+                                                formatted += ", ";
+                                        }
+                                        return formatted;
                                     }
                                 },
-                                {title:"MAC", field:"mac", sorter:"string", editor:"input",
-                                    editorParams:{
-                                        mask:"**-**-**-**-**-**",
-                                        maskAutoFill:true
+                                formatterParams: groups,
+                            },
+                            {
+                                title:"' . lang('Text.lab') . '", field:"lab", editor:"list",
+                                editorParams:{
+                                    values:labs,
+                                    disabled:true,
+                                },
+                                formatter:function (cell, formatterParams, onRendered) {
+                                    if(typeof cell.getValue() !== "undefined"){
+                                        if(typeof formatterParams[cell.getValue()] === "undefined") {
+                                            console.warn(\'Missing display value for \' + cell.getValue());
+                                            return cell.getValue();
+                                        }
+                                        return formatterParams[cell.getValue()];
                                     }
                                 },
-                                {title:"' . lang('Text.notes') . '", field:"notes", sorter:"string", editor:"textarea"},
-                                {title:"' . lang('Text.groups') . '", field:"groups", editor:"list",
-                                    editorParams:{
-                                        multiselect:true,
-                                        values:groups
-                                    },
-                                    formatter:function (cell, formatterParams, onRendered) {
-										if(typeof cell.getValue() !== "undefined"){
-											values = cell.getValue().toString().split(",");
-											let formatted = "";
-											for(i = 0; i < values.length; ++i) {
-												if(typeof formatterParams[values[i]] === "undefined") {
-													console.warn(\'Missing display value for \' + values[i]);
-													return values[i];
-												}
-												formatted += formatterParams[values[i]];
-												if(i < values.length - 1)
-													formatted += ", ";
-											}
-											return formatted;
-										}
-                                    },
-                                    formatterParams: groups,
-                                },
-                                {
-                                    title:"' . lang('Text.lab') . '", field:"lab", editor:"list",
-									editorParams:{
-										values:labs,
-										disabled:true,
-									},
-									formatter:function (cell, formatterParams, onRendered) {
-										if(typeof cell.getValue() !== "undefined"){
-											if(typeof formatterParams[cell.getValue()] === "undefined") {
-												console.warn(\'Missing display value for \' + cell.getValue());
-												return cell.getValue();
-											}
-											return formatterParams[cell.getValue()];
-										}
-									},
-									formatterParams: labs,
-                                },',
+                                formatterParams: labs,
+                            },',
             'JS_bef_tb' => 'let groups = {};
 
                                 async function getGroups(){
@@ -104,13 +104,17 @@ class Computers extends BaseController
         return view('table', $options);
     }
 
-    public function computers_managed(){
+    public function computers_managed()
+    {
         $options = ['title' => lang('Text.computers_managed')];
+
         return $this->index($options);
     }
 
-    public function computers_unassigned(){
+    public function computers_unassigned()
+    {
         $options = ['title' => lang('Text.computers_unassigned')];
+
         return $this->index($options);
     }
 }

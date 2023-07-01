@@ -120,7 +120,8 @@ goto main_menu
         }
     } else {
         $computer->builder()->select(
-            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups', false
+            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups',
+            false
         );
         $computer->builder()->join(
             'computer_groups',
@@ -133,6 +134,6 @@ goto main_menu
             echo 'This would be the computer specific (based on group and time) boot menu.';
         }
     }
-?>
+    ?>
 
 <?php endif; ?>

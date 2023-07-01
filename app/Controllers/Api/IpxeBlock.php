@@ -127,7 +127,7 @@ class IpxeBlock extends ResourceController
      *
      * Create a new resource object, from "posted" parameters
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function create()
     {
@@ -213,7 +213,7 @@ class IpxeBlock extends ResourceController
      *
      * @param mixed|null $id
      *
-     *@throws ReflectionException
+     * @throws ReflectionException
      */
     public function update($id = null)
     {

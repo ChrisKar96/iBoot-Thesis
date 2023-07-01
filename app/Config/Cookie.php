@@ -23,7 +23,7 @@ class Cookie extends BaseConfig
      *
      * Set a cookie name prefix if you need to avoid collisions.
      */
-    public $prefix = 'iboot';
+    public $prefix = 'iboot_';
 
     /**
      * --------------------------------------------------------------------------

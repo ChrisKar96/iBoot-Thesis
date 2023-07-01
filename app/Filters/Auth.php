@@ -22,6 +22,8 @@ class Auth implements FilterInterface
      * Require user is logged in to access a page, otherwise redirect them to the login page.
      * Optionally, require the user to have admin privileges to access the page, otherwise redirect them to their dashboard.
      *
+     * @param mixed|null $arguments
+     *
      * @return RedirectResponse|void
      */
     public function before(RequestInterface $request, $arguments = null)
@@ -34,8 +36,8 @@ class Auth implements FilterInterface
 
         $user = session()->get('user');
 
-        if (in_array('adminOnly', ($arguments !== null) ? $arguments : [], true) && ! $user['isAdmin']) {
-            log_message('notice', 'User {username} tried to illegally access {cur_url}', ['username' => $user['username'], 'cur_url' => current_url()]);
+        if (in_array('adminOnly', ($arguments !== null) ? $arguments : [], true) && ! $user->isAdmin) {
+            log_message('notice', 'User {username} tried to illegally access {cur_url}', ['username' => $user->username, 'cur_url' => current_url()]);
 
             return redirect()->to(site_url('dashboard'));
         }
@@ -43,6 +45,8 @@ class Auth implements FilterInterface
 
     /**
      * Empty, just for interface satisfaction.
+     *
+     * @param mixed|null $arguments
      *
      * @return void
      */

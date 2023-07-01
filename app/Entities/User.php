@@ -152,4 +152,17 @@ class User extends Entity
      * )
      */
     private $updated_at;
+
+    /**
+     * @OA\Property(
+     *     description="labs",
+     *     title="labs",
+     *     type="array",
+     *     @OA\Items(
+     *         type="integer",
+     *         title="lab id",
+     *     )
+     * )
+     */
+    private $labs;
 }
