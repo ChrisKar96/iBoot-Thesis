@@ -21,7 +21,9 @@ class BootMenu extends BaseController
                 'title'     => lang('Text.boot_menu'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/bootmenu'),
-                'columns'   => '{title:"' . lang('Text.boot_menu') . '", field:"name", sorter:"string"},',
+                'columns'   => '{title:"' . lang('Text.boot_menu') . '", field:"name", sorter:"string", editor:"input", validator:["required", "maxLength:20"]},
+                                {title:"' . lang('Text.description') . '", field:"description", sorter:"string", editor:"input", validator:["required", "maxLength:50"]},
+                                {title:"' . lang('Text.ipxe_block') . '", field:"ipxe_block", sorter:"string", editor:"textarea"},',
                 'JS_bef_tb' => '',
             ]
         );
