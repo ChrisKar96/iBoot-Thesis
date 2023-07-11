@@ -82,4 +82,17 @@ class Group extends Entity
      * )
      */
     private $image_server_path_prefix;
+
+    /**
+     * @OA\Property(
+     *     description="computers",
+     *     title="computers",
+     *     type="array",
+     *     @OA\Items(
+     *         type="integer",
+     *         title="computer id",
+     *     )
+     * )
+     */
+    private $computers;
 }

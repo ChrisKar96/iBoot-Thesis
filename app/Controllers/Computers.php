@@ -16,7 +16,7 @@ class Computers extends BaseController
     private function index($opt): string
     {
         $options = [
-            'title'     => $opt['title'],
+            'title'     => lang('Text.computers'),
             'tabulator' => true,
             'apiTarget' => base_url('/api/computer'),
             'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input"},
@@ -101,19 +101,25 @@ class Computers extends BaseController
                 ',
         ];
 
-        return view('table', $options);
+        return view('table', array_merge($options, $opt));
     }
 
     public function computers_managed()
     {
-        $options = ['title' => lang('Text.computers_managed')];
+        $options = [
+            'title'     => lang('Text.computers_managed'),
+            'JS_aft_tb' => 'table.setFilter("lab", "!=", null);',
+        ];
 
         return $this->index($options);
     }
 
     public function computers_unassigned()
     {
-        $options = ['title' => lang('Text.computers_unassigned')];
+        $options = [
+            'title'     => lang('Text.computers_unassigned'),
+            'JS_aft_tb' => 'table.setFilter("lab", "=", null);',
+        ];
 
         return $this->index($options);
     }

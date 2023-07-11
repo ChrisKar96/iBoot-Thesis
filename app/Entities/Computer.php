@@ -105,4 +105,17 @@ class Computer extends Entity
      * )
      */
     private $lab;
+
+    /**
+     * @OA\Property(
+     *     description="groups",
+     *     title="groups",
+     *     type="array",
+     *     @OA\Items(
+     *         type="integer",
+     *         title="group id",
+     *     )
+     * )
+     */
+    private $groups;
 }

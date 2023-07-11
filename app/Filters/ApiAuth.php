@@ -78,8 +78,8 @@ class ApiAuth implements FilterInterface
                 $userLabs      = $userLabsModel->select('lab_id')->where('user_id', $user->id)->findAll();
                 $userLabAccess = array_column($userLabs, 'lab_id');
                 session()->setFlashdata('userLabAccess', $userLabAccess);
-                session()->setFlashdata('userID', $user->id);
             }
+            session()->setFlashdata('userID', $user->id);
             session()->setFlashdata('userIsAdmin', $user->isAdmin);
         } catch (ExpiredException $ex) {
             $response->setBody('Access denied. Token is expired.');

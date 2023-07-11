@@ -11,11 +11,13 @@
 
 namespace iBoot\Controllers\Api;
 
-use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\ComputerModel;
 use OpenApi\Annotations as OA;
 use ReflectionException;
+
+// TODO: Think about the required permissions (userIsAdmin or userLabAccess etc)
 
 class Computer extends ResourceController
 {
@@ -46,40 +48,9 @@ class Computer extends ResourceController
      */
     public function index()
     {
-        $userIsAdmin   = session()->getFlashdata('userIsAdmin');
-        $userLabAccess = session()->getFlashdata('userLabAccess');
-
-        if (! $userIsAdmin && empty($userLabAccess)) {
-            return $this->respond(null, 401, 'Access denied');
-        }
-
         $computer = new ComputerModel();
-        $computer->builder()->select(
-            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups',
-            false
-        );
-        $computer->builder()->join(
-            'computer_groups',
-            'computers.id = computer_groups.computer_id',
-            'LEFT'
-        );
-        if (! empty($userLabAccess)) {
-            $computer->builder()->orWhereIn('lab', $userLabAccess)->orWhere('lab', null);
-        }
-        $computer->builder()->groupBy('computers.id');
-
-        log_message('debug', "computer api index query:\n{query}", ['query' => $computer->builder()->getCompiledSelect(false)]);
 
         $data = $computer->findAll();
-
-        log_message('debug', "computer api index query return:\n{data}", ['data' => var_export($data, true)]);
-
-        // Explode groups as json array
-        $data_num = count($data);
-
-        for ($i = 0; $i < $data_num; $i++) {
-            $data[$i]->groups = explode(',', $data[$i]->groups);
-        }
 
         return $this->respond($data, 200, count($data) . ' Computers Found');
     }
@@ -124,34 +95,15 @@ class Computer extends ResourceController
      *
      * @return mixed
      */
-    public function show($id = null)
+    public function show($id = null): ResponseInterface
     {
-        $userIsAdmin   = session()->getFlashdata('userIsAdmin');
-        $userLabAccess = session()->getFlashdata('userLabAccess');
-
-        if (! $userIsAdmin && empty($userLabAccess)) {
-            return $this->respond(null, 401, 'Access denied');
+        if (! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
         }
 
         $computer = new ComputerModel();
-        $computer->builder()->select(
-            'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups'
-        );
-        $computer->builder()->join(
-            'computer_groups',
-            'computers.id = computer_groups.computer_id',
-            'LEFT'
-        );
-        if (! empty($userLabAccess)) {
-            $computer->builder()->orWhereIn('lab', $userLabAccess)->orWhere('lab', null);
-        }
-        $computer->builder()->groupBy('computers.id');
-        $data = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
 
-        // Explode groups as json array
-        if ($data) {
-            $data->groups = explode(',', $data->groups);
-        }
+        $data = $computer->where(['id' => $id])->first();
 
         if ($data) {
             return $this->respond($data, 200, 'Computer with id ' . $id . ' Found');
@@ -190,20 +142,23 @@ class Computer extends ResourceController
         $computer = new ComputerModel();
 
         $data = [
-            'name'  => $this->request->getVar('name'),
-            'uuid'  => $this->request->getVar('uuid'),
-            'mac'   => $this->request->getVar('mac'),
-            'notes' => $this->request->getVar('notes'),
-            'lab'   => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
+            'name'   => $this->request->getVar('name'),
+            'uuid'   => $this->request->getVar('uuid'),
+            'mac'    => $this->request->getVar('mac'),
+            'notes'  => $this->request->getVar('notes'),
+            'lab'    => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
+            'groups' => (empty($this->request->getVar('groups')) ? null : $this->request->getVar('groups')),
         ];
 
-        $computer->insert($data);
+        if ($computer->save($data)) {
+            log_message('notice', 'Computer with uuid {uuid} was added.', ['uuid' => $data['uuid']]);
 
-        $id = $computer->getInsertID();
+            return $this->respondCreated($data, 'Computer Saved with id ' . $computer->getInsertID());
+        }
 
-        log_message('debug', "computer api create groups var:\n{data}", ['data' => var_export($this->request->getVar('groups'), true)]);
+        log_message('notice', 'Failed to create computer ' . $data['uuid'] . "\n" . var_export($computer->errors(), true));
 
-        return $this->respondCreated(null, 'Computer Saved with id ' . $id);
+        return $this->fail('Failed to create computer. Errors: ' . json_encode($computer->errors()));
     }
 
     /**
@@ -276,21 +231,54 @@ class Computer extends ResourceController
      *
      * @throws ReflectionException
      */
-    public function update($id = null)
+    public function update($id = null) // TODO: Check if computer is in lab to update it (or if lab is to be assigned with this call)
     {
-        $computer = new ComputerModel();
+        if (! empty($id) && ! is_numeric($id)) {
 
-        $data = [
-            'name'  => $this->request->getVar('name'),
-            'uuid'  => $this->request->getVar('uuid'),
-            'mac'   => $this->request->getVar('mac'),
-            'notes' => $this->request->getVar('notes'),
-            'lab'   => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
-        ];
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
+        }
 
-        $computer->update($id, $data);
+        $computerModel = new ComputerModel();
+        $userIsAdmin   = session()->getFlashdata('userIsAdmin');
 
-        return $this->respondUpdated(null, 'Computer with id ' . $id . ' Updated');
+        if (! $userIsAdmin) {
+            return $this->respond(null, 401, 'Access denied');
+        }
+
+        $computer = $computerModel->where('id', $id)->first();
+        if (empty($computer)) {
+            return $this->failNotFound('No Computer Found with id ' . $id);
+        }
+        if ($this->request->getVar('name') !== null && $computer->name !== $this->request->getVar('name')) {
+            $data['name'] = $this->request->getVar('name');
+        }
+        if ($this->request->getVar('uuid') !== null && $computer->uuid !== $this->request->getVar('uuid')) {
+            $data['uuid'] = $this->request->getVar('uuid');
+        }
+        if ($this->request->getVar('mac') !== null && $computer->mac !== $this->request->getVar('mac')) {
+            $data['mac'] = $this->request->getVar('mac');
+        }
+        if ($this->request->getVar('notes') !== null && $computer->notes !== $this->request->getVar('notes')) {
+            $data['notes'] = $this->request->getVar('notes');
+        }
+        if ($this->request->getVar('lab') !== null && $computer->lab !== $this->request->getVar('lab')) {
+            $data['lab'] = $this->request->getVar('lab');
+        }
+        if ($this->request->getVar('groups') !== null) {
+            $data['groups'] = $this->request->getVar('groups');
+        }
+
+        if (! empty($data)) {
+            if ($computerModel->update($id, $data)) {
+                log_message('notice', 'Computer {id} was updated from {ip}', ['id' => $id, 'ip' => $this->request->getIPAddress()]);
+
+                return $this->respondUpdated($data, 'Computer with id ' . $id . ' Updated');
+            }
+
+            return $this->respond($computerModel->errors(), 401, 'Error Updating Computer with id ' . $id);
+        }
+
+        return $this->respond('Nothing to update');
     }
 
     /**
@@ -353,122 +341,23 @@ class Computer extends ResourceController
      */
     public function delete($id = null)
     {
+        if (! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
+        }
+
         $computer = new ComputerModel();
+        $userID   = session()->getFlashdata('userID');
 
         $data = $computer->find($id);
 
         if ($data) {
             $computer->delete($id);
 
+            log_message('notice', 'Computer {uuid} was deleted by user with id {uid} from {ip}', ['uuid' => $data->uuid, 'uid' => $userID, 'ip' => $this->request->getIPAddress()]);
+
             return $this->respondDeleted(null, 'Computer with id ' . $id . ' Deleted');
         }
 
         return $this->failNotFound('No Computer Found with id ' . $id);
-    }
-
-    /**
-     * @OA\Put(
-     *     path="/computer/{id}/lab",
-     *     tags={"Computer"},
-     *     summary="Update Lab for an existing Computer",
-     *     operationId="updateComputerLab",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Computer id to update",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid ID supplied"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Computer not found"
-     *     ),
-     *     @OA\Response(
-     *         response=405,
-     *         description="Validation exception"
-     *     ),
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="application/x-www-form-urlencoded",
-     *             @OA\Schema(
-     *                 @OA\Property(
-     *                     property="lab",
-     *         			   description="Lab id to set to Computer",
-     *                     type="integer"
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     security={
-     *         {"bearerAuth": {}}
-     *     }
-     * )
-     * @OA\Post(
-     *     path="/computer/{id}/lab",
-     *     tags={"Computer"},
-     *     summary="Update Lab for an existing Computer (Websafe alternative)",
-     *     operationId="updateComputerLabWebsafe",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Computer id to update",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid ID supplied"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Computer not found"
-     *     ),
-     *     @OA\Response(
-     *         response=405,
-     *         description="Validation exception"
-     *     ),
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="application/x-www-form-urlencoded",
-     *             @OA\Schema(
-     *                 @OA\Property(
-     *                     property="lab",
-     *         			   description="Lab id to set to Computer",
-     *                     type="integer"
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     security={
-     *         {"bearerAuth": {}}
-     *     }
-     * )
-     *
-     * Add or update a model resource, from "posted" properties
-     *
-     * @param mixed|null $id
-     *
-     * @throws ReflectionException
-     */
-    public function updateComputerLab($id): Response
-    {
-        $computer = new ComputerModel();
-
-        $data = [
-            'id'  => $id,
-            'lab' => $this->request->getVar('lab'),
-        ];
-
-        $computer->save($data);
-
-        return $this->respondUpdated(null, 'Set Lab ' . $data['lab'] . ' for Computer with id ' . $id);
     }
 }
