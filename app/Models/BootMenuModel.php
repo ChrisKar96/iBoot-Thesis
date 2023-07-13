@@ -41,7 +41,7 @@ class BootMenuModel extends Model
         'id'          => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
         'name'        => 'max_length[20]|required',
         'description' => 'max_length[50]|required',
-        'ipxe_block'  => 'required',
+        'ipxe_block'  => 'permit_empty',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
