@@ -64,7 +64,7 @@ $routes->get('labs', 'Labs::index', ['filter' => 'auth']);
 $routes->get('ipxeblocks', 'IpxeBlocks::index', ['filter' => 'auth']);
 $routes->group('boot_menu', static function ($routes) {
     $routes->get('', 'BootMenu::index', ['filter' => 'auth']);
-    $routes->get('(:segment)', 'BootMenu::menuEditor/$1');
+    $routes->get('(:num)', 'BootMenu::menuEditor/$1');
 });
 $routes->get('schedules', 'Schedules::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout', ['filter' => 'auth']);
