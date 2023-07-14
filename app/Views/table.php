@@ -7,6 +7,9 @@ if (isset($columns, $apiTarget)): ?>
 
     <main role="main" class="py-5">
         <div class="container">
+            <div class="mb-4 mt-2">
+                <h1 class="text-center"><?= $title; ?></h1>
+            </div>
             <div class="my-2">
                 <button class="btn btn-primary" id="add-row"><?= lang('Text.add_row'); ?></button>
                 <button class="btn btn-danger" style="float: right; display: none;" id="reset" disabled><?= lang('Text.reset_table'); ?></button>
