@@ -117,6 +117,8 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     $routes->resource('schedule', ['websafe' => true, 'filter' => 'api-auth']);
 });
 
+$routes->addRedirect('computers', 'computers_managed');
+
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }

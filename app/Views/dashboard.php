@@ -7,7 +7,7 @@
             <div class="row">
                 <?php
                 $items = [
-                    [lang('Text.computers'), 'computer.png', 'computers'],
+                    [lang('Text.computers'), 'computer.png', 'computers_managed'],
                     [lang('Text.groups'), 'groups.png', 'groups'],
                     [lang('Text.labs'), 'lab.png', 'labs'],
                     [lang('Text.ipxe_blocks'), 'osimage.png', 'ipxeblocks'],
