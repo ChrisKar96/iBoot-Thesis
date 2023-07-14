@@ -83,4 +83,5 @@ return [
     'image_server_ip'                        => 'OS image server IP',
     'image_server_path_prefix'               => 'OS image server path prefix',
     'edit'                                   => 'Edit',
+    'editmenu'                               => 'Edit Menu {id}',
 ];

@@ -104,8 +104,8 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
         $routes->post('login', 'User::login');
     });
     $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'api-auth']);
-    $routes->resource('bootmenu', ['controller' => 'BootMenu', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('bootmenu/edit/(:num)', ['controller' => 'BootMenuBlocks', 'websafe' => true, 'filter' => 'api-auth']);
+    $routes->resource('bootmenu', ['controller' => 'BootMenu', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('computer', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->group('lab', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {

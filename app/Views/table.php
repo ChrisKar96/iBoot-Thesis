@@ -145,11 +145,13 @@ if (isset($columns, $apiTarget)): ?>
                     }
                 });
 
-                //Add row on "Add Row" button click
-                document.getElementById("add-row").addEventListener("click", function(){
+                function addnewrow(){
                     table.addRow({}, true);
                     table.redraw();
-                });
+                }
+
+                //Add row on "Add Row" button click
+                document.getElementById("add-row").addEventListener("click", addnewrow);
 
                 //Save changes to the table on "Save" button click
                 document.getElementById("save").addEventListener("click", function(){

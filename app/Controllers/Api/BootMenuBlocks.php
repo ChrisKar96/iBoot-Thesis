@@ -56,8 +56,8 @@ class BootMenuBlocks extends ResourceController
      */
     public function index(): ResponseInterface
     {
-        $uri = current_url(true);
-        $boot_menu_id = $uri->getSegments()[$uri->getTotalSegments()-1];
+        $uri          = current_url(true);
+        $boot_menu_id = $uri->getSegments()[$uri->getTotalSegments() - 1];
 
         $boot_menu_blocks = new BootMenuBlocksModel();
 
@@ -164,15 +164,15 @@ class BootMenuBlocks extends ResourceController
      */
     public function create(): ResponseInterface
     {
-        $uri = current_url(true);
-        $boot_menu_id = $uri->getSegments()[$uri->getTotalSegments()-1];
+        $uri          = current_url(true);
+        $boot_menu_id = $uri->getSegments()[$uri->getTotalSegments() - 1];
 
         $boot_menu_blocks = new BootMenuBlocksModel();
 
         $data = [
-            'boot_menu_id'        => $boot_menu_id,
-            'block_id' => $this->request->getVar('block_id'),
-            'key'  => $this->request->getVar('key'),
+            'boot_menu_id' => $boot_menu_id,
+            'block_id'     => $this->request->getVar('block_id'),
+            'key'          => $this->request->getVar('key'),
         ];
 
         if ($boot_menu_blocks->save($data)) {
@@ -276,15 +276,15 @@ class BootMenuBlocks extends ResourceController
      */
     public function update($id = null): ResponseInterface
     {
-        $uri = current_url(true);
-        $boot_menu_id = $uri->getSegments()[$uri->getTotalSegments()-1];
+        $uri          = current_url(true);
+        $boot_menu_id = $uri->getSegments()[$uri->getTotalSegments() - 1];
 
         $boot_menu_blocks = new BootMenuBlocksModel();
 
         $data = [
             'boot_menu_id' => $boot_menu_id,
-            'block_id' => $this->request->getVar('block_id'),
-            'key'  => $this->request->getVar('key'),
+            'block_id'     => $this->request->getVar('block_id'),
+            'key'          => $this->request->getVar('key'),
         ];
 
         if ($boot_menu_blocks->update($id, $data)) {
