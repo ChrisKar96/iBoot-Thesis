@@ -105,15 +105,12 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     });
     $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('bootmenu', ['controller' => 'BootMenu', 'websafe' => true, 'filter' => 'api-auth']);
-    $routes->group('computer', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
-        $routes->put('(:segment)/lab', 'Computer::updateComputerLab/$1');
-        $routes->post('update/(:segment)/lab', 'Computer::updateComputerLab/$1');
-    });
+    $routes->resource('bootmenu/edit/(:num)', ['controller' => 'BootMenuBlocks', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('computer', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->group('lab', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
         $routes->get('', 'Lab::index');
-        $routes->get('(:segment)', 'Lab::show/$1');
+        $routes->get('(:num)', 'Lab::show/$1');
     });
     $routes->resource('lab', ['except' => 'index,show', 'websafe' => true, 'filter' => 'api-auth:adminOnly']);
     $routes->resource('ipxeblock', ['controller' => 'IpxeBlock', 'websafe' => true, 'filter' => 'api-auth']);
