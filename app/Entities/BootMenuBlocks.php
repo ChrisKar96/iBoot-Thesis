@@ -21,7 +21,7 @@ use OpenApi\Annotations as OA;
  *     title="BootMenuBlocks"
  * )
  * @OA\Tag(
- *     name="BootMenuBlocks"
+ *     name="BootMenu"
  * )
  * @OA\RequestBody(
  *     request="BootMenuBlocks",
