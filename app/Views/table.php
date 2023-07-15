@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <?php
-if (isset($columns, $apiTarget)): ?>
+if (isset($title, $columns, $apiTarget)): ?>
 
     <main role="main" class="py-5">
         <div class="container">
@@ -102,6 +102,12 @@ if (isset($columns, $apiTarget)): ?>
                         headers: {
                             "Authorization": "Bearer <?= session()->get('user')->token ?>"
                         },
+                    },
+                    placeholder:function(){
+                        return this.getHeaderFilters().length ? "<?= lang('Text.no_results'); ?>" : "<?= lang('Text.no_data'); ?>";
+                    },
+                    persistence:{
+                        headerFilter: true,
                     },
                     pagination:"local",
                     paginationSize:10,

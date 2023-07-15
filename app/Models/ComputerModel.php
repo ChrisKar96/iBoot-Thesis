@@ -40,10 +40,10 @@ class ComputerModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'    => 'numeric|max_length[10]|permit_empty|is_unique[computers.id,id,{id}]',
+        'id'    => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[computers.id,id,{id}]',
         'name'  => 'max_length[20]',
-        'uuid'  => 'max_length[36]|required',
-        'mac'   => 'max_length[17]|required',
+        'uuid'  => 'exact_length[32]|hex|required',
+        'mac'   => 'exact_length[12]|hex|required',
         'notes' => 'permit_empty',
         'lab'   => 'numeric|max_length[10]|permit_empty',
     ];
@@ -69,8 +69,11 @@ class ComputerModel extends Model
         $this->builder()->join('computer_groups', $this->db->DBPrefix . 'computers.id = ' . $this->db->DBPrefix . 'computer_groups.computer_id', 'LEFT');
         $this->builder()->where($this->db->DBPrefix . 'computers.id', $id);
 
+        $groups = array_filter(array_column($this->builder->get()->getResultArray(), 'groups'));
+        sort($groups);
+
         // Return the values of the result array column 'groups', filtering the empty values
-        return array_filter(array_column($this->builder->get()->getResultArray(), 'groups'));
+        return $groups;
     }
 
     protected function addGroupToComputer(int $computer_id, int $group_id)

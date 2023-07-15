@@ -84,4 +84,6 @@ return [
     'image_server_path_prefix'               => 'OS image server path prefix',
     'edit'                                   => 'Edit',
     'editmenu'                               => 'Edit Menu {id}',
+    'no_data'                                => 'No Data',
+    'no_results'                             => 'No results',
 ];

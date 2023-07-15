@@ -19,23 +19,24 @@ class Computers extends BaseController
             'title'     => lang('Text.computers'),
             'tabulator' => true,
             'apiTarget' => base_url('/api/computer'),
-            'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input"},
-                            {title:"UUID", field:"uuid", sorter:"string", editor:"input", validator:["required", "unique"],
+            'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input", headerFilter:"input"},
+                            {title:"UUID", field:"uuid", sorter:"string", editor:"input", validator:["required", "unique", "regex:\\[0-9a-fA-F]{32}"], headerFilter:"input",
                                 editorParams:{
-                                    mask:"********-****-****-****-************",
+                                    mask:"********************************",
                                     maskAutoFill:true
                                 }
                             },
-                            {title:"MAC", field:"mac", sorter:"string", editor:"input", validator:["required", "unique"],
+                            {title:"MAC", field:"mac", sorter:"string", editor:"input", validator:["required", "unique", "regex:\\[0-9a-fA-F]{12}"], headerFilter:"input",
                                 editorParams:{
-                                    mask:"**-**-**-**-**-**",
+                                    mask:"************",
                                     maskAutoFill:true
                                 }
                             },
-                            {title:"' . lang('Text.notes') . '", field:"notes", sorter:"string", editor:"textarea"},
-                            {title:"' . lang('Text.groups') . '", field:"groups", editor:"list",
+                            {title:"' . lang('Text.notes') . '", field:"notes", sorter:"string", editor:"textarea", headerFilter:"input"},
+                            {title:"' . lang('Text.groups') . '", field:"groups", sorter:"string", editor:"list",
                                 editorParams:{
                                     multiselect:true,
+                                    clearable:true,
                                     values:groups
                                 },
                                 formatter:function (cell, formatterParams, onRendered) {
@@ -57,10 +58,10 @@ class Computers extends BaseController
                                 formatterParams: groups,
                             },
                             {
-                                title:"' . lang('Text.lab') . '", field:"lab", editor:"list",
+                                title:"' . lang('Text.lab') . '", field:"lab", headerSort:false, editor:"list",
                                 editorParams:{
                                     values:labs,
-                                    disabled:true,
+                                    clearable:true
                                 },
                                 formatter:function (cell, formatterParams, onRendered) {
                                     if(typeof cell.getValue() !== "undefined"){
@@ -108,7 +109,7 @@ class Computers extends BaseController
     {
         $options = [
             'title'     => lang('Text.computers_managed'),
-            'JS_aft_tb' => 'table.setFilter("lab", "!=", null);',
+            'apiTarget' => base_url('/api/computer/assigned'),
         ];
 
         return $this->index($options);
@@ -118,7 +119,7 @@ class Computers extends BaseController
     {
         $options = [
             'title'     => lang('Text.computers_unassigned'),
-            'JS_aft_tb' => 'table.setFilter("lab", "=", null);',
+            'apiTarget' => base_url('/api/computer/unassigned'),
         ];
 
         return $this->index($options);

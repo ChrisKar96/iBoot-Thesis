@@ -35,10 +35,6 @@ class Computer extends ResourceController
      *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Computer")),
      *         ),
      *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Computer objects not found"
-     *     ),
      *     security={
      *         {"bearerAuth": {}}
      *     }
@@ -53,6 +49,66 @@ class Computer extends ResourceController
         $data = $computer->findAll();
 
         return $this->respond($data, 200, count($data) . ' Computers Found');
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/computer/unassigned",
+     *     tags={"Computer"},
+     *     summary="Find Unassigned Computers",
+     *     description="Returns list of Computer objects not assigned to a Lab",
+     *     operationId="getUnassignedComputers",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(type="object",
+     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Computer")),
+     *         ),
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     *
+     * Return an array of resource objects, themselves in array format
+     */
+    public function findUnassigned()
+    {
+        $computer = new ComputerModel();
+
+        $data = $computer->where('lab')->findAll();
+
+        return $this->respond($data, 200, count($data) . ' Unassigned Computers Found');
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/computer/assigned",
+     *     tags={"Computer"},
+     *     summary="Find Assigned Computers",
+     *     description="Returns list of Computer objects assigned to a Lab",
+     *     operationId="getAssignedComputers",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(type="object",
+     *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Computer")),
+     *         ),
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     *
+     * Return an array of resource objects, themselves in array format
+     */
+    public function findAssigned()
+    {
+        $computer = new ComputerModel();
+
+        $data = $computer->whereNotIn('lab', [''])->findAll();
+
+        return $this->respond($data, 200, count($data) . ' Assigned Computers Found');
     }
 
     /**
@@ -143,8 +199,8 @@ class Computer extends ResourceController
 
         $data = [
             'name'   => $this->request->getVar('name'),
-            'uuid'   => $this->request->getVar('uuid'),
-            'mac'    => $this->request->getVar('mac'),
+            'uuid'   => strtolower($this->request->getVar('uuid')),
+            'mac'    => strtolower($this->request->getVar('mac')),
             'notes'  => $this->request->getVar('notes'),
             'lab'    => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
             'groups' => (empty($this->request->getVar('groups')) ? null : $this->request->getVar('groups')),
@@ -253,10 +309,10 @@ class Computer extends ResourceController
             $data['name'] = $this->request->getVar('name');
         }
         if ($this->request->getVar('uuid') !== null && $computer->uuid !== $this->request->getVar('uuid')) {
-            $data['uuid'] = $this->request->getVar('uuid');
+            $data['uuid'] = strtolower($this->request->getVar('uuid'));
         }
         if ($this->request->getVar('mac') !== null && $computer->mac !== $this->request->getVar('mac')) {
-            $data['mac'] = $this->request->getVar('mac');
+            $data['mac'] = strtolower($this->request->getVar('mac'));
         }
         if ($this->request->getVar('notes') !== null && $computer->notes !== $this->request->getVar('notes')) {
             $data['notes'] = $this->request->getVar('notes');
@@ -275,6 +331,7 @@ class Computer extends ResourceController
                 return $this->respondUpdated($data, 'Computer with id ' . $id . ' Updated');
             }
 
+            log_message('notice', "Computer {id} was not updated.\n{errors}", ['id' => $id, 'errors' => var_export($computerModel->errors(), true)]);
             return $this->respond($computerModel->errors(), 401, 'Error Updating Computer with id ' . $id);
         }
 

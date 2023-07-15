@@ -44,7 +44,7 @@ class UserModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'            => 'numeric|max_length[10]|permit_empty|is_unique[users.id,id,{id}]',
+        'id'            => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[users.id,id,{id}]',
         'name'          => 'min_length[3]|max_length[40]|required',
         'email'         => 'valid_email|max_length[320]|required|is_unique[users.email,id,{id}]',
         'phone'         => 'min_length[3]|max_length[15]|permit_empty',
@@ -59,24 +59,14 @@ class UserModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = ['beforeInsert'];
+    protected $beforeInsert   = ['passwordHash'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = ['beforeUpdate'];
+    protected $beforeUpdate   = ['passwordHash'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-
-    protected function beforeInsert(array $data): array
-    {
-        return $this->passwordHash($data);
-    }
-
-    protected function beforeUpdate(array $data): array
-    {
-        return $this->passwordHash($data);
-    }
 
     protected function passwordHash(array $data): array
     {
@@ -94,8 +84,11 @@ class UserModel extends Model
         $this->builder()->join('user_labs', $this->db->DBPrefix . 'users.id = ' . $this->db->DBPrefix . 'user_labs.user_id', 'LEFT');
         $this->builder()->where($this->db->DBPrefix . 'users.id', $id);
 
+        $labs = array_filter(array_column($this->builder->get()->getResultArray(), 'labs'));
+        sort($labs);
+
         // Return the values of the result array column 'labs', filtering the empty values
-        return array_filter(array_column($this->builder->get()->getResultArray(), 'labs'));
+        return $labs;
     }
 
     protected function assignLabToUser(int $user_id, int $lab_id)

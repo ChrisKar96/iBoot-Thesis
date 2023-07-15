@@ -65,8 +65,12 @@ class GroupModel extends Model
         $this->builder()->join('computer_groups', $this->db->DBPrefix . 'groups.id = ' . $this->db->DBPrefix . 'computer_groups.group_id', 'LEFT');
         $this->builder()->where($this->db->DBPrefix . 'groups.id', $id);
 
+        $computers = array_filter(array_column($this->builder->get()->getResultArray(), 'computers'));
+        sort($computers);
+
         // Return the values of the result array column 'computers', filtering the empty values
-        return array_filter(array_column($this->builder->get()->getResultArray(), 'computers'));
+        return $computers;
+
     }
 
     protected function addComputerToGroup(int $group_id, int $computer_id)

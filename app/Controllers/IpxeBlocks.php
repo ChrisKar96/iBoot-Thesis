@@ -21,8 +21,8 @@ class IpxeBlocks extends BaseController
                 'title'     => lang('Text.ipxe_blocks'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/ipxeblock'),
-                'columns'   => '{title:"' . lang('Text.ipxe_block') . '", field:"name", sorter:"string", width: 200, editor:"input", validator:["required", "maxLength:30"]},
-                                {title:"' . lang('Text.ipxe_entry') . '", field:"ipxe_block", formatter:"textarea", editor:"textarea", validator:["required"]},',
+                'columns'   => '{title:"' . lang('Text.ipxe_block') . '", field:"name", sorter:"string", headerFilter:"input", width: 200, editor:"input", validator:["required", "maxLength:30"]},
+                                {title:"' . lang('Text.ipxe_entry') . '", field:"ipxe_block", formatter:"textarea", editor:"textarea", headerFilter:"input", validator:["required"]},',
                 'JS_bef_tb' => '',
             ]
         );

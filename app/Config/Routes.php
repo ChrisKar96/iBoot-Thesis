@@ -106,6 +106,30 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('bootmenu/edit/(:num)', ['controller' => 'BootMenuBlocks', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('bootmenu', ['controller' => 'BootMenu', 'websafe' => true, 'filter' => 'api-auth']);
+    $routes->group('computer', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
+        $routes->group('assigned', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
+            $routes->get('', 'Computer::findAssigned');
+            $routes->post('', 'Computer::create');
+            $routes->get('(:segment)', 'Computer::show/$1');
+            $routes->get('(:segment)/edit', 'Computer::edit/$1');
+            $routes->put('(:segment)', 'Computer::update/$1');
+            $routes->patch('(:segment)', 'Computer::update/$1');
+            $routes->post('(:segment)', 'Computer::update/$1');
+            $routes->post('(:segment)/delete', 'Computer::delete/$1');
+            $routes->delete('(:segment)', 'Computer::delete/$1');
+        });
+        $routes->group('unassigned', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
+            $routes->get('', 'Computer::findUnassigned');
+            $routes->post('', 'Photos::create');
+            $routes->get('(:segment)', 'Computer::show/$1');
+            $routes->get('(:segment)/edit', 'Computer::edit/$1');
+            $routes->put('(:segment)', 'Computer::update/$1');
+            $routes->patch('(:segment)', 'Computer::update/$1');
+            $routes->post('(:segment)', 'Computer::update/$1');
+            $routes->post('(:segment)/delete', 'Computer::delete/$1');
+            $routes->delete('(:segment)', 'Computer::delete/$1');
+        });
+    });
     $routes->resource('computer', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->group('lab', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
@@ -117,6 +141,11 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
     $routes->resource('schedule', ['websafe' => true, 'filter' => 'api-auth']);
 });
 
+/*
+ * --------------------------------------------------------------------
+ * REDIRECTIONS
+ * --------------------------------------------------------------------
+ */
 $routes->addRedirect('computers', 'computers_managed');
 
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
