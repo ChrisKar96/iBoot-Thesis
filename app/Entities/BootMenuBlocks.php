@@ -15,25 +15,25 @@ use CodeIgniter\Entity\Entity;
 use OpenApi\Annotations as OA;
 
 /**
- * Class Group
+ * Class BootMenuBlocks
  *
  * @OA\Schema(
- *     title="Group"
+ *     title="BootMenuBlocks"
  * )
  * @OA\Tag(
- *     name="Group"
+ *     name="BootMenu"
  * )
  * @OA\RequestBody(
- *     request="Group",
- *     description="Group object",
- *     @OA\JsonContent(ref="#/components/schemas/Group"),
+ *     request="BootMenuBlocks",
+ *     description="BootMenuBlocks object",
+ *     @OA\JsonContent(ref="#/components/schemas/BootMenuBlocks"),
  *     @OA\MediaType(
  *         mediaType="application/x-www-form-urlencoded",
- *         @OA\Schema(ref="#/components/schemas/Group")
+ *         @OA\Schema(ref="#/components/schemas/BootMenuBlocks")
  *     )
  * )
  */
-class Group extends Entity
+class BootMenuBlocks extends Entity
 {
     /**
      * @OA\Property(
@@ -49,50 +49,36 @@ class Group extends Entity
 
     /**
      * @OA\Property(
-     *     description="name",
-     *     title="name",
-     *     type="string",
+     *     description="boot_menu_id",
+     *     title="boot_menu_id",
+     *     type="integer",
      * 	   format="-",
      * 	   nullable=false,
-     * 	   maxLength=20,
+     * 	   maxLength=10,
      * )
      */
-    private $name;
+    private $boot_menu_id;
 
     /**
      * @OA\Property(
-     *     description="image_server_ip",
-     *     title="image_server_ip",
-     *     type="string",
+     *     description="block_id",
+     *     title="block_id",
+     *     type="integer",
      * 	   format="-",
      * 	   nullable=false,
-     * 	   maxLength=15,
+     * 	   maxLength=10,
      * )
      */
-    private $image_server_ip;
+    private $block_id;
 
     /**
      * @OA\Property(
-     *     description="image_server_path_prefix",
-     *     title="image_server_path_prefix",
+     *     description="ipxe_block",
+     *     title="ipxe_block",
      *     type="string",
      * 	   format="-",
-     * 	   nullable=false,
-     * 	   maxLength=50,
+     * 	   nullable=true,
      * )
      */
-    private $image_server_path_prefix;
-
-    /**
-     * @OA\Property(
-     *     description="computers",
-     *     title="computers",
-     *     type="array",
-     *     @OA\Items(
-     *         type="integer",
-     *         title="computer id",
-     *     )
-     * )
-     */
-    private $computers;
+    private $ipxe_block;
 }

@@ -21,9 +21,9 @@ class Groups extends BaseController
                 'title'     => lang('Text.groups'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/group'),
-                'columns'   => '{title:"' . lang('Text.group') . '", field:"name", sorter:"string", editor:"input", validator:["required","maxLength:20"]},
-                                {title:"' . lang('Text.image_server_ip') . '", field:"image_server_ip", sorter:"string", editor:"input", validator:["required","maxLength:15"]},
-                                {title:"' . lang('Text.image_server_path_prefix') . '", field:"image_server_path_prefix", sorter:"string", editor:"input", validator:["required","maxLength:50"]},
+                'columns'   => '{title:"' . lang('Text.group') . '", field:"name", sorter:"string", editor:"input", headerFilter:"input", validator:["required","maxLength:20"]},
+                                {title:"' . lang('Text.image_server_ip') . '", field:"image_server_ip", sorter:"string", headerFilter:"input", editor:"input", validator:["required","maxLength:15"]},
+                                {title:"' . lang('Text.image_server_path_prefix') . '", field:"image_server_path_prefix", headerFilter:"input", sorter:"string", editor:"input", validator:["required","maxLength:50"]},
                                 {title:"' . lang('Text.computers') . '", field:"computers", editor:"list",
                                     editorParams:{
                                         multiselect:true,

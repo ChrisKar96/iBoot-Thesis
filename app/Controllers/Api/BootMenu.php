@@ -136,14 +136,20 @@ class BootMenu extends ResourceController
         $boot_menu = new BootMenuModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
+            'name'        => $this->request->getVar('name'),
+            'description' => $this->request->getVar('description'),
+            'ipxe_block'  => $this->request->getVar('ipxe_block'),
         ];
 
-        $boot_menu->insert($data);
+        if ($boot_menu->save($data)) {
+            log_message('notice', 'Boot Menu with name {name} was added.', ['name' => $data['name']]);
 
-        $id = $boot_menu->getInsertID();
+            return $this->respondCreated($data, 'Boot Menu Saved with id ' . $boot_menu->getInsertID());
+        }
 
-        return $this->respondCreated(null, 'Boot Menu Saved with id ' . $id);
+        log_message('notice', 'Failed to create Boot Menu ' . $data['name'] . "\n" . var_export($boot_menu->errors(), true));
+
+        return $this->fail('Failed to create Boot Menu. Errors: ' . json_encode($boot_menu->errors()));
     }
 
     /**
@@ -221,12 +227,20 @@ class BootMenu extends ResourceController
         $boot_menu = new BootMenuModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
+            'name'        => $this->request->getVar('name'),
+            'description' => $this->request->getVar('description'),
+            'ipxe_block'  => $this->request->getVar('ipxe_block'),
         ];
 
-        $boot_menu->update($id, $data);
+        if ($boot_menu->update($id, $data)) {
+            log_message('notice', 'Boot Menu with id {id} was updated.', ['id' => $id]);
 
-        return $this->respondUpdated(null, 'Boot Menu with id ' . $id . ' Updated');
+            return $this->respondUpdated(null, 'Boot Menu with id ' . $id . ' Updated');
+        }
+
+        log_message('notice', 'Failed to create Boot Menu ' . $data['name'] . "\n" . var_export($boot_menu->errors(), true));
+
+        return $this->fail('Failed to create Boot Menu. Errors: ' . json_encode($boot_menu->errors()));
     }
 
     /**

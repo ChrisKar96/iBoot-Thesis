@@ -69,7 +69,7 @@ class InitDB extends Migration
             ],
         ]);
         $this->forge->addPrimaryKey('id');
-        $this->forge->addUniqueKey(['boot_menu_id', 'image_id']);
+        $this->forge->addUniqueKey(['boot_menu_id', 'block_id']);
         $this->forge->addForeignKey('boot_menu_id', 'boot_menu', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('block_id', 'ipxe_blocks', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('boot_menu_blocks', true);

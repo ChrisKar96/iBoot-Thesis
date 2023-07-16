@@ -3,10 +3,13 @@
 <?= $this->section('content') ?>
 
 <?php
-if (isset($columns, $apiTarget)): ?>
+if (isset($title, $columns, $apiTarget)): ?>
 
     <main role="main" class="py-5">
         <div class="container">
+            <div class="mb-4 mt-2">
+                <h1 class="text-center"><?= $title; ?></h1>
+            </div>
             <div class="my-2">
                 <button class="btn btn-primary" id="add-row"><?= lang('Text.add_row'); ?></button>
                 <button class="btn btn-danger" style="float: right; display: none;" id="reset" disabled><?= lang('Text.reset_table'); ?></button>
@@ -100,6 +103,12 @@ if (isset($columns, $apiTarget)): ?>
                             "Authorization": "Bearer <?= session()->get('user')->token ?>"
                         },
                     },
+                    placeholder:function(){
+                        return this.getHeaderFilters().length ? "<?= lang('Text.no_results'); ?>" : "<?= lang('Text.no_data'); ?>";
+                    },
+                    persistence:{
+                        headerFilter: true,
+                    },
                     pagination:"local",
                     paginationSize:10,
                     paginationSizeSelector:[10, 25, 50, 100],
@@ -145,11 +154,13 @@ if (isset($columns, $apiTarget)): ?>
                     }
                 });
 
-                //Add row on "Add Row" button click
-                document.getElementById("add-row").addEventListener("click", function(){
+                function addnewrow(){
                     table.addRow({}, true);
                     table.redraw();
-                });
+                }
+
+                //Add row on "Add Row" button click
+                document.getElementById("add-row").addEventListener("click", addnewrow);
 
                 //Save changes to the table on "Save" button click
                 document.getElementById("save").addEventListener("click", function(){

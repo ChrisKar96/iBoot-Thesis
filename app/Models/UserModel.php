@@ -44,7 +44,7 @@ class UserModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'            => 'numeric|max_length[10]|permit_empty|is_unique[users.id,id,{id}]',
+        'id'            => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[users.id,id,{id}]',
         'name'          => 'min_length[3]|max_length[40]|required',
         'email'         => 'valid_email|max_length[320]|required|is_unique[users.email,id,{id}]',
         'phone'         => 'min_length[3]|max_length[15]|permit_empty',
@@ -59,24 +59,14 @@ class UserModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = ['beforeInsert'];
+    protected $beforeInsert   = ['passwordHash'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = ['beforeUpdate'];
+    protected $beforeUpdate   = ['passwordHash'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-
-    protected function beforeInsert(array $data): array
-    {
-        return $this->passwordHash($data);
-    }
-
-    protected function beforeUpdate(array $data): array
-    {
-        return $this->passwordHash($data);
-    }
 
     protected function passwordHash(array $data): array
     {
@@ -93,15 +83,11 @@ class UserModel extends Model
         $this->builder()->from($this->table, true);
         $this->builder()->join('user_labs', $this->db->DBPrefix . 'users.id = ' . $this->db->DBPrefix . 'user_labs.user_id', 'LEFT');
         $this->builder()->where($this->db->DBPrefix . 'users.id', $id);
-        $labs_temp = $this->builder->get()->getResultArray();
-        $labs      = [];
 
-        foreach ($labs_temp as $l) {
-            if (! empty($l['labs'])) {
-                $labs[] = $l['labs'];
-            }
-        }
+        $labs = array_filter(array_column($this->builder->get()->getResultArray(), 'labs'));
+        sort($labs);
 
+        // Return the values of the result array column 'labs', filtering the empty values
         return $labs;
     }
 
@@ -141,17 +127,10 @@ class UserModel extends Model
     {
         $changed_flag = false;
         $prev_labs    = $this->getUserLabs($id);
-        $test         = [];
-
-        log_message('debug', "labs:\n" . var_export($labs, true));
-        log_message('debug', "prev_labs:\n" . var_export($prev_labs, true));
-        log_message('debug', "empty test array:\n" . var_export($test, true));
 
         // Only Admins can assign Labs to Users
         if ($userIsAdmin) {
             $labs_to_add = array_diff($labs, $prev_labs);
-            log_message('debug', 'is labs_to_add empty?:' . var_export(empty($labs_to_add), true));
-            log_message('debug', "labs_to_add:\n" . var_export($labs_to_add, true));
             if (! empty($labs_to_add)) {
                 foreach ($labs_to_add as $l) {
                     $this->assignLabToUser($id, $l);
@@ -162,8 +141,6 @@ class UserModel extends Model
 
         // Users can unassign themselves from Labs
         $labs_to_remove = array_diff($prev_labs, $labs);
-        log_message('debug', 'is labs_to_remove empty?:' . var_export(empty($labs_to_remove), true));
-        log_message('debug', "labs_to_remove:\n" . var_export($labs_to_remove, true));
         if (! empty($labs_to_remove)) {
             foreach ($labs_to_remove as $l) {
                 $this->unassignLabFromUser($id, $l);
@@ -224,22 +201,4 @@ class UserModel extends Model
 
         return $updated_user || $updated_labs;
     }
-    // maybe cascade from db makes this redundant
-    /*
-        public function delete($id = null, bool $purge = false): bool|\CodeIgniter\Database\BaseResult
-        {
-            $ulm = new UserLabsModel();
-            $ulm->builder()->select('id')->where('user_id', $id);
-            $ids = $ulm->builder->get()->getResultArray();
-            if(! empty($ids)){
-                $todel = [];
-                foreach ($ids as $id){
-                    $todel[] = $ids['id'];
-                }
-                $ulm->delete($todel, $purge);
-            }
-
-            return parent::delete($id, $purge);
-        }
-    */
 }

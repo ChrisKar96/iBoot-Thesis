@@ -16,7 +16,7 @@ use CodeIgniter\Model;
 class ComputerGroupsModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'groups';
+    protected $table            = 'computer_groups';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;

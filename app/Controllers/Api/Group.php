@@ -11,6 +11,7 @@
 
 namespace iBoot\Controllers\Api;
 
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\GroupModel;
 use OpenApi\Annotations as OA;
@@ -46,29 +47,8 @@ class Group extends ResourceController
     public function index()
     {
         $group = new GroupModel();
-        $group->builder()->select(
-            $group->db->DBPrefix . 'groups.*, GROUP_CONCAT(DISTINCT(' . $group->db->DBPrefix . 'computer_groups.computer_id)) as computers',
-            false
-        );
-        $group->builder()->join(
-            'computer_groups',
-            'groups.id = computer_groups.group_id',
-            'LEFT'
-        );
-        $group->builder()->groupBy('groups.id');
-
-        log_message('debug', "group api index query:\n{query}", ['query' => $group->builder()->getCompiledSelect(false)]);
 
         $data = $group->findAll();
-
-        log_message('debug', "group api index query return:\n{data}", ['data' => var_export($data, true)]);
-
-        // Explode groups as json array
-        $data_num = count($data);
-
-        for ($i = 0; $i < $data_num; $i++) {
-            $data[$i]->computers = explode(',', $data[$i]->computers);
-        }
 
         return $this->respond($data, 200, count($data) . ' Groups Found');
     }
@@ -113,22 +93,15 @@ class Group extends ResourceController
      *
      * @return mixed
      */
-    public function show($id = null)
+    public function show($id = null): ResponseInterface
     {
-        $group = new GroupModel();
-        $group->builder()->select(
-            'groups.*, GROUP_CONCAT(DISTINCT(' . $group->db->DBPrefix . 'computer_groups.computer_id)) as computers'
-        );
-        $group->builder()->join(
-            'computer_groups',
-            'groups.id = computer_groups.group_id'
-        );
-        $group->builder()->groupBy('groups.id');
-        $data = $group->where(['id' => $id])->first();
-
-        if ($data) {
-            $data['computers'] = explode(',', $data['computers']);
+        if (! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
         }
+
+        $group = new GroupModel();
+
+        $data = $group->where(['id' => $id])->first();
 
         if ($data) {
             return $this->respond($data, 200, 'Group with id ' . $id . ' Found');
@@ -170,17 +143,18 @@ class Group extends ResourceController
             'name'                     => $this->request->getVar('name'),
             'image_server_ip'          => $this->request->getVar('image_server_ip'),
             'image_server_path_prefix' => $this->request->getVar('image_server_path_prefix'),
+            'computers'                => (empty($this->request->getVar('computers')) ? null : $this->request->getVar('computers')),
         ];
 
-        $group->insert($data);
+        if ($group->save($data)) {
+            log_message('notice', 'Group with name {name} was added.', ['name' => $data['name']]);
 
-        $id = $group->getInsertID();
-
-        if ($id) {
-            return $this->respondCreated(null, 'Group Saved with id ' . $id);
+            return $this->respondCreated($data, 'Group Saved with id ' . $group->getInsertID());
         }
 
-        return $this->fail('Failed to save group');
+        log_message('notice', 'Failed to create group ' . $data['uuid'] . "\n" . var_export($group->errors(), true));
+
+        return $this->fail('Failed to create group. Errors: ' . json_encode($group->errors()));
     }
 
     /**
@@ -253,19 +227,48 @@ class Group extends ResourceController
      *
      * @throws ReflectionException
      */
-    public function update($id = null)
+    public function update($id = null) // TODO: permissions: who can update?
     {
-        $group = new GroupModel();
+        if (! empty($id) && ! is_numeric($id)) {
 
-        $data = [
-            'name'                     => $this->request->getVar('name'),
-            'image_server_ip'          => $this->request->getVar('image_server_ip'),
-            'image_server_path_prefix' => $this->request->getVar('image_server_path_prefix'),
-        ];
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
+        }
 
-        $group->update($id, $data);
+        $groupModel  = new GroupModel();
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
 
-        return $this->respondUpdated(null, 'Group with id ' . $id . ' Updated');
+        if (! $userIsAdmin) {
+            return $this->respond(null, 401, 'Access denied');
+        }
+
+        $group = $groupModel->where('id', $id)->first();
+        if (empty($group)) {
+            return $this->failNotFound('No Group Found with id ' . $id);
+        }
+        if ($this->request->getVar('name') !== null && $group->name !== $this->request->getVar('name')) {
+            $data['name'] = $this->request->getVar('name');
+        }
+        if ($this->request->getVar('image_server_ip') !== null && $group->image_server_ip !== $this->request->getVar('image_server_ip')) {
+            $data['image_server_ip'] = $this->request->getVar('image_server_ip');
+        }
+        if ($this->request->getVar('image_server_path_prefix') !== null && $group->image_server_path_prefix !== $this->request->getVar('image_server_path_prefix')) {
+            $data['image_server_path_prefix'] = $this->request->getVar('image_server_path_prefix');
+        }
+        if ($this->request->getVar('computers') !== null) {
+            $data['computers'] = $this->request->getVar('computers');
+        }
+
+        if (! empty($data)) {
+            if ($groupModel->update($id, $data)) {
+                log_message('notice', 'Group {id} was updated from {ip}', ['id' => $id, 'ip' => $this->request->getIPAddress()]);
+
+                return $this->respondUpdated($data, 'Group with id ' . $id . ' Updated');
+            }
+
+            return $this->respond($groupModel->errors(), 401, 'Error Updating Group with id ' . $id);
+        }
+
+        return $this->respond('Nothing to update');
     }
 
     /**
@@ -328,12 +331,19 @@ class Group extends ResourceController
      */
     public function delete($id = null)
     {
-        $group = new GroupModel();
+        if (! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
+        }
+
+        $group  = new GroupModel();
+        $userID = session()->getFlashdata('userID');
 
         $data = $group->find($id);
 
         if ($data) {
             $group->delete($id);
+
+            log_message('notice', 'Group {name} was deleted by user with id {uid} from {ip}', ['name' => $data->name, 'uid' => $userID, 'ip' => $this->request->getIPAddress()]);
 
             return $this->respondDeleted(null, 'Group with id ' . $id . ' Deleted');
         }

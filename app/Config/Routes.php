@@ -57,12 +57,15 @@ $routes->get('sendEmailVerification/(:segment)', 'User::sendValidationEmail/$1',
 $routes->get('profile', 'User::profile', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('users', 'User::index', ['filter' => 'auth:adminOnly']);
-$routes->get('computers_managed', 'Computers::computers_managed', ['filter' => 'auth']);
-$routes->get('computers_unassigned', 'Computers::computers_unassigned', ['filter' => 'auth']);
+$routes->get('computers_managed', 'Computers::computersManaged', ['filter' => 'auth']);
+$routes->get('computers_unassigned', 'Computers::computersUnassigned', ['filter' => 'auth']);
 $routes->get('groups', 'Groups::index', ['filter' => 'auth']);
 $routes->get('labs', 'Labs::index', ['filter' => 'auth']);
 $routes->get('ipxeblocks', 'IpxeBlocks::index', ['filter' => 'auth']);
-$routes->get('boot_menu', 'BootMenu::index', ['filter' => 'auth']);
+$routes->group('boot_menu', static function ($routes) {
+    $routes->get('', 'BootMenu::index', ['filter' => 'auth']);
+    $routes->get('(:num)', 'BootMenu::menuEditor/$1');
+});
 $routes->get('schedules', 'Schedules::index', ['filter' => 'auth']);
 $routes->get('logout', 'User::logout', ['filter' => 'auth']);
 $routes->get('boot', 'Home::boot');
@@ -101,21 +104,49 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
         $routes->post('login', 'User::login');
     });
     $routes->resource('user', ['except' => 'login,register', 'websafe' => true, 'filter' => 'api-auth']);
+    $routes->resource('bootmenu/edit/(:num)', ['controller' => 'BootMenuBlocks', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('bootmenu', ['controller' => 'BootMenu', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->group('computer', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
-        $routes->put('(:segment)/lab', 'Computer::updateComputerLab/$1');
-        $routes->post('update/(:segment)/lab', 'Computer::updateComputerLab/$1');
+        $routes->group('assigned', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
+            $routes->get('', 'Computer::findAssigned');
+            $routes->post('', 'Computer::create');
+            $routes->get('(:segment)', 'Computer::show/$1');
+            $routes->get('(:segment)/edit', 'Computer::edit/$1');
+            $routes->put('(:segment)', 'Computer::update/$1');
+            $routes->patch('(:segment)', 'Computer::update/$1');
+            $routes->post('(:segment)', 'Computer::update/$1');
+            $routes->post('(:segment)/delete', 'Computer::delete/$1');
+            $routes->delete('(:segment)', 'Computer::delete/$1');
+        });
+        $routes->group('unassigned', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
+            $routes->get('', 'Computer::findUnassigned');
+            $routes->post('', 'Photos::create');
+            $routes->get('(:segment)', 'Computer::show/$1');
+            $routes->get('(:segment)/edit', 'Computer::edit/$1');
+            $routes->put('(:segment)', 'Computer::update/$1');
+            $routes->patch('(:segment)', 'Computer::update/$1');
+            $routes->post('(:segment)', 'Computer::update/$1');
+            $routes->post('(:segment)/delete', 'Computer::delete/$1');
+            $routes->delete('(:segment)', 'Computer::delete/$1');
+        });
     });
     $routes->resource('computer', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('group', ['websafe' => true, 'filter' => 'api-auth']);
     $routes->group('lab', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
         $routes->get('', 'Lab::index');
-        $routes->get('(:segment)', 'Lab::show/$1');
+        $routes->get('(:num)', 'Lab::show/$1');
     });
     $routes->resource('lab', ['except' => 'index,show', 'websafe' => true, 'filter' => 'api-auth:adminOnly']);
     $routes->resource('ipxeblock', ['controller' => 'IpxeBlock', 'websafe' => true, 'filter' => 'api-auth']);
     $routes->resource('schedule', ['websafe' => true, 'filter' => 'api-auth']);
 });
+
+/*
+ * --------------------------------------------------------------------
+ * REDIRECTIONS
+ * --------------------------------------------------------------------
+ */
+$routes->addRedirect('computers', 'computers_managed');
 
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';

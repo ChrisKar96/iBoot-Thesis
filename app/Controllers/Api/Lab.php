@@ -48,6 +48,15 @@ class Lab extends ResourceController
     {
         $lab = new LabModel();
 
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        if (! $userIsAdmin) {
+            $userLabAccess = session()->getFlashdata('userLabAccess');
+            if (empty($userLabAccess)) {
+                return $this->failNotFound('No Labs Found.');
+            }
+            $lab->whereIn('id', $userLabAccess);
+        }
+
         $data = $lab->findAll();
 
         return $this->respond($data, 200, count($data) . ' Labs Found');
@@ -96,6 +105,15 @@ class Lab extends ResourceController
     public function show($id = null)
     {
         $lab = new LabModel();
+
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        if (! $userIsAdmin) {
+            $userLabAccess = session()->getFlashdata('userLabAccess');
+            if (empty($userLabAccess)) {
+                return $this->failNotFound('No Lab Found with id ' . $id);
+            }
+            $lab->whereIn('id', $userLabAccess);
+        }
 
         $data = $lab->where(['id' => $id])->first();
 

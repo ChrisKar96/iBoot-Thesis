@@ -55,7 +55,7 @@ class User extends ResourceController
             unset($data[$i]->password);
         }
 
-        return $this->respond($data, 200, count($data) . ' Users Found');
+        return $this->respond($data, 200, $data_num . ' Users Found');
     }
 
     /**
@@ -149,6 +149,7 @@ class User extends ResourceController
         $user = new UserModel();
 
         $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        $userID      = session()->getFlashdata('userID');
 
         if (! $userIsAdmin) {
             return $this->respond(null, 401, 'Access denied');
@@ -166,12 +167,12 @@ class User extends ResourceController
         ];
 
         if ($user->save($data)) {
-            log_message('notice', 'Created user ' . $data['username'] . 'with id ' . $user->getInsertID());
+            log_message('notice', 'User {username} was created by user with id {uid} from {ip}', ['username' => $data['username'], 'uid' => $userID, 'ip' => $this->request->getIPAddress()]);
 
             return $this->respondCreated($data, 'User Saved with id ' . $user->getInsertID());
         }
 
-        log_message('warning', 'Failed to create user ' . $data['username'] . "\n" . var_export($user->errors(), true));
+        log_message('notice', 'Failed to create user ' . $data['username'] . "\n" . var_export($user->errors(), true));
 
         return $this->fail('Failed to create user. Errors: ' . json_encode($user->errors()));
     }
@@ -301,6 +302,8 @@ class User extends ResourceController
 
         if (! empty($data)) {
             if ($userModel->update($id, $data)) {
+                log_message('notice', 'User {id} was updated by user with id {uid} from {ip}', ['id' => $id, 'uid' => $userID, 'ip' => $this->request->getIPAddress()]);
+
                 return $this->respondUpdated($data, 'User with id ' . $id . ' Updated');
             }
 
@@ -392,7 +395,7 @@ class User extends ResourceController
             if ($data) {
                 $user->delete($id);
 
-                log_message('info', 'User {username} was deleted by user with id {uid} using the API from {ip}', ['username' => $data->username, 'uid' => $userID, 'ip' => $this->request->getIPAddress()]);
+                log_message('notice', 'User {username} was deleted by user with id {uid} from {ip}', ['username' => $data->username, 'uid' => $userID, 'ip' => $this->request->getIPAddress()]);
 
                 return $this->respondDeleted(null, 'User with id ' . $id . ' Deleted');
             }
