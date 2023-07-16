@@ -105,7 +105,7 @@ class Computers extends BaseController
         return view('table', array_merge($options, $opt));
     }
 
-    public function computers_managed()
+    public function computersManaged()
     {
         $options = [
             'title'     => lang('Text.computers_managed'),
@@ -115,7 +115,7 @@ class Computers extends BaseController
         return $this->index($options);
     }
 
-    public function computers_unassigned()
+    public function computersUnassigned()
     {
         $options = [
             'title'     => lang('Text.computers_unassigned'),
