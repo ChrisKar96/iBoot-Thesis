@@ -64,10 +64,7 @@ class Computer extends ResourceController
      *         @OA\JsonContent(type="object",
      *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Computer")),
      *         ),
-     *     ),
-     *     security={
-     *         {"bearerAuth": {}}
-     *     }
+     *     )
      * )
      *
      * Return an array of resource objects, themselves in array format
@@ -79,6 +76,60 @@ class Computer extends ResourceController
         $data = $computer->where('lab')->findAll();
 
         return $this->respond($data, 200, count($data) . ' Unassigned Computers Found');
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/computer/unassigned/{id}",
+     *     tags={"Computer"},
+     *     summary="Find Unassigned Computer by ID",
+     *     description="Returns a single Unassigned Computer",
+     *     operationId="getUnassignedComputerById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of Computer to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Computer"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found"
+     *     )
+     * )
+     *
+     * Return the properties of a resource object
+     *
+     * @param mixed|null $id
+     *
+     * @return mixed
+     */
+    public function showUnassigned($id)
+    {
+        if (! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
+        }
+
+        $computer = new ComputerModel();
+
+        $data = $computer->find($id);
+
+        if ($data && empty($data->lab)) {
+            return $this->respond($data, 200, 'Computer with id ' . $id . ' Found');
+        }
+
+        return $this->failNotFound('No Computer Found with id ' . $id);
     }
 
     /**
@@ -318,13 +369,14 @@ class Computer extends ResourceController
             $data['notes'] = $this->request->getVar('notes');
         }
         if ($this->request->getVar('lab') !== null && $computer->lab !== $this->request->getVar('lab')) {
-            $data['lab'] = $this->request->getVar('lab');
+            $data['lab'] = is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null;
         }
         if ($this->request->getVar('groups') !== null) {
             $data['groups'] = $this->request->getVar('groups');
         }
 
         if (! empty($data)) {
+            log_message('debug', "Computer {id} is to be updated.\n{data}", ['id' => $id, 'data' => var_export($data, true)]);
             if ($computerModel->update($id, $data)) {
                 log_message('notice', 'Computer {id} was updated from {ip}', ['id' => $id, 'ip' => $this->request->getIPAddress()]);
 
@@ -332,6 +384,121 @@ class Computer extends ResourceController
             }
 
             log_message('notice', "Computer {id} was not updated.\n{errors}", ['id' => $id, 'errors' => var_export($computerModel->errors(), true)]);
+
+            return $this->respond($computerModel->errors(), 401, 'Error Updating Computer with id ' . $id);
+        }
+
+        return $this->respond('Nothing to update');
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/computer/unassigned/{id}",
+     *     tags={"Computer"},
+     *     summary="Update an existing Unassigned Computer",
+     *     operationId="updateUnassignedComputer",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Unassigned Computer id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     requestBody={"$ref": "#/components/requestBodies/Computer"}
+     * )
+     * @OA\Post(
+     *     path="/computer/unassigned/{id}",
+     *     tags={"Computer"},
+     *     summary="Update an existing Unassigned Computer (Websafe alternative)",
+     *     operationId="updateUnassignedComputerWebsafe",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found"
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Validation exception"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     requestBody={"$ref": "#/components/requestBodies/Computer"}
+     * )
+     *
+     * Add or update a model resource, from "posted" properties
+     *
+     * @param mixed|null $id
+     *
+     * @throws ReflectionException
+     */
+    public function updateUnassigned($id = null)
+    {
+        if (! empty($id) && ! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
+        }
+
+        $computerModel = new ComputerModel();
+
+        $computer = $computerModel->where('id', $id)->first();
+        if (empty($computer) || ! empty($computer->lab)) {
+            return $this->failNotFound('No Computer Found with id ' . $id);
+        }
+        if ($this->request->getVar('name') !== null && $computer->name !== $this->request->getVar('name')) {
+            $data['name'] = $this->request->getVar('name');
+        }
+        if ($this->request->getVar('uuid') !== null && $computer->uuid !== $this->request->getVar('uuid')) {
+            $data['uuid'] = strtolower($this->request->getVar('uuid'));
+        }
+        if ($this->request->getVar('mac') !== null && $computer->mac !== $this->request->getVar('mac')) {
+            $data['mac'] = strtolower($this->request->getVar('mac'));
+        }
+        if ($this->request->getVar('notes') !== null && $computer->notes !== $this->request->getVar('notes')) {
+            $data['notes'] = $this->request->getVar('notes');
+        }
+        if ($this->request->getVar('lab') !== null && $computer->lab !== $this->request->getVar('lab')) {
+            $data['lab'] = is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null;
+        }
+        if ($this->request->getVar('groups') !== null) {
+            $data['groups'] = $this->request->getVar('groups');
+        }
+
+        if (! empty($data)) {
+            log_message('debug', "Computer {id} is to be updated.\n{data}", ['id' => $id, 'data' => var_export($data, true)]);
+            if ($computerModel->update($id, $data)) {
+                log_message('notice', 'Computer {id} was updated from {ip}', ['id' => $id, 'ip' => $this->request->getIPAddress()]);
+
+                return $this->respondUpdated($data, 'Computer with id ' . $id . ' Updated');
+            }
+
+            log_message('notice', "Computer {id} was not updated.\n{errors}", ['id' => $id, 'errors' => var_export($computerModel->errors(), true)]);
+
             return $this->respond($computerModel->errors(), 401, 'Error Updating Computer with id ' . $id);
         }
 
@@ -411,6 +578,79 @@ class Computer extends ResourceController
             $computer->delete($id);
 
             log_message('notice', 'Computer {uuid} was deleted by user with id {uid} from {ip}', ['uuid' => $data->uuid, 'uid' => $userID, 'ip' => $this->request->getIPAddress()]);
+
+            return $this->respondDeleted(null, 'Computer with id ' . $id . ' Deleted');
+        }
+
+        return $this->failNotFound('No Computer Found with id ' . $id);
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/computer/unassigned/{id}",
+     *     tags={"Computer"},
+     *     summary="Deletes an Unassigned Computer",
+     *     operationId="deleteUnassignedComputer",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found",
+     *     )
+     * )
+     * @OA\Post(
+     *     path="/computer/unassigned/{id}/delete",
+     *     tags={"Computer"},
+     *     summary="Deletes an Unassigned Computer (Websafe alternative)",
+     *     operationId="deleteUnassignedComputerWebsafe",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Computer id to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Computer not found",
+     *     )
+     * )
+     *
+     * Delete the designated resource object from the model
+     *
+     * @param mixed|null $id
+     */
+    public function deleteUnassigned($id = null)
+    {
+        if (! is_numeric($id)) {
+            return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
+        }
+
+        $computer = new ComputerModel();
+
+        $data = $computer->find($id);
+
+        if ($data && $data->lab === null) {
+            $computer->delete($id);
+
+            log_message('notice', 'Unassigned Computer {uuid} was deleted from {ip}', ['uuid' => $data->uuid, 'ip' => $this->request->getIPAddress()]);
 
             return $this->respondDeleted(null, 'Computer with id ' . $id . ' Deleted');
         }

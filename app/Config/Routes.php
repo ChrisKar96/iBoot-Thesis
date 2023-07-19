@@ -111,23 +111,21 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
             $routes->get('', 'Computer::findAssigned');
             $routes->post('', 'Computer::create');
             $routes->get('(:num)', 'Computer::show/$1');
-            $routes->get('(:num)/edit', 'Computer::edit/$1');
             $routes->put('(:num)', 'Computer::update/$1');
             $routes->patch('(:num)', 'Computer::update/$1');
             $routes->post('(:num)', 'Computer::update/$1');
             $routes->post('(:num)/delete', 'Computer::delete/$1');
             $routes->delete('(:num)', 'Computer::delete/$1');
         });
-        $routes->group('unassigned', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
+        $routes->group('unassigned', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
             $routes->get('', 'Computer::findUnassigned');
             $routes->post('', 'Computer::create');
-            $routes->get('(:num)', 'Computer::show/$1');
-            $routes->get('(:num)/edit', 'Computer::edit/$1');
-            $routes->put('(:num)', 'Computer::update/$1');
-            $routes->patch('(:num)', 'Computer::update/$1');
-            $routes->post('(:num)', 'Computer::update/$1');
-            $routes->post('(:num)/delete', 'Computer::delete/$1');
-            $routes->delete('(:num)', 'Computer::delete/$1');
+            $routes->get('(:num)', 'Computer::showUnassigned/$1');
+            $routes->put('(:num)', 'Computer::updateUnassigned/$1');
+            $routes->patch('(:num)', 'Computer::updateUnassigned/$1');
+            $routes->post('(:num)', 'Computer::updateUnassigned/$1');
+            $routes->post('(:num)/delete', 'Computer::deleteUnassigned/$1');
+            $routes->delete('(:num)', 'Computer::deleteUnassigned/$1');
         });
     });
     $routes->resource('computer', ['websafe' => true, 'placeholder' => '(:num)', 'filter' => 'api-auth']);
