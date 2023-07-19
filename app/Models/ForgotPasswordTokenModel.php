@@ -37,7 +37,7 @@ class ForgotPasswordTokenModel extends Model
 
     // Validation
     protected $validationRules = [
-        'user_id' => 'numeric|max_length[10]|required|is_unique[forgot_password_tokens.user_id,id,{id}]',
+        'user_id' => 'is_natural_no_zero|max_length[10]|required|is_unique[forgot_password_tokens.user_id,id,{id}]',
         'token'   => 'max_length[255]',
     ];
     protected $validationMessages   = [];

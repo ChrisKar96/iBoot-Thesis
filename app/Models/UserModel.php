@@ -50,8 +50,8 @@ class UserModel extends Model
         'phone'         => 'min_length[3]|max_length[15]|permit_empty',
         'username'      => 'alpha_numeric_punct|min_length[3]|max_length[40]|required|is_unique[users.username,id,{id}]',
         'password'      => 'alpha_numeric_punct|min_length[5]|max_length[255]|required',
-        'isAdmin'       => 'numeric|max_length[1]|permit_empty',
-        'verifiedEmail' => 'numeric|max_length[1]|permit_empty',
+        'isAdmin'       => 'in_list[0,1]|permit_empty',
+        'verifiedEmail' => 'in_list[0,1]|permit_empty',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

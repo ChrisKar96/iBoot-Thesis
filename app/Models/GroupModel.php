@@ -38,7 +38,7 @@ class GroupModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'                       => 'numeric|max_length[10]|permit_empty|is_unique[groups.id,id,{id}]',
+        'id'                       => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[groups.id,id,{id}]',
         'name'                     => 'max_length[20]|required',
         'image_server_ip'          => 'max_length[15]|required',
         'image_server_path_prefix' => 'max_length[50]|required',

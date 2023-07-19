@@ -159,7 +159,7 @@ class Computer extends ResourceController
 
         $computer = new ComputerModel();
 
-        $data = $computer->where(['id' => $id])->first();
+        $data = $computer->find($id);
 
         if ($data) {
             return $this->respond($data, 200, 'Computer with id ' . $id . ' Found');

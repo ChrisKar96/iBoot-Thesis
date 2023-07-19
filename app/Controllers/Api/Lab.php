@@ -115,7 +115,7 @@ class Lab extends ResourceController
             $lab->whereIn('id', $userLabAccess);
         }
 
-        $data = $lab->where(['id' => $id])->first();
+        $data = $lab->find($id);
 
         if ($data) {
             return $this->respond($data, 200, 'Lab with id ' . $id . ' Found');

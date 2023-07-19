@@ -45,7 +45,7 @@ class ComputerModel extends Model
         'uuid'  => 'exact_length[32]|hex|required',
         'mac'   => 'exact_length[12]|hex|required',
         'notes' => 'permit_empty',
-        'lab'   => 'numeric|max_length[10]|permit_empty',
+        'lab'   => 'is_natural_no_zero|max_length[10]|permit_empty',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

@@ -119,7 +119,7 @@ class BootMenuBlocks extends ResourceController
     {
         $boot_menu_blocks = new BootMenuBlocksModel();
 
-        $data = $boot_menu_blocks->where(['id' => $id])->first();
+        $data = $boot_menu_blocks->find($id);
 
         if ($data) {
             return $this->respond($data, 200, 'Boot Menu with id ' . $id . ' Found');

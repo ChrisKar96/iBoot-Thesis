@@ -44,11 +44,11 @@ class ScheduleModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'           => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu_schedules.id,id,{id}]',
-        'day_of_week'  => 'numeric|max_length[3]',
-        'date'         => 'valid_date',
-        'boot_menu_id' => 'numeric|max_length[10]|required',
-        'group_id'     => 'numeric|max_length[10]|required',
+        'id'           => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[boot_menu_schedules.id,id,{id}]',
+        'day_of_week'  => 'required_without[date]|is_natural|less_than[7]',
+        'date'         => 'required_without[day_of_week]|valid_date',
+        'boot_menu_id' => 'is_natural_no_zero|max_length[10]|required',
+        'group_id'     => 'is_natural_no_zero|max_length[10]|required',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

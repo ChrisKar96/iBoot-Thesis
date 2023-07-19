@@ -38,9 +38,9 @@ class BootMenuBlocksModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'           => 'numeric|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
-        'boot_menu_id' => 'numeric|max_length[10]|required',
-        'block_id'     => 'numeric|max_length[10]|required',
+        'id'           => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[boot_menu.id,id,{id}]',
+        'boot_menu_id' => 'is_natural_no_zero|max_length[10]|required',
+        'block_id'     => 'is_natural_no_zero|max_length[10]|required',
         'key'          => 'max_length[1]|permit_empty',
     ];
     protected $validationMessages   = [];

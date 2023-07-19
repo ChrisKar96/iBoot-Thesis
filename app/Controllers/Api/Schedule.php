@@ -95,7 +95,7 @@ class Schedule extends ResourceController
     {
         $schedule = new ScheduleModel();
 
-        $data = $schedule->where(['id' => $id])->first();
+        $data = $schedule->find($id);
 
         if ($data) {
             return $this->respond($data, 200, 'Schedule with id ' . $id . ' Found');

@@ -101,7 +101,7 @@ class Group extends ResourceController
 
         $group = new GroupModel();
 
-        $data = $group->where(['id' => $id])->first();
+        $data = $group->find($id);
 
         if ($data) {
             return $this->respond($data, 200, 'Group with id ' . $id . ' Found');

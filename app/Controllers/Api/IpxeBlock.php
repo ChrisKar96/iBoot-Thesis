@@ -95,7 +95,7 @@ class IpxeBlock extends ResourceController
     {
         $os_image = new IpxeBlockModel();
 
-        $data = $os_image->where(['id' => $id])->first();
+        $data = $os_image->find($id);
 
         if ($data) {
             return $this->respond($data, 200, 'Ipxe Block with id ' . $id . ' Found');

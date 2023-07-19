@@ -37,8 +37,9 @@ class ComputerGroupsModel extends Model
 
     // Validation
     protected $validationRules = [
-        'group_id'    => 'numeric|max_length[10]|required',
-        'computer_id' => 'numeric|max_length[10]|required',
+        'id'          => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[computer_groups.id,id,{id}]',
+        'group_id'    => 'is_natural_no_zero|max_length[10]|required',
+        'computer_id' => 'is_natural_no_zero|max_length[10]|required',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

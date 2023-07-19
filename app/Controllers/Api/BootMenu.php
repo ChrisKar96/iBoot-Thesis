@@ -97,7 +97,7 @@ class BootMenu extends ResourceController
     {
         $boot_menu = new BootMenuModel();
 
-        $data = $boot_menu->where(['id' => $id])->first();
+        $data = $boot_menu->find($id);
 
         if ($data) {
             return $this->respond($data, 200, 'Boot Menu with id ' . $id . ' Found');

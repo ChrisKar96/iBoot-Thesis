@@ -108,7 +108,7 @@ class User extends ResourceController
 
         $user = new UserModel();
 
-        $data = $user->where(['id' => $id])->first();
+        $data = $user->find($id);
 
         if ($data) {
             unset($data->password);
