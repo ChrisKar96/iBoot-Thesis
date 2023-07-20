@@ -11,7 +11,6 @@
 
 namespace iBoot\Controllers\Api;
 
-use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\ScheduleModel;
@@ -55,10 +54,10 @@ class Schedule extends ResourceController
 
         for ($i = 0; $i < $data_num; $i++) {
             $ca = $data[$i]->created_at;
-            unset($data[$i]->created_at);
-            $data[$i]->created = $ca->toDateTimeString();
             $ua = $data[$i]->updated_at;
-            unset($data[$i]->updated_at);
+            unset($data[$i]->created_at, $data[$i]->updated_at);
+
+            $data[$i]->created = $ca->toDateTimeString();
             $data[$i]->updated = $ua->toDateTimeString();
         }
 
@@ -103,7 +102,7 @@ class Schedule extends ResourceController
      *
      * @param mixed|null $id
      */
-    public function show($id = null): Response
+    public function show($id = null): ResponseInterface
     {
         $schedule = new ScheduleModel();
 
@@ -111,10 +110,10 @@ class Schedule extends ResourceController
 
         if ($data) {
             $ca = $data->created_at;
-            unset($data->created_at);
-            $data->created = $ca->toDateTimeString();
             $ua = $data->updated_at;
-            unset($data->updated_at);
+            unset($data->created_at, $data->updated_at);
+
+            $data->created = $ca->toDateTimeString();
             $data->updated = $ua->toDateTimeString();
 
             return $this->respond($data, 200, 'Schedule with id ' . $id . ' Found');
@@ -244,7 +243,7 @@ class Schedule extends ResourceController
      *
      * @throws ReflectionException
      */
-    public function update($id = null): Response
+    public function update($id = null): ResponseInterface
     {
         $schedule = new ScheduleModel();
 
@@ -321,7 +320,7 @@ class Schedule extends ResourceController
      *
      * @param mixed|null $id
      */
-    public function delete($id = null): Response
+    public function delete($id = null): ResponseInterface
     {
         $schedule = new ScheduleModel();
 

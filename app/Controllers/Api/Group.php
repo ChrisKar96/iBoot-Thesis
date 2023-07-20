@@ -227,7 +227,7 @@ class Group extends ResourceController
      *
      * @throws ReflectionException
      */
-    public function update($id = null) // TODO: permissions: who can update?
+    public function update($id = null)
     {
         if (! empty($id) && ! is_numeric($id)) {
 

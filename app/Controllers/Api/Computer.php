@@ -17,8 +17,6 @@ use iBoot\Models\ComputerModel;
 use OpenApi\Annotations as OA;
 use ReflectionException;
 
-// TODO: Think about the required permissions (userIsAdmin or userLabAccess etc)
-
 class Computer extends ResourceController
 {
     /**
@@ -46,6 +44,16 @@ class Computer extends ResourceController
     {
         $computer = new ComputerModel();
 
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        if (! $userIsAdmin) {
+            $userLabAccess = session()->getFlashdata('userLabAccess');
+            if (empty($userLabAccess)) {
+                return $this->respond([], 200, 'No Computers Found.');
+            }
+            $userLabAccess[] = null; // Add null to the access array to return unassigned computers as well
+            $computer->whereIn('lab', $userLabAccess);
+        }
+
         $data = $computer->findAll();
 
         return $this->respond($data, 200, count($data) . ' Computers Found');
@@ -69,7 +77,7 @@ class Computer extends ResourceController
      *
      * Return an array of resource objects, themselves in array format
      */
-    public function findUnassigned()
+    public function findUnassigned(): ResponseInterface
     {
         $computer = new ComputerModel();
 
@@ -111,11 +119,9 @@ class Computer extends ResourceController
      *
      * Return the properties of a resource object
      *
-     * @param mixed|null $id
-     *
-     * @return mixed
+     * @param int|null $id
      */
-    public function showUnassigned($id)
+    public function showUnassigned($id = null): ResponseInterface
     {
         if (! is_numeric($id)) {
             return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
@@ -153,9 +159,18 @@ class Computer extends ResourceController
      *
      * Return an array of resource objects, themselves in array format
      */
-    public function findAssigned()
+    public function findAssigned(): ResponseInterface
     {
         $computer = new ComputerModel();
+
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        if (! $userIsAdmin) {
+            $userLabAccess = session()->getFlashdata('userLabAccess');
+            if (empty($userLabAccess)) {
+                return $this->respond([], 200, 'No Assigned Computers Found.');
+            }
+            $computer->whereIn('lab', $userLabAccess);
+        }
 
         $data = $computer->whereNotIn('lab', [''])->findAll();
 
@@ -198,9 +213,7 @@ class Computer extends ResourceController
      *
      * Return the properties of a resource object
      *
-     * @param mixed|null $id
-     *
-     * @return mixed
+     * @param int|null $id
      */
     public function show($id = null): ResponseInterface
     {
@@ -209,6 +222,16 @@ class Computer extends ResourceController
         }
 
         $computer = new ComputerModel();
+
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        if (! $userIsAdmin) {
+            $userLabAccess = session()->getFlashdata('userLabAccess');
+            if (empty($userLabAccess)) {
+                return $this->respond(null, 200, 'No Computer Found with id ' . $id);
+            }
+            $userLabAccess[] = null;
+            $computer->whereIn('lab', $userLabAccess);
+        }
 
         $data = $computer->find($id);
 
@@ -253,9 +276,20 @@ class Computer extends ResourceController
             'uuid'   => strtolower($this->request->getVar('uuid')),
             'mac'    => strtolower($this->request->getVar('mac')),
             'notes'  => $this->request->getVar('notes'),
-            'lab'    => (is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null),
+            'lab'    => (is_numeric($this->request->getVar('lab')) ? (int) ($this->request->getVar('lab')) : null),
             'groups' => (empty($this->request->getVar('groups')) ? null : $this->request->getVar('groups')),
         ];
+
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        if (! $userIsAdmin && $data['lab'] !== null) {
+            $userLabAccess = session()->getFlashdata('userLabAccess');
+            if (empty($userLabAccess)) {
+                return $this->failUnauthorized('You cannot assign Computers to any Lab.');
+            }
+            if (! in_array($data['lab'], $userLabAccess, true)) {
+                $data['lab'] = null;
+            }
+        }
 
         if ($computer->save($data)) {
             log_message('notice', 'Computer with uuid {uuid} was added.', ['uuid' => $data['uuid']]);
@@ -334,11 +368,11 @@ class Computer extends ResourceController
      *
      * Add or update a model resource, from "posted" properties
      *
-     * @param mixed|null $id
+     * @param int|null $id
      *
      * @throws ReflectionException
      */
-    public function update($id = null) // TODO: Check if computer is in lab to update it (or if lab is to be assigned with this call)
+    public function update($id = null)
     {
         if (! empty($id) && ! is_numeric($id)) {
 
@@ -346,13 +380,19 @@ class Computer extends ResourceController
         }
 
         $computerModel = new ComputerModel();
-        $userIsAdmin   = session()->getFlashdata('userIsAdmin');
 
+        $computerModel->where('id', $id);
+
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
         if (! $userIsAdmin) {
-            return $this->respond(null, 401, 'Access denied');
+            $userLabAccess = session()->getFlashdata('userLabAccess');
+            if (empty($userLabAccess)) {
+                return $this->failUnauthorized('You cannot update Computers in any Lab.');
+            }
+            $computerModel->whereIn('lab', $userLabAccess);
         }
 
-        $computer = $computerModel->where('id', $id)->first();
+        $computer = $computerModel->first();
         if (empty($computer)) {
             return $this->failNotFound('No Computer Found with id ' . $id);
         }
@@ -454,11 +494,11 @@ class Computer extends ResourceController
      *
      * Add or update a model resource, from "posted" properties
      *
-     * @param mixed|null $id
+     * @param int|null $id
      *
      * @throws ReflectionException
      */
-    public function updateUnassigned($id = null)
+    public function updateUnassigned($id = null): ResponseInterface
     {
         if (! empty($id) && ! is_numeric($id)) {
             return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
@@ -561,9 +601,9 @@ class Computer extends ResourceController
      *
      * Delete the designated resource object from the model
      *
-     * @param mixed|null $id
+     * @param int|null $id
      */
-    public function delete($id = null)
+    public function delete($id = null): ResponseInterface
     {
         if (! is_numeric($id)) {
             return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');
@@ -571,6 +611,15 @@ class Computer extends ResourceController
 
         $computer = new ComputerModel();
         $userID   = session()->getFlashdata('userID');
+
+        $userIsAdmin = session()->getFlashdata('userIsAdmin');
+        if (! $userIsAdmin) {
+            $userLabAccess = session()->getFlashdata('userLabAccess');
+            if (empty($userLabAccess)) {
+                return $this->failNotFound('No Computer Found with id ' . $id);
+            }
+            $computer->whereIn('lab', $userLabAccess);
+        }
 
         $data = $computer->find($id);
 
@@ -637,7 +686,7 @@ class Computer extends ResourceController
      *
      * @param mixed|null $id
      */
-    public function deleteUnassigned($id = null)
+    public function deleteUnassigned($id = null): ResponseInterface
     {
         if (! is_numeric($id)) {
             return $this->failValidationErrors('Invalid id `' . $id . '`', null, 'Invalid id');

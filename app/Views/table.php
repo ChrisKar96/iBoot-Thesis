@@ -68,7 +68,7 @@ if (isset($title, $columns, $apiTarget)): ?>
                 if (isset($JS_bef_tb)) {
                     echo $JS_bef_tb;
                 }
-                ?>
+    ?>
 
                 <?php if (isset($calendar) && $calendar) : ?>
                     let eventlist = {};
@@ -281,7 +281,7 @@ if (isset($title, $columns, $apiTarget)): ?>
     if (isset($JS_aft_tb)) {
         echo $JS_aft_tb;
     }
-    ?>
+?>
 
             </script>
         </div>

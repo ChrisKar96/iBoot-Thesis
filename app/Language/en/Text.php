@@ -97,4 +97,5 @@ return [
     'thursday'                               => 'Thursday',
     'friday'                                 => 'Friday',
     'saturday'                               => 'Saturday',
+    'key'                                    => 'Key',
 ];

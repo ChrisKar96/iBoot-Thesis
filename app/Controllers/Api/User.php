@@ -55,10 +55,10 @@ class User extends ResourceController
             unset($data[$i]->password);
 
             $ca = $data[$i]->created_at;
-            unset($data[$i]->created_at);
-            $data[$i]->created = $ca->toDateTimeString();
             $ua = $data[$i]->updated_at;
-            unset($data[$i]->updated_at);
+            unset($data[$i]->created_at, $data[$i]->updated_at);
+
+            $data[$i]->created = $ca->toDateTimeString();
             $data[$i]->updated = $ua->toDateTimeString();
         }
 
@@ -121,10 +121,10 @@ class User extends ResourceController
             unset($data->password);
 
             $ca = $data->created_at;
-            unset($data->created_at);
-            $data->created = $ca->toDateTimeString();
             $ua = $data->updated_at;
-            unset($data->updated_at);
+            unset($data->created_at, $data->updated_at);
+
+            $data->created = $ca->toDateTimeString();
             $data->updated = $ua->toDateTimeString();
 
             return $this->respond($data, 200, 'User with id ' . $id . ' Found');
@@ -175,9 +175,9 @@ class User extends ResourceController
             'phone'         => (empty($this->request->getVar('phone')) ? null : $this->request->getVar('phone')),
             'username'      => $this->request->getVar('username'),
             'password'      => $this->request->getVar('password'),
-            'verifiedEmail' => (empty($this->request->getVar('verifiedEmail')) ? 0 : (int) $this->request->getVar('verifiedEmail')),
-            'isAdmin'       => (empty($this->request->getVar('isAdmin')) ? 0 : (int) $this->request->getVar('isAdmin')),
-            'labs'          => (empty($this->request->getVar('labs')) ? null : $this->request->getVar('labs')),
+            'verifiedEmail' => (in_array($this->request->getVar('verifiedEmail'), [0, 1]) ? (int) $this->request->getVar('verifiedEmail') : 0),
+            'isAdmin'       => (in_array($this->request->getVar('isAdmin'), [0, 1]) ? (int) $this->request->getVar('isAdmin') : 0),
+            'labs'          => (! empty($this->request->getVar('labs')) ? $this->request->getVar('labs') : null),
         ];
 
         if ($user->save($data)) {
@@ -303,10 +303,10 @@ class User extends ResourceController
         if ($this->request->getVar('password') !== null) {
             $data['password'] = $this->request->getVar('password');
         }
-        if ($this->request->getVar('verifiedEmail') !== null && $user->verifiedEmail !== (int) $this->request->getVar('verifiedEmail')) {
+        if ($this->request->getVar('verifiedEmail') !== null && in_array($this->request->getVar('verifiedEmail'), [0, 1]) && $user->verifiedEmail !== (int) $this->request->getVar('verifiedEmail')) {
             $data['verifiedEmail'] = (int) $this->request->getVar('verifiedEmail');
         }
-        if ($this->request->getVar('isAdmin') !== null && $user->isAdmin !== (int) $this->request->getVar('isAdmin')) {
+        if ($this->request->getVar('isAdmin') !== null && in_array($this->request->getVar('isAdmin'), [0, 1]) && $user->isAdmin !== (int) $this->request->getVar('isAdmin')) {
             $data['isAdmin'] = (int) $this->request->getVar('isAdmin');
         }
         if ($this->request->getVar('labs') !== null) {
