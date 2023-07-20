@@ -45,8 +45,8 @@ class ScheduleModel extends Model
     // Validation
     protected $validationRules = [
         'id'           => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[boot_menu_schedules.id,id,{id}]',
-        'day_of_week'  => 'required_without[date]|is_natural|less_than[7]',
-        'date'         => 'required_without[day_of_week]|valid_date',
+        'day_of_week'  => 'required_without[date]|is_natural|less_than[7]|permit_empty',
+        'date'         => 'required_without[day_of_week]|valid_date|permit_empty',
         'boot_menu_id' => 'is_natural_no_zero|max_length[10]|required',
         'group_id'     => 'is_natural_no_zero|max_length[10]|required',
     ];

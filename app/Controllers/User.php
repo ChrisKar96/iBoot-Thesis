@@ -37,8 +37,8 @@ class User extends BaseController
                                 {title:"' . lang('Text.password') . '", field:"password", editor:"input", validator:["required","minLength:5","maxLength:255"]},
                                 {title:"' . lang('Text.administrator') . '", field:"isAdmin", sorter:"string", editor:"tickCross", formatter:"tickCross"},
                                 {title:"' . lang('Text.verifiedEmail') . '", field:"verifiedEmail", sorter:"string", editor:"tickCross", formatter:"tickCross"},
-                                {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", formatter:"datetime"},
-                                {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", formatter:"datetime"},
+                                {title:"' . lang('Text.created_at') . '", field:"created", sorter:"datetime", formatter:"datetime"},
+                                {title:"' . lang('Text.updated_at') . '", field:"updated", sorter:"datetime", formatter:"datetime"},
                                 {
                                     title:"' . lang('Text.labs') . '", field:"labs", editor:"list",
 									editorParams:{

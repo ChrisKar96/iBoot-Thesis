@@ -12,6 +12,7 @@
 namespace iBoot\Controllers\Api;
 
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 use iBoot\Models\ScheduleModel;
 use OpenApi\Annotations as OA;
@@ -50,7 +51,18 @@ class Schedule extends ResourceController
 
         $data = $schedule->findAll();
 
-        return $this->respond($data, 200, count($data) . ' Schedules Found');
+        $data_num = count($data);
+
+        for ($i = 0; $i < $data_num; $i++) {
+            $ca = $data[$i]->created_at;
+            unset($data[$i]->created_at);
+            $data[$i]->created = $ca->toDateTimeString();
+            $ua = $data[$i]->updated_at;
+            unset($data[$i]->updated_at);
+            $data[$i]->updated = $ua->toDateTimeString();
+        }
+
+        return $this->respond($data, 200, $data_num . ' Schedules Found');
     }
 
     /**
@@ -98,6 +110,13 @@ class Schedule extends ResourceController
         $data = $schedule->find($id);
 
         if ($data) {
+            $ca = $data->created_at;
+            unset($data->created_at);
+            $data->created = $ca->toDateTimeString();
+            $ua = $data->updated_at;
+            unset($data->updated_at);
+            $data->updated = $ua->toDateTimeString();
+
             return $this->respond($data, 200, 'Schedule with id ' . $id . ' Found');
         }
 
@@ -129,19 +148,30 @@ class Schedule extends ResourceController
      *
      * @throws ReflectionException
      */
-    public function create(): Response
+    public function create(): ResponseInterface
     {
         $schedule = new ScheduleModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
+            'time_from'    => $this->request->getVar('time_from'),
+            'time_to'      => $this->request->getVar('time_to'),
+            'day_of_week'  => $this->request->getVar('day_of_week'),
+            'date'         => $this->request->getVar('date'),
+            'boot_menu_id' => $this->request->getVar('boot_menu_id'),
+            'group_id'     => $this->request->getVar('group_id'),
+            'isActive'     => (empty($this->request->getVar('isActive')) ? 0 : (int) $this->request->getVar('isActive')),
         ];
 
-        $schedule->insert($data);
+        if ($schedule->save($data)) {
+            log_message('notice', "Schedule was added.\n" . var_export($data, true));
 
-        $id = $schedule->getInsertID();
+            return $this->respondCreated($data, 'Schedule Saved with id ' . $schedule->getInsertID());
+        }
 
-        return $this->respondCreated(null, 'Schedule Saved with id ' . $id);
+        log_message('notice', "Failed to create schedule.\n" . var_export($schedule->errors(), true));
+
+        return $this->fail('Failed to create schedule. Errors: ' . json_encode($schedule->errors()));
+
     }
 
     /**
@@ -219,7 +249,13 @@ class Schedule extends ResourceController
         $schedule = new ScheduleModel();
 
         $data = [
-            'name' => $this->request->getVar('name'),
+            'time_from'    => $this->request->getVar('time_from'),
+            'time_to'      => $this->request->getVar('time_to'),
+            'day_of_week'  => $this->request->getVar('day_of_week'),
+            'date'         => $this->request->getVar('date'),
+            'boot_menu_id' => $this->request->getVar('boot_menu_id'),
+            'group_id'     => $this->request->getVar('group_id'),
+            'isActive'     => (empty($this->request->getVar('isActive')) ? 0 : (int) $this->request->getVar('isActive')),
         ];
 
         $schedule->update($id, $data);

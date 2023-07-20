@@ -10,6 +10,11 @@ if (isset($title, $columns, $apiTarget)): ?>
             <div class="mb-4 mt-2">
                 <h1 class="text-center"><?= $title; ?></h1>
             </div>
+
+            <?php if (isset($calendar) && $calendar) : ?>
+            <div class="mb-4 mt-2" id="calendar"></div>
+            <?php endif; ?>
+
             <div class="my-2">
                 <button class="btn btn-primary" id="add-row"><?= lang('Text.add_row'); ?></button>
                 <button class="btn btn-danger" style="float: right; display: none;" id="reset" disabled><?= lang('Text.reset_table'); ?></button>
@@ -63,7 +68,75 @@ if (isset($title, $columns, $apiTarget)): ?>
                 if (isset($JS_bef_tb)) {
                     echo $JS_bef_tb;
                 }
-    ?>
+                ?>
+
+                <?php if (isset($calendar) && $calendar) : ?>
+                    let eventlist = {};
+
+                    let dow = {};
+                    dow[0] = "<?= lang('Text.sunday'); ?>";
+                    dow[1] = "<?= lang('Text.monday'); ?>";
+                    dow[2] = "<?= lang('Text.tuesday'); ?>";
+                    dow[3] = "<?= lang('Text.wednesday'); ?>";
+                    dow[4] = "<?= lang('Text.thursday'); ?>";
+                    dow[5] = "<?= lang('Text.friday'); ?>";
+                    dow[6] = "<?= lang('Text.saturday'); ?>";
+
+                    async function getSchedules(){
+                        await api_call("<?= $apiTarget ?>", "GET").then(function(response) {
+                            eventlist = {};
+                            for (i = 0; i < response.length; ++i) {
+                                eventlist[response[i].id] = {};
+                                if(response[i].isActive === "1"){
+                                    eventlist[response[i].id].title = 'BM: ' + response[i].boot_menu_id + ' for G: ' + response[i].group_id;
+                                    if(response[i].day_of_week !== null){
+                                        eventlist[response[i].id].startTime = response[i].time_from;
+                                        eventlist[response[i].id].endTime = response[i].time_to;
+                                        eventlist[response[i].id].daysOfWeek = [response[i].day_of_week];
+                                    }
+                                    else{
+                                        eventlist[response[i].id].start = response[i].date + 'T' + response[i].time_from + '+00:00';
+                                        eventlist[response[i].id].end = response[i].date + 'T' + response[i].time_to + '+00:00';
+                                    }
+                                }
+
+                            }
+                            calendar.removeAllEventSources();
+                            calendar.addEventSource(Object.values(eventlist));
+                        });
+                    }
+
+                    getSchedules();
+
+                    let calendar = null;
+                    document.addEventListener('DOMContentLoaded', function() {
+                        let calendarEl = document.getElementById('calendar');
+
+                        calendar = new FullCalendar.Calendar(calendarEl, {
+                            schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                            themeSystem: 'bootstrap5',
+                            timeZone: '<?= app_timezone(); ?>',
+                            initialView: 'timeGridWeek',
+                            headerToolbar: {
+                                left: 'prev,next',
+                                center: 'title',
+                                right: 'timeGridDay,timeGridWeek'
+                            },
+                            dayHeaderFormat: {
+                                weekday: 'long'
+                            },
+                            allDaySlot: false,
+                            nowIndicator: true,
+                            editable: false,
+                            <?php if (session()->get('locale') === 'el') : ?>
+                            locale: 'el',
+                            <?php else: ?>
+                            locale: 'en',
+                            <?php endif; ?>
+                        });
+                        calendar.render();
+                    });
+                <?php endif; ?>
 
                 let table = new Tabulator("#table", {
                     index: "id",
@@ -89,6 +162,9 @@ if (isset($title, $columns, $apiTarget)): ?>
                                         cell.getRow().delete();
                                         table.redraw();
                                         deleteRow(cell.getRow().getIndex());
+                                        <?php if (isset($calendar) && $calendar) : ?>
+                                        getSchedules();
+                                        <?php endif; ?>
                                     } else {
                                         cell.getRow().getElement().style.backgroundColor = cell_previous_bg;
                                     }
@@ -162,35 +238,44 @@ if (isset($title, $columns, $apiTarget)): ?>
                 //Add row on "Add Row" button click
                 document.getElementById("add-row").addEventListener("click", addnewrow);
 
-                //Save changes to the table on "Save" button click
-                document.getElementById("save").addEventListener("click", function(){
+                function save() {
                     document.getElementById("save").disabled = true;
                     document.getElementById("reset").disabled = true;
                     let rows = new Set(); //Place rows in Set to avoid duplicates
-                    table.getEditedCells().forEach(function(cell){
+                    table.getEditedCells().forEach(function (cell) {
                         rows.add(cell.getRow());
                     })
                     rows = [...rows]; //Convert Set back to array
                     let updates = [];
-                    rows.forEach(function(row){
+                    rows.forEach(function (row) {
                         updates.push(postRow(row.getData()));
                     })
-                    Promise.all(updates).then(function() {
+                    Promise.all(updates).then(function () {
                         table.setData("<?= $apiTarget ?>");
                         document.getElementById("save").style.display = "none";
                         document.getElementById("reset").style.display = "none";
+                        <?php if (isset($calendar) && $calendar) : ?>
+                        getSchedules();
+                        <?php endif; ?>
                     });
+                }
 
-                });
+                //Save changes to the table on "Save" button click
+                document.getElementById("save").addEventListener("click", save);
 
-                //Reset table contents on "Reset the table" button click
-                document.getElementById("reset").addEventListener("click", function(){
+                function reset(){
                     document.getElementById("save").style.display = "none";
                     document.getElementById("reset").style.display = "none";
                     document.getElementById("save").disabled = true;
                     document.getElementById("reset").disabled = true;
                     table.setData("<?= $apiTarget ?>");
-                });
+                    <?php if (isset($calendar) && $calendar) : ?>
+                    getSchedules();
+                    <?php endif; ?>
+                }
+
+                //Reset table contents on "Reset the table" button click
+                document.getElementById("reset").addEventListener("click", reset);
 
 				<?php
     if (isset($JS_aft_tb)) {
