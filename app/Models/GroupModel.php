@@ -130,9 +130,7 @@ class GroupModel extends Model
         $data = parent::findAll($limit, $offset);
 
         foreach ($data as $d) {
-            if (! $d->isAdmin) {
-                $this->addComputersToGroupModel($d);
-            }
+            $this->addComputersToGroupModel($d);
         }
 
         return $data;

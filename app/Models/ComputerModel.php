@@ -133,9 +133,7 @@ class ComputerModel extends Model
         $data = parent::findAll($limit, $offset);
 
         foreach ($data as $d) {
-            if (! $d->isAdmin) {
-                $this->addGroupsToComputerModel($d);
-            }
+            $this->addGroupsToComputerModel($d);
         }
 
         return $data;
