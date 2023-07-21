@@ -42,8 +42,8 @@ class ComputerModel extends Model
     protected $validationRules = [
         'id'    => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[computers.id,id,{id}]',
         'name'  => 'max_length[20]',
-        'uuid'  => 'exact_length[32]|hex|required',
-        'mac'   => 'exact_length[12]|hex|required',
+        'uuid'  => 'exact_length[32]|hex|required|is_unique[computers.uuid,id,{id}]',
+        'mac'   => 'exact_length[12]|hex|required|is_unique[computers.mac,id,{id}]',
         'notes' => 'permit_empty',
         'lab'   => 'is_natural_no_zero|max_length[10]|permit_empty',
     ];

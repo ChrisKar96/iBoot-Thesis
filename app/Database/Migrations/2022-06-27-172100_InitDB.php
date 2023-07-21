@@ -108,6 +108,8 @@ class InitDB extends Migration
             ],
         ]);
         $this->forge->addPrimaryKey('id');
+        $this->forge->addUniqueKey('uuid');
+        $this->forge->addUniqueKey('mac');
         $this->forge->addForeignKey('lab', 'labs', 'id', 'CASCADE', 'SET NULL');
         $this->forge->createTable('computers', true);
         // END COMPUTERS

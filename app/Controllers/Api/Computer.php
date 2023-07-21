@@ -277,7 +277,7 @@ class Computer extends ResourceController
             'mac'    => strtolower($this->request->getVar('mac')),
             'notes'  => $this->request->getVar('notes'),
             'lab'    => (is_numeric($this->request->getVar('lab')) ? (int) ($this->request->getVar('lab')) : null),
-            'groups' => (empty($this->request->getVar('groups')) ? null : $this->request->getVar('groups')),
+            'groups' => empty($this->request->getVar('groups')) ? null : $this->request->getVar('groups'),
         ];
 
         $userIsAdmin = session()->getFlashdata('userIsAdmin');
@@ -291,7 +291,11 @@ class Computer extends ResourceController
             }
         }
 
-        if ($computer->save($data)) {
+        if ($data['lab'] === null) {
+            $data['groups'] = null;
+        }
+
+        if ($computer->insert($data)) {
             log_message('notice', 'Computer with uuid {uuid} was added.', ['uuid' => $data['uuid']]);
 
             return $this->respondCreated($data, 'Computer Saved with id ' . $computer->getInsertID());
@@ -409,10 +413,10 @@ class Computer extends ResourceController
             $data['notes'] = $this->request->getVar('notes');
         }
         if ($this->request->getVar('lab') !== null && $computer->lab !== $this->request->getVar('lab')) {
-            $data['lab'] = is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null;
+            $data['lab'] = is_numeric($this->request->getVar('lab')) ? (int) $this->request->getVar('lab') : null;
         }
         if ($this->request->getVar('groups') !== null) {
-            $data['groups'] = $this->request->getVar('groups');
+            $data['groups'] = (isset($data) && array_key_exists('lab', $data) && null === $data['lab']) ? [] : $this->request->getVar('groups');
         }
 
         if (! empty($data)) {
@@ -523,9 +527,9 @@ class Computer extends ResourceController
             $data['notes'] = $this->request->getVar('notes');
         }
         if ($this->request->getVar('lab') !== null && $computer->lab !== $this->request->getVar('lab')) {
-            $data['lab'] = is_numeric($this->request->getVar('lab')) ? $this->request->getVar('lab') : null;
+            $data['lab'] = is_numeric($this->request->getVar('lab')) ? (int) $this->request->getVar('lab') : null;
         }
-        if ($this->request->getVar('groups') !== null) {
+        if ($this->request->getVar('groups') !== null && isset($data) && array_key_exists('lab', $data) && null !== $data['lab']) {
             $data['groups'] = $this->request->getVar('groups');
         }
 
