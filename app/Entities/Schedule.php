@@ -149,4 +149,6 @@ class Schedule extends Entity
      * )
      */
     private $updated_at;
+
+    protected $dates = [];
 }

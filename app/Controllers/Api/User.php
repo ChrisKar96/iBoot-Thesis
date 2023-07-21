@@ -53,13 +53,6 @@ class User extends ResourceController
 
         for ($i = 0; $i < $data_num; $i++) {
             unset($data[$i]->password);
-
-            $ca = $data[$i]->created_at;
-            $ua = $data[$i]->updated_at;
-            unset($data[$i]->created_at, $data[$i]->updated_at);
-
-            $data[$i]->created = $ca->toDateTimeString();
-            $data[$i]->updated = $ua->toDateTimeString();
         }
 
         return $this->respond($data, 200, $data_num . ' Users Found');
@@ -119,13 +112,6 @@ class User extends ResourceController
 
         if ($data) {
             unset($data->password);
-
-            $ca = $data->created_at;
-            $ua = $data->updated_at;
-            unset($data->created_at, $data->updated_at);
-
-            $data->created = $ca->toDateTimeString();
-            $data->updated = $ua->toDateTimeString();
 
             return $this->respond($data, 200, 'User with id ' . $id . ' Found');
         }

@@ -50,18 +50,7 @@ class Schedule extends ResourceController
 
         $data = $schedule->findAll();
 
-        $data_num = count($data);
-
-        for ($i = 0; $i < $data_num; $i++) {
-            $ca = $data[$i]->created_at;
-            $ua = $data[$i]->updated_at;
-            unset($data[$i]->created_at, $data[$i]->updated_at);
-
-            $data[$i]->created = $ca->toDateTimeString();
-            $data[$i]->updated = $ua->toDateTimeString();
-        }
-
-        return $this->respond($data, 200, $data_num . ' Schedules Found');
+        return $this->respond($data, 200, count($data) . ' Schedules Found');
     }
 
     /**
@@ -109,13 +98,6 @@ class Schedule extends ResourceController
         $data = $schedule->find($id);
 
         if ($data) {
-            $ca = $data->created_at;
-            $ua = $data->updated_at;
-            unset($data->created_at, $data->updated_at);
-
-            $data->created = $ca->toDateTimeString();
-            $data->updated = $ua->toDateTimeString();
-
             return $this->respond($data, 200, 'Schedule with id ' . $id . ' Found');
         }
 

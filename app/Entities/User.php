@@ -165,4 +165,6 @@ class User extends Entity
      * )
      */
     private $labs;
+
+    protected $dates = [];
 }
