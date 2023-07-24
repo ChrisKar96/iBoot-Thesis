@@ -12,6 +12,7 @@
 namespace iBoot\Entities;
 
 use CodeIgniter\Entity\Entity;
+use iBoot\Models\IpxeBlockModel;
 use OpenApi\Annotations as OA;
 
 /**
@@ -81,4 +82,11 @@ class BootMenuBlocks extends Entity
      * )
      */
     private $ipxe_block;
+
+    public function getBlock()
+    {
+        $ipxeBlockModel = new IpxeBlockModel();
+
+        return $ipxeBlockModel->where('id', $this->attributes['block_id'])->first();
+    }
 }

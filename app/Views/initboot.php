@@ -1,18 +1,48 @@
+<?= $this->extend('template') ?>
+
+<?= $this->section('bootmenu') ?>
 <?php
 
+use CodeIgniter\I18n\Time;
+use Config\Services;
 use iBoot\Models\ComputerModel;
 
 if (! (isset($_GET['uuid'], $_GET['mac']))) : ?>
-There was an error. This page should be loaded using a GET request to provide the MAC and UUID of the machine. Make sure your DHCP server / iPXE installation can provide the uuid property.
+There was an error. This page should be loaded using a GET request to provide the UUID and the MAC address of the computer. Make sure your DHCP server / iPXE installation can provide the UUID property.
 <?php else :
-    $uuid     = $_GET['uuid'];
-    $mac      = $_GET['mac'];
-    $computer = new ComputerModel();
-    $computer->builder()->select('id');
-    $id = $computer->where($computer->db->DBPrefix . 'computers.uuid', $uuid)->first()['id'];
-    if (! $id) {
-        try {
-            $computer->insert(['id' => null, 'name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => null, 'lab' => null]); ?>
+    $uuid             = $_GET['uuid'];
+    $mac              = $_GET['mac'];
+    $computerModel    = new ComputerModel();
+    $computer         = $computerModel->where('uuid', $uuid)->where('mac', $mac)->first();
+    $request          = Services::request();
+    $IP               = $request->getIPAddress();
+    $current_datetime = Time::now();
+    if (! $computer) {
+        if(! $computerModel->insert(['name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => "Added from {$IP} at {$current_datetime->toDateTimeString()}.", 'lab' => null])) {
+            $error_message = "There was a problem registering the computer.\nitem Maybe its' UUID or MAC address are already used.\nitem Try to resolve the issue before retrying.\n";
+            log_message('warning', "Error registering computer from initboot\n{errors}", ['errors' => var_export(($computerModel->errors()), true)]);
+        }
+
+    } else {
+        $groups = $computer->getGroupObjs();
+
+        if (! empty($groups)) {
+            $schedule = null;
+
+            foreach ($groups as $g) {
+                $schedule = $g->getScheduleObj($current_datetime);
+                if(! empty($schedule)) {
+                    break;
+                }
+            }
+
+            if (! empty($schedule)) {
+                $bootmenu        = $schedule->getBootMenuObj();
+                $bootmenu_blocks = $bootmenu->getBootMenuBlockObjs();
+            }
+        }
+    }
+    ?>
 #!ipxe
 
 :start
@@ -44,13 +74,29 @@ isset ${post_boot} || chain --replace --autofree boot.ipxe ||
 isset ${main_menu_cursor} || set main_menu_cursor exit
 clear version
 menu ${main_menu_title} UUID: ${uuid} MAC: ${netX/mac}
+<?php if (isset($error_message)):?>
+item --gap <?= $error_message; ?>
+<?php else:?>
 item --gap Use the UUID and MAC shown to verify and configure this computer in iBoot
+<?php endif; ?>
 item
 item --gap Default:
 item --key x exit ${space} Boot from hard disk [x]
 item
 item --gap Main menu:
-
+<?php if (! empty($bootmenu)) {
+    echo $bootmenu->ipxeblock;
+}?>
+<?php if (! empty($bootmenu_blocks)) {
+    foreach ($bootmenu_blocks as $b) {
+        printf('item ');
+        if(! empty($b->key)) {
+            printf('--key %s ', $b->key);
+        }
+        printf('%s ${space} %s' . "\n", str_replace(' ', '_', $b->getBlock()->name), str_replace(' ', '_', $b->getBlock()->name));
+    }
+    printf("\n");
+}?>
 item
 item --gap Tools:
 item sysinfo ${space} System info
@@ -114,26 +160,20 @@ item --gap Filename:
 item filename ${space} ${netX/filename}
 choose empty ||
 goto main_menu
-<?php
-        } catch (ReflectionException $e) {
-            echo $e->getMessage();
-        }
-    } else {
-        $computer->builder()->select(
-            $computer->db->DBPrefix . 'computers.*, GROUP_CONCAT(DISTINCT(' . $computer->db->DBPrefix . 'computer_groups.group_id)) as groups',
-            false
-        );
-        $computer->builder()->join(
-            'computer_groups',
-            'computers.id = computer_groups.computer_id',
-            'LEFT'
-        );
-        $computer->builder()->groupBy('computers.id');
-        $computer = $computer->where([$computer->db->DBPrefix . 'computers.id' => $id])->first();
-        if ($computer) {
-            echo 'This would be the computer specific (based on group and time) boot menu.';
-        }
-    }
-    ?>
 
+<?php if (! empty($bootmenu_blocks)) {
+    foreach ($bootmenu_blocks as $b) {
+        printf(":%s\n%s\n\n", str_replace(' ', '_', $b->getBlock()->name), $b->getBlock()->ipxe_block);
+    }
+}?>
 <?php endif; ?>
+
+<?= $this->endSection() ?>
+
+<?= $this->section('content') ?>
+    <main role="main" class="py-5 text-center">
+        <div class="container">
+            <h1 class="text-center"><?= lang('Text.onlyIPXE'); ?></h1>
+        </div>
+    </main>
+<?= $this->endSection() ?>

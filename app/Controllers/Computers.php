@@ -20,15 +20,15 @@ class Computers extends BaseController
             'tabulator' => true,
             'apiTarget' => base_url('/api/computer'),
             'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input", headerFilter:"input"},
-                            {title:"UUID", field:"uuid", sorter:"string", editor:"input", validator:["required", "unique", "regex:\\[0-9a-fA-F]{32}"], headerFilter:"input",
+                            {title:"UUID", field:"uuid", sorter:"string", editor:"input", validator:["required", "unique", "regex:\\[0-9a-fA-F\-]{36}"], headerFilter:"input",
                                 editorParams:{
-                                    mask:"********************************",
+                                    mask:"********-****-****-****-************",
                                     maskAutoFill:true
                                 }
                             },
-                            {title:"MAC", field:"mac", sorter:"string", editor:"input", validator:["required", "unique", "regex:\\[0-9a-fA-F]{12}"], headerFilter:"input",
+                            {title:"MAC", field:"mac", sorter:"string", editor:"input", validator:["required", "unique", "regex:\\[0-9a-fA-F:]{17}"], headerFilter:"input",
                                 editorParams:{
-                                    mask:"************",
+                                    mask:"**:**:**:**:**:**",
                                     maskAutoFill:true
                                 }
                             },

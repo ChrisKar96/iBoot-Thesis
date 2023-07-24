@@ -13,7 +13,7 @@ namespace iBoot\Validation;
 
 use iBoot\Models\UserModel;
 
-class Userrules
+class UserRules
 {
     public function authenticateUser(string $str, string $fields, array $data)
     {

@@ -12,6 +12,7 @@
 namespace iBoot\Entities;
 
 use CodeIgniter\Entity\Entity;
+use iBoot\Models\GroupModel;
 use OpenApi\Annotations as OA;
 
 /**
@@ -118,4 +119,16 @@ class Computer extends Entity
      * )
      */
     private $groups;
+
+    public function getGroupObjs(): array
+    {
+        $group_arr  = [];
+        $groupModel = new GroupModel();
+
+        foreach ($this->attributes['groups'] as $g) {
+            $group_arr[] = $groupModel->find($g);
+        }
+
+        return $group_arr;
+    }
 }

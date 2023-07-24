@@ -12,6 +12,7 @@
 namespace iBoot\Entities;
 
 use CodeIgniter\Entity\Entity;
+use iBoot\Models\BootMenuModel;
 use OpenApi\Annotations as OA;
 
 /**
@@ -151,4 +152,11 @@ class Schedule extends Entity
     private $updated_at;
 
     protected $dates = [];
+
+    public function getBootMenuObj()
+    {
+        $bootMenuModel = new BootMenuModel();
+
+        return $bootMenuModel->find($this->attributes['boot_menu_id']);
+    }
 }

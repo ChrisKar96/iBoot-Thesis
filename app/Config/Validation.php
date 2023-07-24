@@ -16,7 +16,8 @@ use CodeIgniter\Validation\StrictRules\CreditCardRules;
 use CodeIgniter\Validation\StrictRules\FileRules;
 use CodeIgniter\Validation\StrictRules\FormatRules;
 use CodeIgniter\Validation\StrictRules\Rules;
-use iBoot\Validation\Userrules;
+use iBoot\Validation\ComputerRules;
+use iBoot\Validation\UserRules;
 
 class Validation extends BaseConfig
 {
@@ -35,7 +36,8 @@ class Validation extends BaseConfig
         FormatRules::class,
         FileRules::class,
         CreditCardRules::class,
-        Userrules::class,
+        UserRules::class,
+        ComputerRules::class,
     ];
 
     /**

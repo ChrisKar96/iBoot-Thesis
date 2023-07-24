@@ -12,6 +12,8 @@
 namespace iBoot\Entities;
 
 use CodeIgniter\Entity\Entity;
+use CodeIgniter\I18n\Time;
+use iBoot\Models\ScheduleModel;
 use OpenApi\Annotations as OA;
 
 /**
@@ -95,4 +97,14 @@ class Group extends Entity
      * )
      */
     private $computers;
+
+    public function getScheduleObj(Time $curtime)
+    {
+        $scheduleModel = new ScheduleModel();
+        $scheduleModel->builder()->where('group_id', $this->attributes['id'])->where('isActive', true);
+        $scheduleModel->builder()->where('time_from <=', $curtime->toTimeString())->where('time_to >=', $curtime->toTimeString());
+        $scheduleModel->builder()->groupStart()->where('day_of_week', (int) $curtime->getDayOfWeek() - 1)->orWhere('date', $curtime->toDateString())->groupEnd();
+
+        return $scheduleModel->first();
+    }
 }

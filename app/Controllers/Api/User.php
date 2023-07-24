@@ -161,8 +161,8 @@ class User extends ResourceController
             'phone'         => (empty($this->request->getVar('phone')) ? null : $this->request->getVar('phone')),
             'username'      => $this->request->getVar('username'),
             'password'      => $this->request->getVar('password'),
-            'verifiedEmail' => (in_array($this->request->getVar('verifiedEmail'), [0, 1]) ? (int) $this->request->getVar('verifiedEmail') : 0),
-            'isAdmin'       => (in_array($this->request->getVar('isAdmin'), [0, 1]) ? (int) $this->request->getVar('isAdmin') : 0),
+            'verifiedEmail' => (in_array((int) $this->request->getVar('verifiedEmail'), [0, 1], true) ? (int) $this->request->getVar('verifiedEmail') : 0),
+            'isAdmin'       => (in_array((int) $this->request->getVar('isAdmin'), [0, 1], true) ? (int) $this->request->getVar('isAdmin') : 0),
             'labs'          => (! empty($this->request->getVar('labs')) ? $this->request->getVar('labs') : null),
         ];
 
@@ -289,10 +289,10 @@ class User extends ResourceController
         if ($this->request->getVar('password') !== null) {
             $data['password'] = $this->request->getVar('password');
         }
-        if ($this->request->getVar('verifiedEmail') !== null && in_array($this->request->getVar('verifiedEmail'), [0, 1]) && $user->verifiedEmail !== (int) $this->request->getVar('verifiedEmail')) {
+        if ($this->request->getVar('verifiedEmail') !== null && in_array((int) $this->request->getVar('verifiedEmail'), [0, 1], true) && $user->verifiedEmail !== (int) $this->request->getVar('verifiedEmail')) {
             $data['verifiedEmail'] = (int) $this->request->getVar('verifiedEmail');
         }
-        if ($this->request->getVar('isAdmin') !== null && in_array($this->request->getVar('isAdmin'), [0, 1]) && $user->isAdmin !== (int) $this->request->getVar('isAdmin')) {
+        if ($this->request->getVar('isAdmin') !== null && in_array((int) $this->request->getVar('isAdmin'), [0, 1], true) && $user->isAdmin !== (int) $this->request->getVar('isAdmin')) {
             $data['isAdmin'] = (int) $this->request->getVar('isAdmin');
         }
         if ($this->request->getVar('labs') !== null) {

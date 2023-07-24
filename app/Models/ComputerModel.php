@@ -42,12 +42,19 @@ class ComputerModel extends Model
     protected $validationRules = [
         'id'    => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[computers.id,id,{id}]',
         'name'  => 'max_length[20]',
-        'uuid'  => 'exact_length[32]|hex|required|is_unique[computers.uuid,id,{id}]',
-        'mac'   => 'exact_length[12]|hex|required|is_unique[computers.mac,id,{id}]',
+        'uuid'  => 'exact_length[36]|valid_uuid|required|is_unique[computers.uuid,id,{id}]',
+        'mac'   => 'exact_length[17]|valid_mac|required|is_unique[computers.mac,id,{id}]',
         'notes' => 'permit_empty',
         'lab'   => 'is_natural_no_zero|max_length[10]|permit_empty',
     ];
-    protected $validationMessages   = [];
+    protected $validationMessages = [
+        'uuid' => [
+            'valid_uuid' => 'The {field} field must contain a valid UUID.',
+        ],
+        'mac' => [
+            'valid_mac' => 'The {field} field must contain a valid MAC address.',
+        ],
+    ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 
@@ -149,10 +156,22 @@ class ComputerModel extends Model
         return $data;
     }
 
+    public function find($id = null)
+    {
+        $data = parent::find($id);
+        if ($data) {
+            $this->addGroupsToComputerModel($data);
+        }
+
+        return $data;
+    }
+
     public function insert($data = null, bool $returnID = true): int|bool|object|string
     {
-        $groups = $data['groups'];
-        unset($data['groups']);
+        if (isset($data['groups'])) {
+            $groups = $data['groups'];
+            unset($data['groups']);
+        }
         $id = parent::insert($data, $returnID);
         if (is_numeric($id) && ! empty($groups)) {
             $this->modifyComputerGroups($id, $groups);

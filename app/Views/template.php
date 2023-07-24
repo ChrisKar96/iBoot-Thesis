@@ -1,5 +1,12 @@
-<?= $this->renderSection('bootmenu') ?>
+<?php
 
+use Config\Services;
+
+$request = Services::request();
+$agent   = $request->getUserAgent();
+if(str_contains($agent, 'iPXE')):?>
+<?= $this->renderSection('bootmenu') ?>
+<?php else: ?>
 <!doctype html>
 <html lang="en" class="h-100">
 
@@ -18,3 +25,4 @@
 
 </body>
 </html>
+<?php endif; ?>
