@@ -33,6 +33,9 @@ class BootMenu extends BaseController
                                     width:140
                                 },',
                 'JS_bef_tb' => '',
+                'JS_aft_tb' => 'table.on("tableBuilt", function(){
+                                  table.updateColumnDefinition("id", {visible:true});
+                                })',
             ]
         );
     }

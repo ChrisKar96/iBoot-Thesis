@@ -144,7 +144,7 @@ if (isset($title, $columns, $apiTarget)): ?>
                     responsiveLayout: "hide",
                     columnHeaderVertAlign:"bottom",
                     columns: [
-                        {title: "id", field: "id", visible: false},
+                        {title: "id", field: "id", width:65, visible: false},
                         <?= $columns ?>
                         {
                             title: "<?= lang('Text.delete') ?>",
