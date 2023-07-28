@@ -112,4 +112,5 @@ return [
     'ece_uowm'                               => 'Department of Electrical and Computer Engineering',
     'ece_uowm_website'                       => 'https://ece.uowm.gr/index.php?lan=en',
     'privacy_policy'                         => 'PRIVACY POLICY',
+    'api_spec'                               => 'API Specification',
 ];

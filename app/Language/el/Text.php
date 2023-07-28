@@ -112,4 +112,5 @@ return [
     'ece_uowm'                               => 'Τμήμα Ηλεκτρολόγων Μηχανικών και Μηχανικών Υπολογιστών',
     'ece_uowm_website'                       => 'https://ece.uowm.gr/index.php?lan=gr',
     'privacy_policy'                         => 'ΠΟΛΙΤΙΚΗ ΑΣΦΑΛΕΙΑΣ ΚΑΙ ΑΠΟΡΡΗΤΟΥ',
+    'api_spec'                               => 'Προδιαγραφή API',
 ];

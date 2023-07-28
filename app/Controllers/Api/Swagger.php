@@ -59,7 +59,6 @@ class Swagger extends BaseController
         $apiSpecPath = $paths->writableDirectory . '/cache/swagger.json';
 
         // Export API Spec JSON session variable
-        $paths   = new Config\Paths();
         $openapi = Generator::scan([$paths->appDirectory . '/Controllers', $paths->appDirectory . '/Entities']);
         if (! write_file($apiSpecPath, $openapi->toJson(0))) {
             log_message('error', 'Failed to write API Spec file at {path}', ['path' => $apiSpecPath]);
