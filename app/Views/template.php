@@ -4,7 +4,7 @@ use Config\Services;
 
 $request = Services::request();
 $agent   = $request->getUserAgent();
-if(str_contains($agent, 'iPXE')):?>
+if(($request->getPath() === 'boot' || $request->getPath() === 'initboot') && (str_contains($agent, 'iPXE') || (int) $request->getGet('overrideAgent') === 1)):?>
 <?= $this->renderSection('bootmenu') ?>
 <?php else: ?>
 <!doctype html>
