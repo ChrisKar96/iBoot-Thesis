@@ -5,40 +5,55 @@
 
 use CodeIgniter\I18n\Time;
 use Config\Services;
+use iBoot\Entities\BootMenuBlocks;
+use iBoot\Models\BootMenuModel;
 use iBoot\Models\ComputerModel;
 
-if (! (isset($_GET['uuid'], $_GET['mac']))) : ?>
-There was an error. This page should be loaded using a GET request to provide the UUID and the MAC address of the computer. Make sure your DHCP server / iPXE installation can provide the UUID property.
+if (! (isset($_GET['uuid'], $_GET['mac'])) && ! isset($_GET['menu']) && ! isset($_GET['block'])) : ?>
+#!ipxe
+echo There was an error. This page should be loaded using a GET request to provide the UUID and the MAC address of the computer. Make sure your DHCP server / iPXE installation can provide the UUID property.
+exit
 <?php else :
-    $uuid             = $_GET['uuid'];
-    $mac              = $_GET['mac'];
-    $computerModel    = new ComputerModel();
-    $computer         = $computerModel->where('uuid', $uuid)->where('mac', $mac)->first();
-    $request          = Services::request();
-    $IP               = $request->getIPAddress();
-    $current_datetime = Time::now();
-    if (! $computer) {
-        if(! $computerModel->insert(['name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => "Added from {$IP} at {$current_datetime->toDateTimeString()}.", 'lab' => null])) {
-            $error_message = "There was a problem registering the computer.\nitem Maybe its' UUID or MAC address are already used.\nitem Try to resolve the issue before retrying.\n";
-            log_message('warning', "Error registering computer from initboot\n{errors}", ['errors' => var_export(($computerModel->errors()), true)]);
-        }
-
+    $menu  = isset($_GET['menu']) ? (int) $_GET['menu'] : null;
+    $block = isset($_GET['block']) ? (int) $_GET['block'] : null;
+    if (! empty($menu)) {
+        $bootmenuModel   = new BootMenuModel();
+        $bootmenu        = $bootmenuModel->find($menu);
+        $bootmenu_blocks = $bootmenu->getBootMenuBlockObjs();
+    } elseif (! empty($block)) {
+        $bootMenuBlock   = new BootMenuBlocks(['id' => 0, 'boot_menu_id' => 0, 'block_id' => $block, 'key' => '']);
+        $bootmenu_blocks = [$bootMenuBlock];
     } else {
-        $groups = $computer->getGroupObjs();
-
-        if (! empty($groups)) {
-            $schedule = null;
-
-            foreach ($groups as $g) {
-                $schedule = $g->getScheduleObj($current_datetime);
-                if(! empty($schedule)) {
-                    break;
-                }
+        $uuid             = $_GET['uuid'];
+        $mac              = $_GET['mac'];
+        $computerModel    = new ComputerModel();
+        $computer         = $computerModel->where('uuid', $uuid)->where('mac', $mac)->first();
+        $request          = Services::request();
+        $IP               = $request->getIPAddress();
+        $current_datetime = Time::now();
+        if (! $computer) {
+            if (! $computerModel->insert(['name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => "Added from {$IP} at {$current_datetime->toDateTimeString()}.", 'lab' => null])) {
+                $error_message = "There was a problem registering the computer.\nitem Maybe its' UUID or MAC address are already used.\nitem Try to resolve the issue before retrying.\n";
+                log_message('warning', "Error registering computer from initboot\n{errors}", ['errors' => var_export(($computerModel->errors()), true)]);
             }
+            $configure = true;
+        } else {
+            $groups = $computer->getGroupObjs();
 
-            if (! empty($schedule)) {
-                $bootmenu        = $schedule->getBootMenuObj();
-                $bootmenu_blocks = $bootmenu->getBootMenuBlockObjs();
+            if (! empty($groups)) {
+                $schedule = null;
+
+                foreach ($groups as $g) {
+                    $schedule = $g->getScheduleObj($current_datetime);
+                    if (! empty($schedule)) {
+                        break;
+                    }
+                }
+
+                if (! empty($schedule)) {
+                    $bootmenu        = $schedule->getBootMenuObj();
+                    $bootmenu_blocks = $bootmenu->getBootMenuBlockObjs();
+                }
             }
         }
     }
@@ -76,7 +91,7 @@ clear version
 menu ${main_menu_title} UUID: ${uuid} MAC: ${netX/mac}
 <?php if (isset($error_message)):?>
 item --gap <?= $error_message; ?>
-<?php else:?>
+<?php elseif (isset($configure) && $configure):?>
 item --gap Use the UUID and MAC shown to verify and configure this computer in iBoot
 <?php endif; ?>
 item
@@ -93,7 +108,11 @@ item --gap Main menu:
         if(! empty($b->key)) {
             printf('--key %s ', $b->key);
         }
-        printf('%s ${space} %s' . "\n", str_replace(' ', '_', $b->getBlock()->name), str_replace(' ', '_', $b->getBlock()->name));
+        printf('%s ${space} %s', str_replace(' ', '_', $b->getBlock()->name), str_replace(' ', '_', $b->getBlock()->name));
+        if(! empty($b->key)) {
+            printf(' [%s]', $b->key);
+        }
+        printf("\n");
     }
     printf("\n");
 }?>
