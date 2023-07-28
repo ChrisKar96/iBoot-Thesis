@@ -42,7 +42,7 @@ if (! isset($title)) {
                            href="<?= site_url('labs'); ?>"><?= lang('Text.labs'); ?></a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle <?= ($title === lang('Text.ipxe_blocks') || $title === lang('Text.schedules')) ? ' active' : ''; ?>"
+                        <a class="nav-link dropdown-toggle <?= ($title === lang('Text.ipxe_blocks') || $title === lang('Text.boot_menu') || $title === lang('Text.schedules')) ? ' active' : ''; ?>"
                            href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <?= lang('Text.boot_menu_options'); ?>
                         </a>
