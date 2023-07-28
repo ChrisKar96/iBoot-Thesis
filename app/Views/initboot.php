@@ -48,7 +48,7 @@ There was an error. This page should be loaded using a GET request to provide th
 :start
 
 # The main menu title
-set main_menu_title iBoot iPXE Menu
+set main_menu_title Karamolegkos-Dasygenis iBoot iPXE Menu
 
 set space:hex 20:20
 set space ${space:string}

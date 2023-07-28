@@ -104,4 +104,12 @@ return [
     'dev_env_warning'                        => 'iPXE booting will not work in non-production environments. Please switch environment to production.',
     'onlyIPXE'                               => 'This page is only accessible from iPXE clients that provide their MAC address and UUID.',
     'dhcp_server_configuration'              => 'DHCP Server configuration',
+    'minas_dasygenis'                        => 'Minas Dasygenis',
+    'mdasyg_website'                         => 'http://arch.icte.uowm.gr/mdasyg/',
+    'supervised_by'                          => 'Supervised by',
+    'uowm'                                   => 'University of Western Macedonia',
+    'uowm_website'                           => 'https://www.uowm.gr/en/',
+    'ece_uowm'                               => 'Department of Electrical and Computer Engineering',
+    'ece_uowm_website'                       => 'https://ece.uowm.gr/index.php?lan=en',
+    'privacy_policy'                         => 'PRIVACY POLICY',
 ];

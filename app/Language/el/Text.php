@@ -104,4 +104,12 @@ return [
     'dev_env_warning'                        => 'Η εκκίνηση iPXE δε θα δουλέψει σε περιβάλλοντα εκτός του production. Παρακαλώ αλλάξτε το περιβάλλον σε production.',
     'onlyIPXE'                               => 'Αυτή η σελίδα είναι προσβάσιμη μόνο από πελάτες iPXE που παρέχουν τη διεύθυνση MAC και το UUID τους.',
     'dhcp_server_configuration'              => 'Ρύθμιση DHCP Server',
+    'minas_dasygenis'                        => 'Μηνάς Δασυγένης',
+    'mdasyg_website'                         => 'http://arch.icte.uowm.gr/mdasyg/',
+    'supervised_by'                          => 'Επίβλεψη',
+    'uowm'                                   => 'Πανεπιστήμιο Δυτικής Μακεδονίας',
+    'uowm_website'                           => 'https://www.uowm.gr/',
+    'ece_uowm'                               => 'Τμήμα Ηλεκτρολόγων Μηχανικών και Μηχανικών Υπολογιστών',
+    'ece_uowm_website'                       => 'https://ece.uowm.gr/index.php?lan=gr',
+    'privacy_policy'                         => 'ΠΟΛΙΤΙΚΗ ΑΣΦΑΛΕΙΑΣ ΚΑΙ ΑΠΟΡΡΗΤΟΥ',
 ];
