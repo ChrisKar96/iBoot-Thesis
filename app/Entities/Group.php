@@ -103,8 +103,20 @@ class Group extends Entity
         $scheduleModel = new ScheduleModel();
         $scheduleModel->builder()->where('group_id', $this->attributes['id'])->where('isActive', true);
         $scheduleModel->builder()->where('time_from <=', $curtime->toTimeString())->where('time_to >=', $curtime->toTimeString());
-        $scheduleModel->builder()->groupStart()->where('day_of_week', (int) $curtime->getDayOfWeek() - 1)->orWhere('date', $curtime->toDateString())->groupEnd();
+        $scheduleModel->builder()->where('date', $curtime->toDateString());
+        $scheduleModel->builder()->orderBy('id', 'DESC');
 
-        return $scheduleModel->first();
+        $schedule = $scheduleModel->first();
+
+        if (empty($schedule)) {
+            $scheduleModel->builder()->where('group_id', $this->attributes['id'])->where('isActive', true);
+            $scheduleModel->builder()->where('time_from <=', $curtime->toTimeString())->where('time_to >=', $curtime->toTimeString());
+            $scheduleModel->builder()->where('day_of_week', (int) $curtime->getDayOfWeek() - 1);
+            $scheduleModel->builder()->orderBy('id', 'DESC');
+
+            $schedule = $scheduleModel->first();
+        }
+
+        return $schedule;
     }
 }

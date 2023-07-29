@@ -8,14 +8,27 @@ use Config\Services;
 use iBoot\Entities\BootMenuBlocks;
 use iBoot\Models\BootMenuModel;
 use iBoot\Models\ComputerModel;
+use iBoot\Models\IpxeBlockModel;
 
 if (! (isset($_GET['uuid'], $_GET['mac'])) && ! isset($_GET['menu']) && ! isset($_GET['block'])) : ?>
 #!ipxe
 echo There was an error. This page should be loaded using a GET request to provide the UUID and the MAC address of the computer. Make sure your DHCP server / iPXE installation can provide the UUID property.
 exit
 <?php else :
-    $menu  = isset($_GET['menu']) ? (int) $_GET['menu'] : null;
-    $block = isset($_GET['block']) ? (int) $_GET['block'] : null;
+    $uuid = isset($_GET['uuid']) ? (int) $_GET['uuid'] : null;
+    $mac  = isset($_GET['mac']) ? (int) $_GET['mac'] : null;
+    $computerModel = new ComputerModel();
+    if (! empty($uuid) && ! empty($mac)) {
+        $computer      = $computerModel->where('uuid', $uuid)->where('mac', $mac)->first();
+    } else {
+        $computer = null;
+    }
+    $request          = Services::request();
+    $IP               = $request->getIPAddress();
+    $current_datetime = Time::now();
+    $menu             = isset($_GET['menu']) ? (int) $_GET['menu'] : null;
+    $block            = isset($_GET['block']) ? (int) $_GET['block'] : null;
+
     if (! empty($menu)) {
         $bootmenuModel   = new BootMenuModel();
         $bootmenu        = $bootmenuModel->find($menu);
@@ -24,17 +37,10 @@ exit
         $bootMenuBlock   = new BootMenuBlocks(['id' => 0, 'boot_menu_id' => 0, 'block_id' => $block, 'key' => '']);
         $bootmenu_blocks = [$bootMenuBlock];
     } else {
-        $uuid             = $_GET['uuid'];
-        $mac              = $_GET['mac'];
-        $computerModel    = new ComputerModel();
-        $computer         = $computerModel->where('uuid', $uuid)->where('mac', $mac)->first();
-        $request          = Services::request();
-        $IP               = $request->getIPAddress();
-        $current_datetime = Time::now();
-        if (! $computer) {
+        if (! $computer && ! empty($uuid) && ! empty($mac)) {
             if (! $computerModel->insert(['name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => "Added from {$IP} at {$current_datetime->toDateTimeString()}.", 'lab' => null])) {
                 $error_message = "There was a problem registering the computer.\nitem Maybe its' UUID or MAC address are already used.\nitem Try to resolve the issue before retrying.\n";
-                log_message('warning', "Error registering computer from initboot\n{errors}", ['errors' => var_export(($computerModel->errors()), true)]);
+                log_message('warning', "Error registering computer at initboot\nUUID: {uuid}\nMAC: {mac}\nIP: {ip}\nErrors: {errors}", ['uuid' => $uuid, 'mac' => $mac, 'ip' => $IP, 'errors' => json_encode($computerModel->errors(), JSON_PRETTY_PRINT)]);
             }
             $configure = true;
         } else {
@@ -46,6 +52,7 @@ exit
                 foreach ($groups as $g) {
                     $schedule = $g->getScheduleObj($current_datetime);
                     if (! empty($schedule)) {
+                        $group = $g;
                         break;
                     }
                 }
@@ -53,7 +60,16 @@ exit
                 if (! empty($schedule)) {
                     $bootmenu        = $schedule->getBootMenuObj();
                     $bootmenu_blocks = $bootmenu->getBootMenuBlockObjs();
+                } else {
+                    $ipxeBlockModel = new IpxeBlockModel();
+                    $default_block          = $ipxeBlockModel->where('name', 'default')->first();
+                    if (! empty($default_block)) {
+                        $bootMenuBlock   = new BootMenuBlocks(['id' => 0, 'boot_menu_id' => 0, 'block_id' => $default_block->id, 'key' => '']);
+                        $bootmenu_blocks = [$bootMenuBlock];
+                    }
                 }
+            } else {
+                $configure = true;
             }
         }
     }
@@ -94,13 +110,14 @@ item --gap <?= $error_message; ?>
 <?php elseif (isset($configure) && $configure):?>
 item --gap Use the UUID and MAC shown to verify and configure this computer in iBoot
 <?php endif; ?>
-item
-item --gap Default:
-item --key x exit ${space} Boot from hard disk [x]
+<?php if (! empty($bootmenu) || ! empty($bootmenu_blocks)):?>
 item
 item --gap Main menu:
+<?php endif; ?>
 <?php if (! empty($bootmenu)) {
-    echo $bootmenu->ipxeblock;
+    $ipxeblock = $bootmenu->ipxeblock;
+    $ipxeblock = ! empty($group) ? str_replace(['${group.ip}', '${group.prefix}'], [$group->image_server_ip, $group->image_server_path_prefix], $bootmenu->ipxe_block) : $bootmenu->ipxe_block;
+    echo $ipxeblock;
 }?>
 <?php if (! empty($bootmenu_blocks)) {
     foreach ($bootmenu_blocks as $b) {
@@ -108,7 +125,8 @@ item --gap Main menu:
         if(! empty($b->key)) {
             printf('--key %s ', $b->key);
         }
-        printf('%s ${space} %s', str_replace(' ', '_', $b->getBlock()->name), str_replace(' ', '_', $b->getBlock()->name));
+        $block_name = str_replace(' ', '_', $b->getBlock()->name);
+        printf('%s ${space} %s', $block_name, $block_name);
         if(! empty($b->key)) {
             printf(' [%s]', $b->key);
         }
@@ -116,6 +134,9 @@ item --gap Main menu:
     }
     printf("\n");
 }?>
+item
+item --gap Local Boot:
+item --key x exit ${space} Boot from hard disk [x]
 item
 item --gap Tools:
 item sysinfo ${space} System info
@@ -182,10 +203,39 @@ goto main_menu
 
 <?php if (! empty($bootmenu_blocks)) {
     foreach ($bootmenu_blocks as $b) {
-        printf(":%s\n%s\n\n", str_replace(' ', '_', $b->getBlock()->name), $b->getBlock()->ipxe_block);
+        $b_block_name = str_replace(' ', '_', $b->getBlock()->name);
+        $b_ipxeblock  = ! empty($group) ? str_replace(['${group.ip}', '${group.prefix}'], [$group->image_server_ip, $group->image_server_path_prefix], $b->getBlock()->ipxe_block) : $b->getBlock()->ipxe_block;
+        printf(":%s\n%s\n\n", $b_block_name, $b_ipxeblock);
     }
 }?>
 <?php endif; ?>
+
+<?php if (empty($error_message) && empty($configure)) {
+    $message = 'Computer ';
+    if (! empty($computer)) {
+        $message .= "with uuid {$computer->uuid} ";
+    }
+    $message .= "from IP: {$IP} received menu ";
+    if(! empty($bootmenu)) {
+        $message .= "{$bootmenu->name} ";
+    }
+    if(! empty($menu)) {
+        $message .= "{$menu} ";
+    }
+    if(! empty($block)) {
+        $message .= "with block {$block} ";
+    }
+    $message .= 'from initboot';
+    if(! empty($bootmenu_blocks)) {
+        $attr = [];
+
+        foreach ($bootmenu_blocks as $bmb) {
+            $attr[] = $bmb->toArray();
+        }
+        $message .= "\nBlocks: " . json_encode($attr, JSON_PRETTY_PRINT);
+    }
+    log_message('info', $message);
+}?>
 
 <?= $this->endSection() ?>
 

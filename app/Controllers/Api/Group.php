@@ -152,7 +152,7 @@ class Group extends ResourceController
             return $this->respondCreated($data, 'Group Saved with id ' . $group->getInsertID());
         }
 
-        log_message('notice', 'Failed to create group ' . $data['uuid'] . "\n" . var_export($group->errors(), true));
+        log_message('notice', "Failed to create group {name}\nData: {data}\nErrors: {errors}", ['name' => $data['name'], 'data' => json_encode($data, JSON_PRETTY_PRINT), 'errors' => json_encode($group->errors(), JSON_PRETTY_PRINT)]);
 
         return $this->fail('Failed to create group. Errors: ' . json_encode($group->errors()));
     }
@@ -264,6 +264,8 @@ class Group extends ResourceController
 
                 return $this->respondUpdated($data, 'Group with id ' . $id . ' Updated');
             }
+
+            log_message('notice', "Failed to update group with id {id}\nData: {data}\nErrors: {errors}", ['id' => $id, 'data' => json_encode($data, JSON_PRETTY_PRINT), 'errors' => json_encode($groupModel->errors(), JSON_PRETTY_PRINT)]);
 
             return $this->respond($groupModel->errors(), 401, 'Error Updating Group with id ' . $id);
         }

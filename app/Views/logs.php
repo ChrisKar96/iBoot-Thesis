@@ -113,7 +113,7 @@
             });
 
             let table = new Tabulator("#table-log", {
-                layout: "fitColumns",
+                layout: "fitDataStretch",
                 responsiveLayout: "collapse",
                 columns: [
                     {
@@ -137,6 +137,7 @@
                         headerFilterFunc: "in",
                         headerFilterLiveFilter: true,
                         widthGrow:1,
+                        resizable:true,
                     },
                     {
                         title: "<?= lang('Text.date'); ?>",
@@ -145,6 +146,7 @@
                         headerFilter: "input",
                         headerFilterLiveFilter: true,
                         widthGrow:1,
+                        resizable:true,
                     },
                     {
                         title: "<?= lang('Text.content'); ?>",
@@ -153,6 +155,7 @@
                         headerFilter: "input",
                         headerFilterLiveFilter: true,
                         widthGrow:4,
+                        resizable:true,
                     },
                 ],
                 columnHeaderVertAlign: "bottom",
