@@ -164,7 +164,7 @@ class User extends BaseController
 
     public static function generateAPItoken($username): string
     {
-        $key = getenv('JWT_SECRET');
+        $key = config('JWT')->secret;
 
         $iat = time(); // current timestamp value
         $nbf = $iat;

@@ -11,6 +11,7 @@
 
 namespace iBoot\Models;
 
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
 
 class ComputerModel extends Model
@@ -29,6 +30,7 @@ class ComputerModel extends Model
         'mac',
         'notes',
         'lab',
+        'last_boot',
     ];
 
     // Dates
@@ -68,6 +70,11 @@ class ComputerModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getLastBooted(int $minutes = 5){
+        $this->builder()->whereNotIn('labs', '')->whereNotIn('last_boot', '')->where('last_boot <=', Time::now()->subMinutes($minutes)->toDateTimeString());
+        return $this->builder->get()->getResultArray();
+    }
 
     protected function getComputerGroups(int $id): array
     {

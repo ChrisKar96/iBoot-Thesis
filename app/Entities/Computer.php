@@ -120,6 +120,17 @@ class Computer extends Entity
      */
     private $groups;
 
+    /**
+     * @OA\Property(
+     *     description="last_boot",
+     *     title="last_boot",
+     *     type="datetime",
+     * 	   format="Y-m-d H:i:s",
+     * 	   nullable=true,
+     * )
+     */
+    private $last_boot;
+
     public function getGroupObjs(): array
     {
         $group_arr  = [];

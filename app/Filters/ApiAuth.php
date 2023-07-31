@@ -33,7 +33,8 @@ class ApiAuth implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $key    = getenv('JWT_SECRET');
+        $key = config('JWT')->secret;
+
         $header = $request->header('Authorization');
         $token  = null;
 

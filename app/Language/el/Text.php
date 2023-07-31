@@ -113,4 +113,6 @@ return [
     'ece_uowm_website'                       => 'https://ece.uowm.gr/index.php?lan=gr',
     'privacy_policy'                         => 'ΠΟΛΙΤΙΚΗ ΑΣΦΑΛΕΙΑΣ ΚΑΙ ΑΠΟΡΡΗΤΟΥ',
     'api_spec'                               => 'Προδιαγραφή API',
+    'registration_is_disabled'               => 'Η εγγραφή είναι απενεργοποιημένη.',
+    'ask_admin_register'                     => 'Αν δεν έχετε λογαριασμό, επικοινωνήστε με τον διαχειριστή.',
 ];

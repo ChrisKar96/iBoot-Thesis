@@ -3,6 +3,8 @@
 if (! isset($title)) {
     $title = lang('Text.dashboard');
 }
+
+$reg_enabled = config('Registration')->enabled;
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient">
@@ -122,13 +124,14 @@ if (! isset($title)) {
                         else: ?>
                             <li><a class="dropdown-item <?= ($title === lang('Text.log_in')) ? ' active' : ''; ?>"
                                    href="<?= site_url('login') ?>"><?= lang('Text.log_in'); ?></a></li>
+                            <?php if ($reg_enabled) :?>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item <?= ($title === lang('Text.sign_up')) ? ' active' : ''; ?>"
                                    href="<?= site_url('signup') ?>"><?= lang('Text.sign_up'); ?></a></li>
-                        <?php
-                        endif; ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </ul>
                 </li>
             </ul>

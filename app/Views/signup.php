@@ -4,6 +4,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xs-12 col-sm-10 col-lg-8 col-xl-6 my-md-2">
+<?php
+    $reg_enabled = config('Registration')->enabled;
+if ($reg_enabled) : ?>
                 <div class="login-clean">
                     <?php
                     if (isset($validation)): ?>
@@ -12,14 +15,13 @@
                         </div>
                     <?php
                     endif;
-if (! isset($title)) {
-    $title = lang('Text.sign_up');
-}
-if (! isset($action)) {
-    $action = base_url('signup');
-}
-?>
-
+    if (! isset($title)) {
+        $title = lang('Text.sign_up');
+    }
+    if (! isset($action)) {
+        $action = base_url('signup');
+    }
+    ?>
                     <form action="<?= $action; ?>" method="post" style="margin: 3vmin;">
                         <?= csrf_field() ?>
                         <h2 class="text-center"><?= $title; ?></h2>
@@ -59,6 +61,11 @@ if (! isset($action)) {
                         </div>
                         <button type="submit" class="btn btn-primary"><?= lang('Text.sign_up'); ?></button>
                     </form>
+<?php else : ?>
+    <h1 class="text-center"><?= lang('Text.registration_is_disabled'); ?></h1>
+    <h3 class="text-center"><?= lang('Text.ask_admin_register'); ?></h3>
+    <a href="<?= site_url('/login')?>" title="iBoot Log In"><h5 class="text-center"><?= lang('Text.log_in'); ?></h5></a>
+<?php endif; ?>
                 </div>
             </div>
         </div>

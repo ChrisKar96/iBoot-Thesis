@@ -15,13 +15,11 @@ if (! (isset($_GET['uuid'], $_GET['mac'])) && ! isset($_GET['menu']) && ! isset(
 echo There was an error. This page should be loaded using a GET request to provide the UUID and the MAC address of the computer. Make sure your DHCP server / iPXE installation can provide the UUID property.
 exit
 <?php else :
-    $uuid = isset($_GET['uuid']) ? (int) $_GET['uuid'] : null;
-    $mac  = isset($_GET['mac']) ? (int) $_GET['mac'] : null;
+    $uuid          = $_GET['uuid'] ?? null;
+    $mac           = $_GET['mac'] ?? null;
     $computerModel = new ComputerModel();
     if (! empty($uuid) && ! empty($mac)) {
-        $computer      = $computerModel->where('uuid', $uuid)->where('mac', $mac)->first();
-    } else {
-        $computer = null;
+        $computer = $computerModel->where('uuid', $uuid)->where('mac', $mac)->first();
     }
     $request          = Services::request();
     $IP               = $request->getIPAddress();
@@ -37,12 +35,14 @@ exit
         $bootMenuBlock   = new BootMenuBlocks(['id' => 0, 'boot_menu_id' => 0, 'block_id' => $block, 'key' => '']);
         $bootmenu_blocks = [$bootMenuBlock];
     } else {
-        if (! $computer && ! empty($uuid) && ! empty($mac)) {
-            if (! $computerModel->insert(['name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => "Added from {$IP} at {$current_datetime->toDateTimeString()}.", 'lab' => null])) {
-                $error_message = "There was a problem registering the computer.\nitem Maybe its' UUID or MAC address are already used.\nitem Try to resolve the issue before retrying.\n";
-                log_message('warning', "Error registering computer at initboot\nUUID: {uuid}\nMAC: {mac}\nIP: {ip}\nErrors: {errors}", ['uuid' => $uuid, 'mac' => $mac, 'ip' => $IP, 'errors' => json_encode($computerModel->errors(), JSON_PRETTY_PRINT)]);
+        if (empty($computer)) {
+            if(! empty($uuid) && ! empty($mac)) {
+                if (!$computerModel->insert(['name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => "Added from {$IP} at {$current_datetime->toDateTimeString()}.", 'lab' => null])) {
+                    $error_message = "There was a problem registering the computer.\nitem Maybe its' UUID or MAC address are already used.\nitem Try to resolve the issue before retrying.\n";
+                    log_message('warning', "Error registering computer at initboot\nUUID: {uuid}\nMAC: {mac}\nIP: {ip}\nErrors: {errors}", ['uuid' => $uuid, 'mac' => $mac, 'ip' => $IP, 'errors' => json_encode($computerModel->errors(), JSON_PRETTY_PRINT)]);
+                }
+                $configure = true;
             }
-            $configure = true;
         } else {
             $groups = $computer->getGroupObjs();
 
@@ -62,7 +62,7 @@ exit
                     $bootmenu_blocks = $bootmenu->getBootMenuBlockObjs();
                 } else {
                     $ipxeBlockModel = new IpxeBlockModel();
-                    $default_block          = $ipxeBlockModel->where('name', 'default')->first();
+                    $default_block  = $ipxeBlockModel->where('name', 'default')->first();
                     if (! empty($default_block)) {
                         $bootMenuBlock   = new BootMenuBlocks(['id' => 0, 'boot_menu_id' => 0, 'block_id' => $default_block->id, 'key' => '']);
                         $bootmenu_blocks = [$bootMenuBlock];
@@ -213,6 +213,7 @@ goto main_menu
 <?php if (empty($error_message) && empty($configure)) {
     $message = 'Computer ';
     if (! empty($computer)) {
+        $computerModel->update($computer->id,['last_boot'=>$current_datetime->toDateTimeString()]);
         $message .= "with uuid {$computer->uuid} ";
     }
     $message .= "from IP: {$IP} received menu ";

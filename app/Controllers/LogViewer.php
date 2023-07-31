@@ -194,9 +194,9 @@ class LogViewer extends BaseController
             $fileName   = basename(base64_decode($file, true));
             $fileExists = file_exists($this->logFolderPath . $fileName);
             if (! empty($file) && ! empty($fileName) && $fileExists) {
-                $singleLine         = $request->getGet(self::API_LOG_STYLE_QUERY_PARAM);
-                $singleLine         = $singleLine === true || $singleLine === 'true' || $singleLine === '1';
-                $logs               = $this->processLogsForAPI($file, $singleLine);
+                $singleLine = $request->getGet(self::API_LOG_STYLE_QUERY_PARAM);
+                $singleLine = $singleLine === true || $singleLine === 'true' || $singleLine === '1';
+                $logs       = $this->processLogsForAPI($file, $singleLine);
                 $response   = $logs;
             } else {
                 $response['error']['message'] = 'Invalid File Name Supplied: [' . json_encode($file) . ']';
@@ -355,15 +355,16 @@ class LogViewer extends BaseController
             return null;
         }
 
-
-        $logs = [];
-        $log_array = file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $logs          = [];
+        $log_array     = file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $log_array_num = count($log_array);
-        for($i=0; $i<$log_array_num; $i++) {
-            if(!str_contains($log_array[$i], "Session: Class initialized using")){
+
+        for ($i = 0; $i < $log_array_num; $i++) {
+            if (! str_contains($log_array[$i], 'Session: Class initialized using')) {
                 $logs[] = $log_array[$i];
             }
         }
+
         return $logs;
     }
 
@@ -388,20 +389,22 @@ class LogViewer extends BaseController
             return 'File Size too Large. Please download it locally';
         }
 
-        if(! $singleLine) {
-            $logs = [];
-            $log_array = file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if (! $singleLine) {
+            $logs          = [];
+            $log_array     = file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             $log_array_num = count($log_array);
-            for($i=0; $i<$log_array_num; $i++) {
-                if(!str_contains($log_array[$i], "Session: Class initialized using")){
+
+            for ($i = 0; $i < $log_array_num; $i++) {
+                if (! str_contains($log_array[$i], 'Session: Class initialized using')) {
                     $logs[] = $log_array[$i];
                 }
             }
+
             return $logs;
         }
-        else {
-            return file_get_contents($fileName);
-        }
+
+        return file_get_contents($fileName);
+
     }
 
     /**

@@ -106,6 +106,10 @@ class InitDB extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
+            'last_boot' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->addUniqueKey('uuid');

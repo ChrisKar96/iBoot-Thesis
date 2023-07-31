@@ -135,8 +135,8 @@ class User extends Entity
      * @OA\Property(
      *     description="created_at",
      *     title="created_at",
-     *     type="string",
-     * 	   format="-",
+     *     type="datetime",
+     * 	   format="Y-m-d H:i:s",
      * 	   nullable=true,
      * )
      */
@@ -146,8 +146,8 @@ class User extends Entity
      * @OA\Property(
      *     description="updated_at",
      *     title="updated_at",
-     *     type="string",
-     * 	   format="-",
+     *     type="datetime",
+     * 	   format="Y-m-d H:i:s",
      * 	   nullable=true,
      * )
      */

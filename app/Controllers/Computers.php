@@ -73,6 +73,14 @@ class Computers extends BaseController
                                     }
                                 },
                                 formatterParams: labs,
+                            },
+                            {title:"last_boot", field:"last_boot", formatter:"datetime",
+                                formatterParams:{
+                                    inputFormat:"yyyy-MM-dd HH:ss",
+                                    outputFormat:"dd/MM/yy",
+                                    invalidPlaceholder:"(invalid date)",
+                                    timezone:"America/Los_Angeles",
+                                },
                             },',
             'JS_bef_tb' => 'let groups = {};
 
