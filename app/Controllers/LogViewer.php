@@ -186,8 +186,7 @@ class LogViewer extends BaseController
         $request = Services::request();
         if ($command === self::API_CMD_LIST) {
             // respond with a list of all the files
-            $response['status']    = true;
-            $response['log_files'] = $this->getFilesBase64Encoded();
+            $response = $this->getFilesBase64Encoded();
         } elseif ($command === self::API_CMD_VIEW) {
             // respond to view the logs of a particular file
             // $file                  = $request->getGet(self::API_FILE_QUERY_PARAM);
@@ -198,10 +197,8 @@ class LogViewer extends BaseController
                 $singleLine         = $request->getGet(self::API_LOG_STYLE_QUERY_PARAM);
                 $singleLine         = $singleLine === true || $singleLine === 'true' || $singleLine === '1';
                 $logs               = $this->processLogsForAPI($file, $singleLine);
-                $response['status'] = true;
-                $response['logs']   = $logs;
+                $response   = $logs;
             } else {
-                $response['status']           = false;
                 $response['error']['message'] = 'Invalid File Name Supplied: [' . json_encode($file) . ']';
                 $response['error']['code']    = 400;
             }
@@ -209,7 +206,6 @@ class LogViewer extends BaseController
             // $file = $request->getGet(self::API_FILE_QUERY_PARAM);
 
             if (null === $file) {
-                $response['status']           = false;
                 $response['error']['message'] = 'NULL value is not allowed for file param';
                 $response['error']['code']    = 400;
             } else {
@@ -225,25 +221,22 @@ class LogViewer extends BaseController
 
                 if (! empty($file) && $fileExists) {
                     $this->deleteFiles($file);
-                    $response['status']  = true;
                     $response['message'] = 'File [' . $file . '] deleted';
                 } else {
-                    $response['status']           = false;
                     $response['error']['message'] = 'File does not exist';
                     $response['error']['code']    = 404;
                 }
             }
         } else {
-            $response['status']           = false;
             $response['error']['message'] = 'Unsupported Query Command [' . $command . ']';
             $response['error']['code']    = 400;
         }
 
         // convert response to json and respond
         header('Content-Type: application/json');
-        if (! $response['status']) {
+        if (! empty($response['error'])) {
             // set a generic bad request code
-            http_response_code(400);
+            http_response_code($response['error']['code']);
         } else {
             http_response_code(200);
         }
@@ -362,7 +355,16 @@ class LogViewer extends BaseController
             return null;
         }
 
-        return file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        $logs = [];
+        $log_array = file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $log_array_num = count($log_array);
+        for($i=0; $i<$log_array_num; $i++) {
+            if(!str_contains($log_array[$i], "Session: Class initialized using")){
+                $logs[] = $log_array[$i];
+            }
+        }
+        return $logs;
     }
 
     /**
@@ -386,7 +388,20 @@ class LogViewer extends BaseController
             return 'File Size too Large. Please download it locally';
         }
 
-        return (! $singleLine) ? file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : file_get_contents($fileName);
+        if(! $singleLine) {
+            $logs = [];
+            $log_array = file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $log_array_num = count($log_array);
+            for($i=0; $i<$log_array_num; $i++) {
+                if(!str_contains($log_array[$i], "Session: Class initialized using")){
+                    $logs[] = $log_array[$i];
+                }
+            }
+            return $logs;
+        }
+        else {
+            return file_get_contents($fileName);
+        }
     }
 
     /**
