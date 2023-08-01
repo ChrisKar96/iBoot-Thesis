@@ -114,5 +114,6 @@ return [
     'privacy_policy'                         => 'PRIVACY POLICY',
     'api_spec'                               => 'API Specification',
     'registration_is_disabled'               => 'Registration is disabled.',
-    'ask_admin_register'                     => 'If you don\'\'t have an account, contact the administrator.',
+    'ask_admin_register'                     => 'If you don\'t have an account, contact the administrator.',
+    'last_boot'                              => 'Last Booted at',
 ];

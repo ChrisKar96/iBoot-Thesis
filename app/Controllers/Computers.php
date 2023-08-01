@@ -16,24 +16,25 @@ class Computers extends BaseController
     private function index($opt): string
     {
         $options = [
-            'title'     => lang('Text.computers'),
-            'tabulator' => true,
-            'apiTarget' => base_url('/api/computer'),
-            'columns'   => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input", headerFilter:"input"},
-                            {title:"UUID", field:"uuid", sorter:"string", editor:"input", validator:["required", "unique", "regex:\\[0-9a-fA-F\-]{36}"], headerFilter:"input",
+            'title'      => lang('Text.computers'),
+            'tabulator'  => true,
+            'reloadable' => true,
+            'apiTarget'  => base_url('/api/computer'),
+            'columns'    => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input", editable:editCheck, headerFilter:"input"},
+                            {title:"UUID", field:"uuid", sorter:"string", editor:"input", editable:editCheck, validator:["required", "unique", "regex:\\[0-9a-fA-F\-]{36}"], headerFilter:"input",
                                 editorParams:{
                                     mask:"********-****-****-****-************",
                                     maskAutoFill:true
                                 }
                             },
-                            {title:"MAC", field:"mac", sorter:"string", editor:"input", validator:["required", "unique", "regex:\\[0-9a-fA-F:]{17}"], headerFilter:"input",
+                            {title:"MAC", field:"mac", sorter:"string", editor:"input", editable:editCheck, validator:["required", "unique", "regex:\\[0-9a-fA-F:]{17}"], headerFilter:"input",
                                 editorParams:{
                                     mask:"**:**:**:**:**:**",
                                     maskAutoFill:true
                                 }
                             },
-                            {title:"' . lang('Text.notes') . '", field:"notes", sorter:"string", editor:"textarea", headerFilter:"input"},
-                            {title:"' . lang('Text.groups') . '", field:"groups", sorter:"string", editor:"list",
+                            {title:"' . lang('Text.notes') . '", field:"notes", sorter:"string", editor:"textarea", editable:editCheck, headerFilter:"input"},
+                            {title:"' . lang('Text.groups') . '", field:"groups", sorter:"string", editor:"list", editable:editCheck,
                                 editorParams:{
                                     multiselect:true,
                                     clearable:true,
@@ -58,7 +59,7 @@ class Computers extends BaseController
                                 formatterParams: groups,
                             },
                             {
-                                title:"' . lang('Text.lab') . '", field:"lab", headerSort:false, editor:"list",
+                                title:"' . lang('Text.lab') . '", field:"lab", headerSort:false, editor:"list", editable:editCheck,
                                 editorParams:{
                                     values:labs,
                                     clearable:true
@@ -74,13 +75,11 @@ class Computers extends BaseController
                                 },
                                 formatterParams: labs,
                             },
-                            {title:"last_boot", field:"last_boot", formatter:"datetime",
+                            {title:"' . lang('Text.last_boot') . '", field:"last_boot", formatter:"datetimediff",
                                 formatterParams:{
-                                    inputFormat:"yyyy-MM-dd HH:ss",
-                                    outputFormat:"dd/MM/yy",
-                                    invalidPlaceholder:"(invalid date)",
-                                    timezone:"America/Los_Angeles",
-                                },
+                                    unit:"minutes",
+                                    suffix:"minutes ago",
+                                }
                             },',
             'JS_bef_tb' => 'let groups = {};
 
@@ -107,6 +106,9 @@ class Computers extends BaseController
                                 }
 
                                 getLabs();
+
+                                let editable = true;
+                                function editCheck() {return editable;}
                 ',
         ];
 

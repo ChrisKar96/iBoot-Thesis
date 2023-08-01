@@ -15,6 +15,21 @@ if (isset($title, $columns, $apiTarget)): ?>
             <div class="mb-4 mt-2" id="calendar"></div>
             <?php endif; ?>
 
+            <?php if(isset($reloadable) && $reloadable) : ?>
+            <div class="row justify-content-end">
+                <div class="col-md-4">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Auto-Reload</span>
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" onclick="ToggleReload()" id="reload_enabled" aria-label="Auto-reload"/>
+                        </div>
+                        <span class="input-group-text" id="minutes_label" hidden>minutes since last boot</span>
+                        <input type="number" class="form-control" aria-label="minutes since last boot" id="minutes" hidden/>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <div class="my-2">
                 <button class="btn btn-primary" id="add-row"><?= lang('Text.add_row'); ?></button>
                 <button class="btn btn-danger" style="float: right; display: none;" id="reset" disabled><?= lang('Text.reset_table'); ?></button>
@@ -251,7 +266,7 @@ if (isset($title, $columns, $apiTarget)): ?>
                         updates.push(postRow(row.getData()));
                     })
                     Promise.all(updates).then(function () {
-                        table.setData("<?= $apiTarget ?>");
+                        table.setData();
                         document.getElementById("save").style.display = "none";
                         document.getElementById("reset").style.display = "none";
                         <?php if (isset($calendar) && $calendar) : ?>
@@ -268,7 +283,7 @@ if (isset($title, $columns, $apiTarget)): ?>
                     document.getElementById("reset").style.display = "none";
                     document.getElementById("save").disabled = true;
                     document.getElementById("reset").disabled = true;
-                    table.setData("<?= $apiTarget ?>");
+                    table.setData();
                     <?php if (isset($calendar) && $calendar) : ?>
                     getSchedules();
                     <?php endif; ?>
@@ -276,18 +291,32 @@ if (isset($title, $columns, $apiTarget)): ?>
 
                 //Reset table contents on "Reset the table" button click
                 document.getElementById("reset").addEventListener("click", reset);
-
+                <?php if(isset($reloadable) && $reloadable) : ?>
+                let interval;
+                function ToggleReload() {
+                    x = document.getElementById("reload_enabled").checked;
+                    if (x) {
+                        document.getElementById("save").style.display = "none";
+                        document.getElementById("reset").style.display = "none";
+                        document.getElementById("save").disabled = true;
+                        document.getElementById("reset").disabled = true;
+                        editable = false;
+                        interval = setInterval(function(){table.setData();},5000);
+                    }
+                    else {
+                        editable = true;
+                        clearInterval(interval);
+                    }
+                }
+                <?php endif; ?>
 				<?php
     if (isset($JS_aft_tb)) {
         echo $JS_aft_tb;
     }
 ?>
-
             </script>
         </div>
     </main>
-
 <?php
 endif; ?>
-
 <?= $this->endSection() ?>

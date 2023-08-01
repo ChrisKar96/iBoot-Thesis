@@ -35,8 +35,8 @@ class User extends BaseController
                                 {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string", editor:"input", headerFilter:"input", validator:["maxLength:15"]},
                                 {title:"' . lang('Text.username') . '", field:"username", sorter:"string", editor:"input", headerFilter:"input", validator:["required","unique","string","minLength:3","maxLength:40"]},
                                 {title:"' . lang('Text.password') . '", field:"password", editor:"input", validator:["required","minLength:5","maxLength:255"]},
-                                {title:"' . lang('Text.administrator') . '", field:"isAdmin", sorter:"string", editor:"tickCross", formatter:"tickCross"},
-                                {title:"' . lang('Text.verifiedEmail') . '", field:"verifiedEmail", sorter:"string", editor:"tickCross", formatter:"tickCross"},
+                                {title:"' . lang('Text.administrator') . '", field:"isAdmin", sorter:"string", editor:"tickCross", formatter:"tickCross", headerFilter:"tickCross",  headerFilterParams:{"tristate":true},headerFilterEmptyCheck:function(value){return value === null}},
+                                {title:"' . lang('Text.verifiedEmail') . '", field:"verifiedEmail", sorter:"string", editor:"tickCross", formatter:"tickCross", headerFilter:"tickCross",  headerFilterParams:{"tristate":true},headerFilterEmptyCheck:function(value){return value === null}},
                                 {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", formatter:"datetime"},
                                 {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", formatter:"datetime"},
                                 {
