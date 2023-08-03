@@ -115,5 +115,6 @@ return [
     'api_spec'                               => 'API Specification',
     'registration_is_disabled'               => 'Registration is disabled.',
     'ask_admin_register'                     => 'If you don\'t have an account, contact the administrator.',
-    'last_boot'                              => 'Last Booted at',
+    'last_boot'                              => 'Booted',
+    'auto_reload'                            => 'Auto Reload',
 ];

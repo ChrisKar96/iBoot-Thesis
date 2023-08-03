@@ -19,9 +19,9 @@ if (isset($title, $columns, $apiTarget)): ?>
             <div class="row justify-content-end">
                 <div class="col-md-3">
                     <div class="input-group mb-3 justify-content-end">
-                        <span class="input-group-text">Auto-Reload</span>
+                        <span class="input-group-text"><?= lang('Text.auto_reload'); ?></span>
                         <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="checkbox" onclick="ToggleReload()" id="reload_enabled" aria-label="Auto-Reload"/>
+                            <input class="form-check-input mt-0" type="checkbox" onclick="ToggleReload()" id="reload_enabled" aria-label="auto-reload"/>
                         </div>
                     </div>
                 </div>
@@ -234,11 +234,22 @@ if (isset($title, $columns, $apiTarget)): ?>
                 });
 
                 table.on("cellEdited", function(){
-                    if(table.getEditedCells()){
+                    if(table.getEditedCells().length > 0){
+                        table.getEditedCells().forEach(cell => {
+                            if((Array.isArray(cell.getOldValue()) && (cell.getOldValue().sort().toString() === cell.getValue().sort().toString() || cell.getInitialValue().sort().toString() === cell.getValue().sort().toString()))
+                            || (cell.getOldValue() === cell.getValue() || cell.getInitialValue() === cell.getValue())){cell.clearEdited();}})
+                    }
+                    if(table.getEditedCells().length > 0){
                         document.getElementById("save").disabled = false;
                         document.getElementById("reset").disabled = false;
                         document.getElementById("reset").style.display = "";
                         document.getElementById("save").style.display = "";
+                    }
+                    else {
+                        document.getElementById("save").style.display = "none";
+                        document.getElementById("reset").style.display = "none";
+                        document.getElementById("save").disabled = true;
+                        document.getElementById("reset").disabled = true;
                     }
                 });
 
@@ -288,6 +299,33 @@ if (isset($title, $columns, $apiTarget)): ?>
 
                 //Reset table contents on "Reset the table" button click
                 document.getElementById("reset").addEventListener("click", reset);
+
+                function multiListHeaderFilter(headerValue, rowValue, rowData, filterParams){
+                    let flagEmpty = false;
+                    let hv = headerValue;
+                    if(hv.includes('null')){
+                        flagEmpty = true;
+                        hv = hv.filter(function(item) {
+                            return item !== 'null'
+                        });
+                    }
+                    let checker = (arr, target) => target.every(v => arr.includes(v));
+                    if(flagEmpty){
+                        if(hv.length === 0){
+                            return rowValue.length === 0;
+                        }
+                        return checker(rowValue, hv) || rowValue.length === 0;
+                    }
+                    return checker(rowValue, hv);
+                }
+
+                function ListHeaderFilter(headerValue, rowValue, rowData, filterParams){
+                    if(headerValue === 'null'){
+                        return rowValue === null;
+                    }
+                    return rowValue === headerValue;
+                }
+
                 <?php if(isset($reloadable) && $reloadable) : ?>
                 let interval;
                 function ToggleReload() {
