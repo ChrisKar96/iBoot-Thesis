@@ -34,7 +34,12 @@ class Computers extends BaseController
                                 }
                             },
                             {title:"' . lang('Text.notes') . '", field:"notes", sorter:"string", editor:"textarea", editable:editCheck, headerFilter:"input"},
-                            {title:"' . lang('Text.groups') . '", field:"groups", sorter:"string", editor:"list", editable:editCheck,
+                            {title:"' . lang('Text.groups') . '", field:"groups", sorter:"string", editor:"list", headerSort:true, headerFilter:true, editable:editCheck,
+                                headerFilterParams:{
+                                    multiselect:true,
+                                    clearable:true,
+                                    values:groups
+                                },
                                 editorParams:{
                                     multiselect:true,
                                     clearable:true,
@@ -59,7 +64,11 @@ class Computers extends BaseController
                                 formatterParams: groups,
                             },
                             {
-                                title:"' . lang('Text.lab') . '", field:"lab", headerSort:false, editor:"list", editable:editCheck,
+                                title:"' . lang('Text.lab') . '", field:"lab", headerSort:true, headerFilter:true, editor:"list", editable:editCheck,
+                                headerFilterParams:{
+                                    values:labs,
+                                    clearable:true
+                                },
                                 editorParams:{
                                     values:labs,
                                     clearable:true
@@ -75,11 +84,13 @@ class Computers extends BaseController
                                 },
                                 formatterParams: labs,
                             },
-                            {title:"' . lang('Text.last_boot') . '", field:"last_boot", formatter:"datetimediff",
-                                formatterParams:{
-                                    unit:"minutes",
-                                    suffix:"minutes ago",
-                                }
+                            {title:"' . lang('Text.last_boot') . '", field:"last_boot",
+                            headerFilter:"input", headerFilterPlaceholder:"Max Minutes", headerFilterFunc:minutesHeaderFilter,
+                            formatter:function(cell, formatterParams, onRendered){
+                                    if(typeof cell.getValue() !== "undefined"){
+                                        return luxon.DateTime.fromSQL(cell.getValue()).setLocale("'. session()->get('locale') .'").toRelative();
+                                    }
+                                },
                             },',
             'JS_bef_tb' => 'let groups = {};
 
@@ -109,6 +120,13 @@ class Computers extends BaseController
 
                                 let editable = true;
                                 function editCheck() {return editable;}
+                                
+                                function minutesHeaderFilter(headerValue, rowValue, rowData, filterParams){
+                                   if(typeof rowData.last_boot === "undefined" || rowData.last_boot === null) {
+                                        return false;
+                                    }
+                                    return luxon.DateTime.fromSQL(rowData.last_boot).diffNow().shiftTo("minutes").values.minutes * (-1) < headerValue;
+                                }
                 ',
         ];
 

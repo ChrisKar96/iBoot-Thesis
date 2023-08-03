@@ -17,14 +17,12 @@ if (isset($title, $columns, $apiTarget)): ?>
 
             <?php if(isset($reloadable) && $reloadable) : ?>
             <div class="row justify-content-end">
-                <div class="col-md-4">
-                    <div class="input-group mb-3">
+                <div class="col-md-3">
+                    <div class="input-group mb-3 justify-content-end">
                         <span class="input-group-text">Auto-Reload</span>
                         <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="checkbox" onclick="ToggleReload()" id="reload_enabled" aria-label="Auto-reload"/>
+                            <input class="form-check-input mt-0" type="checkbox" onclick="ToggleReload()" id="reload_enabled" aria-label="Auto-Reload"/>
                         </div>
-                        <span class="input-group-text" id="minutes_label" hidden>minutes since last boot</span>
-                        <input type="number" class="form-control" aria-label="minutes since last boot" id="minutes" hidden/>
                     </div>
                 </div>
             </div>
@@ -114,7 +112,6 @@ if (isset($title, $columns, $apiTarget)): ?>
                                         eventlist[response[i].id].end = response[i].date + 'T' + response[i].time_to + '+00:00';
                                     }
                                 }
-
                             }
                             calendar.removeAllEventSources();
                             calendar.addEventSource(Object.values(eventlist));
