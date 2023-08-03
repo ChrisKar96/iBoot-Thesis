@@ -72,7 +72,10 @@ class Computer extends ResourceController
      *         @OA\JsonContent(type="object",
      *            @OA\Property(property="data",type="array",@OA\Items(ref="#/components/schemas/Computer")),
      *         ),
-     *     )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
      * )
      *
      * Return an array of resource objects, themselves in array format
@@ -114,7 +117,10 @@ class Computer extends ResourceController
      *     @OA\Response(
      *         response=404,
      *         description="Computer not found"
-     *     )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
      * )
      *
      * Return the properties of a resource object
@@ -462,6 +468,9 @@ class Computer extends ResourceController
      *         response=405,
      *         description="Validation exception"
      *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
      *     requestBody={"$ref": "#/components/requestBodies/Computer"}
      * )
      * @OA\Post(
@@ -600,7 +609,7 @@ class Computer extends ResourceController
      *     ),
      *     security={
      *         {"bearerAuth": {}}
-     *     },
+     *     }
      * )
      *
      * Delete the designated resource object from the model
@@ -660,7 +669,10 @@ class Computer extends ResourceController
      *     @OA\Response(
      *         response=404,
      *         description="Computer not found",
-     *     )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
      * )
      * @OA\Post(
      *     path="/computer/unassigned/{id}/delete",
@@ -683,7 +695,10 @@ class Computer extends ResourceController
      *     @OA\Response(
      *         response=404,
      *         description="Computer not found",
-     *     )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
      * )
      *
      * Delete the designated resource object from the model

@@ -117,7 +117,7 @@ $routes->group('api', ['namespace' => 'iBoot\Controllers\Api'], static function 
             $routes->post('(:num)/delete', 'Computer::delete/$1');
             $routes->delete('(:num)', 'Computer::delete/$1');
         });
-        $routes->group('unassigned', ['namespace' => 'iBoot\Controllers\Api'], static function ($routes) {
+        $routes->group('unassigned', ['namespace' => 'iBoot\Controllers\Api', 'filter' => 'api-auth'], static function ($routes) {
             $routes->get('', 'Computer::findUnassigned');
             $routes->post('', 'Computer::create');
             $routes->get('(:num)', 'Computer::showUnassigned/$1');
