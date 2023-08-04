@@ -29,8 +29,18 @@ class Groups extends BaseController
                                         multiselect:true,
                                         values:computers
                                     },
+                                    headerFilter:"list",
+                                    headerFilterFunc:multiListHeaderFilter,
+                                    headerFilterEmptyCheck:function(value){
+                                        return !value.length;
+                                    },
+                                    headerFilterParams: {
+                                        values:computers,
+                                        clearable:true,
+                                        multiselect:true
+                                    },
                                     formatter:function (cell, formatterParams, onRendered) {
-										if(typeof cell.getValue() !== "undefined"){
+                                        if(typeof cell.getValue() !== "undefined" && cell.getValue().length !== 0){
 											values = cell.getValue().toString().split(",");
 											let formatted = "";
 											for(i = 0; i < values.length; ++i) {
@@ -52,7 +62,12 @@ class Groups extends BaseController
                                 async function getComputers(){
                                     await api_call("' . base_url('/api/computer') . '", "GET").then(function(response) {
                                         for (i = 0; i < response.length; ++i) {
-                                            computers[response[i].id] = response[i].name;
+                                            if (response[i].name !== null) {
+                                                computers[response[i].id] = response[i].name;
+                                            }
+                                            else {
+                                                computers[response[i].id] = response[i].uuid;
+                                            }
                                         }
                                     });
                                 }

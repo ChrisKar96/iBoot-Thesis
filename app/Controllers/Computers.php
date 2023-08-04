@@ -95,7 +95,7 @@ class Computers extends BaseController
                                 min:1,
                                 step:1,
                                 selectContents:true,
-                            },
+                            }, headerPopup:"' . lang('Text.enter_minutes') . '",
                             formatter:function(cell, formatterParams, onRendered){
                                     if(typeof cell.getValue() !== "undefined"){
                                         return luxon.DateTime.fromSQL(cell.getValue()).setLocale("' . session()->get('locale') . '").toRelative();

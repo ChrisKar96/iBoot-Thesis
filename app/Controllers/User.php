@@ -39,28 +39,37 @@ class User extends BaseController
                                 {title:"' . lang('Text.verifiedEmail') . '", field:"verifiedEmail", sorter:"string", editor:"tickCross", formatter:"tickCross", headerFilter:"tickCross",  headerFilterParams:{"tristate":true},headerFilterEmptyCheck:function(value){return value === null}},
                                 {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", formatter:"datetime"},
                                 {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", formatter:"datetime"},
-                                {
-                                    title:"' . lang('Text.labs') . '", field:"labs", editor:"list",
-									editorParams:{
+                                {title:"' . lang('Text.labs') . '", field:"labs", sorter:"string", editor:"list", headerSort:true,
+                                    headerFilter:"list",
+                                    headerFilterFunc:multiListHeaderFilter,
+                                    headerFilterEmptyCheck:function(value){
+                                        return !value && !value.length;
+                                    },
+                                    headerFilterParams: {
+                                        values:labs,
+                                        clearable:true,
+                                        multiselect:true
+                                    },
+                                    editorParams:{
                                         multiselect:true,
-										values:labs,
-										disabled:true,
-									},
+                                        clearable:true,
+                                        values:labs
+                                    },
                                     formatter:function (cell, formatterParams, onRendered) {
-										if(typeof cell.getValue() !== "undefined"){
-											values = cell.getValue().toString().split(",");
-											let formatted = "";
-											for(i = 0; i < values.length; ++i) {
-												if(typeof formatterParams[values[i]] === "undefined") {
-													console.warn(\'Missing display value for \' + values[i]);
-													return values[i];
-												}
-												formatted += formatterParams[values[i]];
-												if(i < values.length - 1)
-													formatted += ", ";
-											}
-											return formatted;
-										}
+                                        if(typeof cell.getValue() !== "undefined" && cell.getValue().length !== 0){
+                                            values = cell.getValue().toString().split(",");
+                                            let formatted = "";
+                                            for(i = 0; i < values.length; ++i) {
+                                                if(typeof formatterParams[values[i]] === "undefined") {
+                                                    console.warn(\'Missing display value for \' + values[i]);
+                                                    return values[i];
+                                                }
+                                                formatted += formatterParams[values[i]];
+                                                if(i < values.length - 1)
+                                                    formatted += ", ";
+                                            }
+                                            return formatted;
+                                        }
                                     },
                                     formatterParams: labs,
                                 },',

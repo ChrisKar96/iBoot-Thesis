@@ -156,9 +156,7 @@ class UserModel extends Model
         $data = parent::findAll($limit, $offset);
 
         foreach ($data as $d) {
-            if (! $d->isAdmin) {
-                $this->addLabsToUserModel($d);
-            }
+            $this->addLabsToUserModel($d);
         }
 
         return $data;

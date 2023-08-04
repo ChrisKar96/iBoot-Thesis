@@ -117,4 +117,6 @@ return [
     'ask_admin_register'                     => 'If you don\'t have an account, contact the administrator.',
     'last_boot'                              => 'Booted',
     'auto_reload'                            => 'Auto Reload',
+    'clear_filters'                          => 'Clear Filters',
+    'enter_minutes'                          => 'Minutes since last boot',
 ];

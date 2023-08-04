@@ -22,17 +22,31 @@ class Schedules extends BaseController
                 'tabulator' => true,
                 'calendar'  => true,
                 'apiTarget' => base_url('/api/schedule'),
-                'columns'   => '{title:"' . lang('Text.time_from') . '", field:"time_from", headerSort:false, editor:"time",
+                'columns'   => '{title:"' . lang('Text.time_from') . '", field:"time_from", headerSort:true, editor:"time",
                                     editorParams:{
                                         format:"HH:mm",
                                     },
+                                    headerFilter:minMaxFilterEditor, headerFilterFunc:minMaxFilterFunction, headerFilterLiveFilter:false,
+                                    headerFilterParams:{
+                                        type:"time",
+                                    },
                                 },
-                                {title:"' . lang('Text.time_to') . '", field:"time_to", headerSort:false, editor:"time",
+                                {title:"' . lang('Text.time_to') . '", field:"time_to", headerSort:true, editor:"time",
                                     editorParams:{
                                         format:"HH:mm",
                                     },
+                                    headerFilter:minMaxFilterEditor, headerFilterFunc:minMaxFilterFunction, headerFilterLiveFilter:false,
+                                    headerFilterParams:{
+                                        type:"time",
+                                    },
                                 },
-                                {title:"' . lang('Text.day_of_week') . '", field:"day_of_week", headerSort:false, editor:"list",
+                                {title:"' . lang('Text.day_of_week') . '", field:"day_of_week", headerSort:true, editor:"list",
+                                    headerFilter:"list",
+                                    headerFilterParams:{
+                                        values:dow,
+                                        clearable:true
+                                    },
+                                    headerFilterFunc:ListHeaderFilter,
                                     editorParams:{
                                         values:dow,
                                         clearable:true
@@ -48,16 +62,26 @@ class Schedules extends BaseController
                                     },
                                     formatterParams: dow
                                 },
-                                {title:"' . lang('Text.date') . '", field:"date", headerSort:false, editor:"date",
+                                {title:"' . lang('Text.date') . '", field:"date", headerSort:true, editor:"date",
                                     editorParams:{
                                         format:"yyyy-MM-dd",
                                     },
+                                    headerFilter:minMaxFilterEditor, headerFilterFunc:minMaxFilterFunction, headerFilterLiveFilter:false,
+                                    headerFilterParams:{
+                                        type:"date",
+                                    },
                                 },
-                                {title:"' . lang('Text.boot_menu') . '", field:"boot_menu_id", headerSort:false, editor:"list",
+                                {title:"' . lang('Text.boot_menu') . '", field:"boot_menu_id", headerSort:true, editor:"list",
                                     editorParams:{
                                         values:bootmenu,
                                         clearable:true
                                     },
+                                    headerFilter:"list",
+                                    headerFilterParams:{
+                                        values:bootmenu,
+                                        clearable:true
+                                    },
+                                    headerFilterFunc:ListHeaderFilter,
                                     formatter:function (cell, formatterParams, onRendered) {
                                         if(typeof cell.getValue() !== "undefined"){
                                             if(typeof formatterParams[cell.getValue()] === "undefined") {
@@ -69,7 +93,13 @@ class Schedules extends BaseController
                                     },
                                     formatterParams: bootmenu
                                 },
-                                {title:"' . lang('Text.group') . '", field:"group_id", headerSort:false, editor:"list",
+                                {title:"' . lang('Text.group') . '", field:"group_id", headerSort:true, editor:"list",
+                                    headerFilter:"list",
+                                    headerFilterParams:{
+                                        values:groups,
+                                        clearable:true
+                                    },
+                                    headerFilterFunc:ListHeaderFilter,
                                     editorParams:{
                                         values:groups,
                                         clearable:true

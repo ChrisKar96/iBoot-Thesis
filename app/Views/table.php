@@ -27,6 +27,13 @@ if (isset($title, $columns, $apiTarget)): ?>
                 </div>
             </div>
             <?php endif; ?>
+            <div class="row justify-content-end">
+                <div class="col-md-3">
+                    <div class="input-group mb-3 justify-content-end">
+                        <button class="btn btn-secondary" onclick="table.clearFilter(true)" id="clear_filters"><?= lang('Text.clear_filters'); ?></button>
+                    </div>
+                </div>
+            </div>
 
             <div class="my-2">
                 <button class="btn btn-primary" id="add-row"><?= lang('Text.add_row'); ?></button>
@@ -148,6 +155,81 @@ if (isset($title, $columns, $apiTarget)): ?>
                         });
                         calendar.render();
                     });
+
+                function minMaxFilterEditor(cell, onRendered, success, cancel, editorParams){
+
+                    let end;
+
+                    let container = document.createElement("span");
+
+                    //create and style inputs
+                    let start = document.createElement("input");
+                    start.setAttribute("type", editorParams.type);
+                    start.setAttribute("placeholder", "Min");
+                    start.style.padding = "4px";
+                    start.style.width = "50%";
+                    start.style.boxSizing = "border-box";
+
+                    start.value = cell.getValue();
+
+                    function buildValues(){
+                        success({
+                            start:start.value,
+                            end:end.value,
+                        });
+                    }
+
+                    function keypress(e){
+                        if(e.keyCode == 13){
+                            buildValues();
+                        }
+
+                        if(e.keyCode == 27){
+                            cancel();
+                        }
+                    }
+
+                    end = start.cloneNode();
+                    end.setAttribute("placeholder", "Max");
+
+                    start.addEventListener("change", buildValues);
+                    start.addEventListener("blur", buildValues);
+                    start.addEventListener("keydown", keypress);
+
+                    end.addEventListener("change", buildValues);
+                    end.addEventListener("blur", buildValues);
+                    end.addEventListener("keydown", keypress);
+
+
+                    container.appendChild(start);
+                    container.appendChild(end);
+
+                    return container;
+                }
+
+                //custom max min filter function
+                function minMaxFilterFunction(headerValue, rowValue, rowData, filterParams){
+                    //headerValue - the value of the header filter element
+                    //rowValue - the value of the column in this row
+                    //rowData - the data for the row being filtered
+                    //filterParams - params object passed to the headerFilterFuncParams property
+
+                    if(rowValue){
+                        if(headerValue.start != ""){
+                            if(headerValue.end != ""){
+                                return rowValue >= headerValue.start && rowValue <= headerValue.end;
+                            }else{
+                                return rowValue >= headerValue.start;
+                            }
+                        }else{
+                            if(headerValue.end != ""){
+                                return rowValue <= headerValue.end;
+                            }
+                        }
+                    }
+
+                    return true; //must return a boolean, true if it passes the filter.
+                }
                 <?php endif; ?>
 
                 let table = new Tabulator("#table", {
