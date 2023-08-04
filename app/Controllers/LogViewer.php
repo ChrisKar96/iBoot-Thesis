@@ -284,8 +284,8 @@ class LogViewer extends BaseController
                 // this log line is a continuation of previous logline
                 // so let's add them as extra
                 $prevLog                        = $superLog[count($superLog) - 1];
-                $extra                          = (array_key_exists('extra', $prevLog)) ? $prevLog['extra'] : '';
-                $prevLog['extra']               = $extra . '<br>' . $log;
+                $extra                          = (array_key_exists('extra', $prevLog)) ? $prevLog['extra'] . '<br>' : '';
+                $prevLog['extra']               = $extra . $log;
                 $superLog[count($superLog) - 1] = $prevLog;
             }
         }

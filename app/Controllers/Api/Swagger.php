@@ -11,8 +11,6 @@
 
 namespace iBoot\Controllers\Api;
 
-use CodeIgniter\Files\Exceptions\FileNotFoundException;
-use CodeIgniter\Files\File;
 use Config;
 use iBoot\Controllers\BaseController;
 use OpenApi\Annotations as OA;
@@ -43,9 +41,7 @@ class Swagger extends BaseController
         $paths       = new Config\Paths();
         $apiSpecPath = $paths->writableDirectory . '/cache/swagger.json';
 
-        try {
-            new File($apiSpecPath, true);
-        } catch (FileNotFoundException $fnf) {
+        if (! file_exists($apiSpecPath)) {
             Swagger::generateAPISpec();
         }
 

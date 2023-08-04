@@ -71,8 +71,10 @@ class ComputerModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getLastBooted(int $minutes = 5){
+    public function getLastBooted(int $minutes = 5)
+    {
         $this->builder()->whereNotIn('labs', '')->whereNotIn('last_boot', '')->where('last_boot <=', Time::now()->subMinutes($minutes)->toDateTimeString());
+
         return $this->builder->get()->getResultArray();
     }
 

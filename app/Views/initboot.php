@@ -37,7 +37,7 @@ exit
     } else {
         if (empty($computer)) {
             if(! empty($uuid) && ! empty($mac)) {
-                if (!$computerModel->insert(['name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => "Added from {$IP} at {$current_datetime->toDateTimeString()}.", 'lab' => null])) {
+                if (! $computerModel->insert(['name' => null, 'mac' => $mac, 'uuid' => $uuid, 'notes' => "Added from {$IP} at {$current_datetime->toDateTimeString()}.", 'lab' => null])) {
                     $error_message = "There was a problem registering the computer.\nitem Maybe its' UUID or MAC address are already used.\nitem Try to resolve the issue before retrying.\n";
                     log_message('warning', "Error registering computer at initboot\nUUID: {uuid}\nMAC: {mac}\nIP: {ip}\nErrors: {errors}", ['uuid' => $uuid, 'mac' => $mac, 'ip' => $IP, 'errors' => json_encode($computerModel->errors(), JSON_PRETTY_PRINT)]);
                 }
@@ -132,7 +132,6 @@ item --gap Main menu:
         }
         printf("\n");
     }
-    printf("\n");
 }?>
 item
 item --gap Local Boot:
@@ -213,7 +212,7 @@ goto main_menu
 <?php if (empty($error_message) && empty($configure)) {
     $message = 'Computer ';
     if (! empty($computer)) {
-        $computerModel->update($computer->id,['last_boot'=>$current_datetime->toDateTimeString()]);
+        $computerModel->update($computer->id, ['last_boot' => $current_datetime->toDateTimeString()]);
         $message .= "with uuid {$computer->uuid} ";
     }
     $message .= "from IP: {$IP} received menu ";
