@@ -15,7 +15,7 @@ use iBoot\Models\UserModel;
 
 class Home extends BaseController
 {
-    public function index()
+    public function index(): string
     {
         $UserModel         = new UserModel();
         $globalAdminExists = $UserModel->where('isAdmin', 1)->first();
