@@ -14,7 +14,6 @@ namespace iBoot\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use iBoot\Controllers\User;
 
 class RefreshUserToken implements FilterInterface
 {
@@ -31,8 +30,9 @@ class RefreshUserToken implements FilterInterface
             session()->set('iBootSessionID', session()->get('__ci_last_regenerate'));
         } elseif (session()->get('iBootSessionID') !== session()->get('__ci_last_regenerate')) {
             if (session()->has('user')) {
-                $user = new User();
-                $user->refreshUserToken();
+                $user = session()->get('user');
+                $user->generateAPItoken();
+                session()->set('user', $user);
             }
             session()->set('iBootSessionID', session()->get('__ci_last_regenerate'));
         }

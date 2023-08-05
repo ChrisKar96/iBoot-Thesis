@@ -15,7 +15,6 @@ use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\I18n\Time;
 use Config\Services;
 use Exception;
-use Firebase\JWT\JWT;
 use iBoot\Models\ForgotPasswordTokenModel;
 use iBoot\Models\UserModel;
 use ReflectionException;
@@ -133,7 +132,7 @@ class User extends BaseController
             $user = $model->where('username', $username)->orWhere('email', $username)->first();
 
             // Get user's API token
-            $user->token = $this->generateAPItoken($username);
+            $user->generateAPItoken();
 
             // Storing session values
             $this->setUserSession($user);
@@ -160,36 +159,6 @@ class User extends BaseController
         ];
 
         session()->set($data);
-    }
-
-    public function refreshUserToken()
-    {
-        $user = session()->get('user');
-
-        $user->token = $this->generateAPItoken($user->username);
-
-        session()->set('user', $user);
-    }
-
-    public static function generateAPItoken($username): string
-    {
-        $key = config('JWT')->secret;
-
-        $iat = time(); // current timestamp value
-        $nbf = $iat;
-        $exp = $iat + 7200;
-
-        $payload = [
-            'iss'      => 'iBoot',
-            'aud'      => base_url(),
-            'sub'      => 'iBoot API',
-            'iat'      => $iat, // Time the JWT issued at
-            'nbf'      => $nbf, // not before in seconds
-            'exp'      => $exp, // Expiration time of token
-            'username' => $username,
-        ];
-
-        return JWT::encode($payload, $key, 'HS256');
     }
 
     public function registerAdmin()

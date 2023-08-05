@@ -12,6 +12,7 @@
 namespace iBoot\Entities;
 
 use CodeIgniter\Entity\Entity;
+use Firebase\JWT\JWT;
 use OpenApi\Annotations as OA;
 
 /**
@@ -166,5 +167,28 @@ class User extends Entity
      */
     private $labs;
 
+    private $token;
+
     protected $dates = [];
+
+    public function generateAPItoken(): void
+    {
+        $key = config('JWT')->secret;
+
+        $iat = time(); // current timestamp value
+        $nbf = $iat;
+        $exp = $iat + 7200;
+
+        $payload = [
+            'iss'      => 'iBoot',
+            'aud'      => base_url(),
+            'sub'      => 'iBoot API',
+            'iat'      => $iat, // Time the JWT issued at
+            'nbf'      => $nbf, // not before in seconds
+            'exp'      => $exp, // Expiration time of token
+            'username' => $this->attributes['username'],
+        ];
+
+        $this->attributes['token'] = JWT::encode($payload, $key, 'HS256');
+    }
 }

@@ -461,10 +461,10 @@ class User extends ResourceController
             return $this->failValidationErrors('Invalid credentials');
         }
 
-        $token = \iBoot\Controllers\User::generateAPItoken($username);
+        $user->generateAPItoken();
 
         log_message('info', 'User {username} logged into the system using the API from {ip}', ['username' => $username, 'ip' => $this->request->getIPAddress()]);
 
-        return $this->respond($token, 200, 'Login Successful');
+        return $this->respond($user->token, 200, 'Login Successful');
     }
 }
