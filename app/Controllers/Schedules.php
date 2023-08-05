@@ -30,6 +30,11 @@ class Schedules extends BaseController
                                     headerFilterParams:{
                                         type:"time",
                                     },
+                                    formatter:"datetime",
+                                    formatterParams:{
+                                        inputFormat:"HH:mm:ss",
+                                        outputFormat:"HH:mm",
+                                    },
                                 },
                                 {title:"' . lang('Text.time_to') . '", field:"time_to", headerSort:true, editor:"time",
                                     editorParams:{
@@ -38,6 +43,11 @@ class Schedules extends BaseController
                                     headerFilter:minMaxFilterEditor, headerFilterFunc:minMaxFilterFunction, headerFilterLiveFilter:false,
                                     headerFilterParams:{
                                         type:"time",
+                                    },
+                                    formatter:"datetime",
+                                    formatterParams:{
+                                        inputFormat:"HH:mm:ss",
+                                        outputFormat:"HH:mm",
                                     },
                                 },
                                 {title:"' . lang('Text.day_of_week') . '", field:"day_of_week", headerSort:true, editor:"list",
@@ -70,6 +80,11 @@ class Schedules extends BaseController
                                     headerFilterParams:{
                                         type:"date",
                                     },
+                                    formatter:"datetime",
+                                    formatterParams:{
+                                        inputFormat:"yyyy-MM-dd",
+                                        outputFormat:"dd/MM/yyyy",
+                                    }
                                 },
                                 {title:"' . lang('Text.boot_menu') . '", field:"boot_menu_id", headerSort:true, editor:"list",
                                     editorParams:{

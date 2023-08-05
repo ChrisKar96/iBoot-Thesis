@@ -234,11 +234,11 @@ if (isset($title, $columns, $apiTarget)): ?>
 
                 let table = new Tabulator("#table", {
                     index: "id",
-                    layout: "fitColumns",
-                    responsiveLayout: "hide",
+                    layout: "fitDataFill",
+                    layoutColumnsOnNewData:true,
                     columnHeaderVertAlign:"bottom",
                     columns: [
-                        {title: "id", field: "id", width:65, visible: false},
+                        {title: "id", field: "id", width:65, visible: false, frozen:true},
                         <?= $columns ?>
                         {
                             title: "<?= lang('Text.delete') ?>",

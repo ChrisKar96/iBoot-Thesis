@@ -21,7 +21,7 @@ class Labs extends BaseController
                 'title'     => lang('Text.labs'),
                 'tabulator' => true,
                 'apiTarget' => base_url('api/lab'),
-                'columns'   => '{title:"' . lang('Text.lab') . '", field:"name", sorter:"string", editor:"input", headerFilter:"input", validator:["required", "maxLength:20"]},
+                'columns'   => '{title:"' . lang('Text.lab') . '", field:"name", sorter:"string", editor:"input", headerFilter:"input", validator:["required", "maxLength:20"], frozen:true},
                                 {title:"' . lang('Text.address') . '", field:"address", sorter:"string", editor:"input", headerFilter:"input", validator:["maxLength:50"]},
                                 {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string", editor:"input", headerFilter:"input", validator:["maxLength:15"]},',
                 'JS_bef_tb' => '',

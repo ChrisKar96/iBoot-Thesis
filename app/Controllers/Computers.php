@@ -20,7 +20,7 @@ class Computers extends BaseController
             'tabulator'  => true,
             'reloadable' => true,
             'apiTarget'  => base_url('/api/computer'),
-            'columns'    => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input", editable:editCheck, headerFilter:"input"},
+            'columns'    => '{title:"' . lang('Text.computer') . '", field:"name", sorter:"string", editor:"input", editable:editCheck, headerFilter:"input", frozen:true},
                             {title:"UUID", field:"uuid", sorter:"string", editor:"input", editable:editCheck, validator:["required", "unique", "regex:\\[0-9a-fA-F\-]{36}"], headerFilter:"input",
                                 editorParams:{
                                     mask:"********-****-****-****-************",

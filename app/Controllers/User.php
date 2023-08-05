@@ -29,7 +29,7 @@ class User extends BaseController
                 'title'     => lang('Text.users'),
                 'tabulator' => true,
                 'apiTarget' => base_url('/api/user'),
-                'columns'   => '{title:"' . lang('Text.fullname') . '", field:"name", sorter:"string", editor:"input", headerFilter:"input", validator:["required","string","maxLength:40"]},
+                'columns'   => '{title:"' . lang('Text.fullname') . '", field:"name", sorter:"string", editor:"input", headerFilter:"input", validator:["required","string","maxLength:40"], frozen:true},
                                 {title:"' . lang('Text.email') . '", field:"email", sorter:"string", editor:"input", headerFilter:"input", validator:["required","unique","string","maxLength:320"]},
                                 {title:"' . lang('Text.phone') . '", field:"phone", sorter:"string", editor:"input", headerFilter:"input", validator:["maxLength:15"]},
                                 {title:"' . lang('Text.username') . '", field:"username", sorter:"string", editor:"input", headerFilter:"input", validator:["required","unique","string","minLength:3","maxLength:40"]},
