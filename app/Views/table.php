@@ -244,6 +244,7 @@ if (isset($title, $columns, $apiTarget)): ?>
                             title: "<?= lang('Text.delete') ?>",
                             formatter: "buttonCross",
                             hozAlign: "center",
+                            headerSort:false,
                             cellClick: function (e, cell) {
                                 if(typeof cell.getRow().getIndex() === "undefined") {
                                     cell.getRow().delete();

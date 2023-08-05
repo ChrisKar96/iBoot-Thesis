@@ -37,8 +37,6 @@ class User extends BaseController
                                 {title:"' . lang('Text.password') . '", field:"password", editor:"input", validator:["required","minLength:5","maxLength:255"]},
                                 {title:"' . lang('Text.administrator') . '", field:"isAdmin", sorter:"string", editor:"tickCross", formatter:"tickCross", headerFilter:"tickCross",  headerFilterParams:{"tristate":true},headerFilterEmptyCheck:function(value){return value === null}},
                                 {title:"' . lang('Text.verifiedEmail') . '", field:"verifiedEmail", sorter:"string", editor:"tickCross", formatter:"tickCross", headerFilter:"tickCross",  headerFilterParams:{"tristate":true},headerFilterEmptyCheck:function(value){return value === null}},
-                                {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", formatter:"datetime"},
-                                {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", formatter:"datetime"},
                                 {title:"' . lang('Text.labs') . '", field:"labs", sorter:"string", editor:"list", headerSort:true,
                                     headerFilter:"list",
                                     headerFilterFunc:multiListHeaderFilter,
@@ -72,7 +70,9 @@ class User extends BaseController
                                         }
                                     },
                                     formatterParams: labs,
-                                },',
+                                },
+                                {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", sorterParams:{format:"yyyy-MM-dd HH:mm:ss"}, formatter:"datetime"},
+                                {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", sorterParams:{format:"yyyy-MM-dd HH:mm:ss"}, formatter:"datetime"},',
                 'JS_bef_tb' => 'let labs = {};
 
                                 async function getLabs(){

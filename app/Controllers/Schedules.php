@@ -116,8 +116,8 @@ class Schedules extends BaseController
                                     formatterParams: groups
                                 },
                                 {title:"' . lang('Text.active') . '", field:"isActive", sorter:"string", editor:"tickCross", formatter:"tickCross", headerFilter:"tickCross",  headerFilterParams:{"tristate":true},headerFilterEmptyCheck:function(value){return value === null}},
-                                {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", formatter:"datetime"},
-                                {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", formatter:"datetime"},',
+                                {title:"' . lang('Text.created_at') . '", field:"created_at", sorter:"datetime", sorterParams:{format:"yyyy-MM-dd HH:mm:ss"}, formatter:"datetime"},
+                                {title:"' . lang('Text.updated_at') . '", field:"updated_at", sorter:"datetime", sorterParams:{format:"yyyy-MM-dd HH:mm:ss"}, formatter:"datetime"},',
                 'JS_bef_tb' => 'let groups = {};
 
                                 async function getGroups(){
