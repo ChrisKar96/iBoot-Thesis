@@ -26,6 +26,7 @@ exit
     $current_datetime = Time::now();
     $menu             = isset($_GET['menu']) ? (int) $_GET['menu'] : null;
     $block            = isset($_GET['block']) ? (int) $_GET['block'] : null;
+    $overrideAgent    = isset($_GET['overrideAgent']) ? (int) $_GET['overrideAgent'] : null;
 
     if (! empty($menu)) {
         $bootmenuModel   = new BootMenuModel();
@@ -210,22 +211,28 @@ goto main_menu
 <?php endif; ?>
 
 <?php if (empty($error_message) && empty($configure)) {
-    $message = 'Computer ';
+    if (! empty($overrideAgent) && $overrideAgent === 1) {
+        $message = "initboot: Printing menu for computer ";
+    }
+    else {
+        $message = "initboot: Booting computer ";
+    }
     if (! empty($computer)) {
-        $computerModel->update($computer->id, ['last_boot' => $current_datetime->toDateTimeString()]);
+        if (empty($_GET['overrideAgent'])) {
+            $computerModel->update($computer->id, ['last_boot' => $current_datetime->toDateTimeString()]);
+        }
         $message .= "with uuid {$computer->uuid} ";
     }
-    $message .= "from IP: {$IP} received menu ";
+    $message .= "from IP: {$IP}";
     if(! empty($bootmenu)) {
-        $message .= "{$bootmenu->name} ";
+        $message .= "\nMenu: {$bootmenu->name}";
     }
     if(! empty($menu)) {
-        $message .= "{$menu} ";
+        $message .= "\nMenu Override: {$menu}";
     }
     if(! empty($block)) {
-        $message .= "with block {$block} ";
+        $message .= "\nBlock Override: {$block}";
     }
-    $message .= 'from initboot';
     if(! empty($bootmenu_blocks)) {
         $attr = [];
 
