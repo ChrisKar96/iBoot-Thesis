@@ -40,7 +40,11 @@ if (isset($title, $columns, $apiTarget)): ?>
                 <button class="btn btn-danger" style="float: right; display: none;" id="reset" disabled><?= lang('Text.reset_table'); ?></button>
             </div>
 
-            <div class="my-2 table-bordered" id="table"></div>
+            <div class="row justify-content-center">
+                <div class="col" style="display: contents;">
+                    <div class="my-2 table-bordered text-center" style="max-width: inherit;" id="table"></div>
+                </div>
+            </div>
 
             <div class="my-2">
                 <button class="btn btn-success" style="float: right; display: none;" id="save" disabled><?= lang('Text.save_table'); ?></button>
@@ -234,7 +238,7 @@ if (isset($title, $columns, $apiTarget)): ?>
 
                 let table = new Tabulator("#table", {
                     index: "id",
-                    layout: "fitDataFill",
+                    layout: "fitDataTable",
                     layoutColumnsOnNewData:true,
                     columnHeaderVertAlign:"bottom",
                     columns: [
@@ -316,23 +320,31 @@ if (isset($title, $columns, $apiTarget)): ?>
                     <?php endif; ?>
                 });
 
+                function showSaveReset(){
+                    document.getElementById("save").disabled = false;
+                    document.getElementById("reset").disabled = false;
+                    document.getElementById("reset").style.display = "";
+                    document.getElementById("save").style.display = "";
+                }
+
+                function hideSaveReset(){
+                    document.getElementById("save").style.display = "none";
+                    document.getElementById("reset").style.display = "none";
+                    document.getElementById("save").disabled = true;
+                    document.getElementById("reset").disabled = true;
+                }
+
                 table.on("cellEdited", function(){
                     if(table.getEditedCells().length > 0){
                         table.getEditedCells().forEach(cell => {
                             if((Array.isArray(cell.getOldValue()) && (cell.getOldValue().sort().toString() === cell.getValue().sort().toString() || cell.getInitialValue().sort().toString() === cell.getValue().sort().toString()))
-                            || (cell.getOldValue() === cell.getValue() || cell.getInitialValue() === cell.getValue())){cell.clearEdited();}})
+                            || ((cell.getOldValue() ?? "") === (cell.getValue() ?? "") || (cell.getInitialValue() ?? "") === (cell.getValue() ?? ""))){cell.clearEdited();}})
                     }
                     if(table.getEditedCells().length > 0){
-                        document.getElementById("save").disabled = false;
-                        document.getElementById("reset").disabled = false;
-                        document.getElementById("reset").style.display = "";
-                        document.getElementById("save").style.display = "";
+                        showSaveReset();
                     }
                     else {
-                        document.getElementById("save").style.display = "none";
-                        document.getElementById("reset").style.display = "none";
-                        document.getElementById("save").disabled = true;
-                        document.getElementById("reset").disabled = true;
+                        hideSaveReset();
                     }
                 });
 
@@ -370,10 +382,7 @@ if (isset($title, $columns, $apiTarget)): ?>
                 document.getElementById("save").addEventListener("click", save);
 
                 function reset(){
-                    document.getElementById("save").style.display = "none";
-                    document.getElementById("reset").style.display = "none";
-                    document.getElementById("save").disabled = true;
-                    document.getElementById("reset").disabled = true;
+                    hideSaveReset();
                     table.setData();
                     <?php if (isset($calendar) && $calendar) : ?>
                     getSchedules();
@@ -414,10 +423,7 @@ if (isset($title, $columns, $apiTarget)): ?>
                 function ToggleReload() {
                     x = document.getElementById("reload_enabled").checked;
                     if (x) {
-                        document.getElementById("save").style.display = "none";
-                        document.getElementById("reset").style.display = "none";
-                        document.getElementById("save").disabled = true;
-                        document.getElementById("reset").disabled = true;
+                        hideSaveReset();
                         editable = false;
                         interval = setInterval(function(){table.setData();},5000);
                     }

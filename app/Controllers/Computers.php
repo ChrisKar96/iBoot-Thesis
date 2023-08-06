@@ -91,15 +91,15 @@ class Computers extends BaseController
                                 formatterParams: labs,
                             },
                             {title:"' . lang('Text.last_boot') . '", field:"last_boot",
-                            headerFilter:"number", headerFilterFunc:minutesHeaderFilter, headerFilterParams:{
-                                min:1,
-                                step:1,
-                                selectContents:true,
-                            }, headerPopup:"' . lang('Text.enter_minutes') . '",
-                            formatter:function(cell, formatterParams, onRendered){
-                                    if(typeof cell.getValue() !== "undefined"){
-                                        return luxon.DateTime.fromSQL(cell.getValue()).setLocale("' . session()->get('locale') . '").toRelative();
-                                    }
+                                headerFilter:"number", headerFilterFunc:minutesHeaderFilter, headerFilterParams:{
+                                    min:1,
+                                    step:1,
+                                    selectContents:true,
+                                }, headerPopup:"' . lang('Text.enter_minutes') . '",
+                                formatter:function(cell, formatterParams, onRendered){
+                                        if(typeof cell.getValue() !== "undefined"){
+                                            return luxon.DateTime.fromSQL(cell.getValue()).setLocale("' . session()->get('locale') . '").toRelative();
+                                        }
                                 },
                             },',
             'JS_bef_tb' => 'let groups = {};
