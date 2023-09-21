@@ -235,9 +235,82 @@ class User extends BaseController
         return view('signup', $data);
     }
 
-    public function profile(): string
+    public function profile($data = null): string
     {
         $data = ['title' => lang('Text.profile')];
+
+        if ($this->request->getPost('id') && $this->request->getPost('password') && $this->request->getPost('old_password') && $this->request->getPost('confirm_password')) {
+            $post = [
+                'id'               => $this->request->getPost('id'),
+                'old_password'     => $this->request->getPost('old_password'),
+                'password'         => $this->request->getPost('password'),
+                'confirm_password' => $this->request->getPost('confirm_password'),
+            ];
+
+            helper('form');
+
+            $rules = [
+                'id'               => 'is_natural_no_zero|max_length[10]|permit_empty',
+                'old_password'     => 'alpha_numeric_punct|min_length[5]|max_length[255]|required',
+                'password'         => 'alpha_numeric_punct|min_length[5]|max_length[255]|required',
+                'confirm_password' => 'alpha_numeric_punct|min_length[5]|max_length[255]|required|matches[password]',
+            ];
+
+            if (! $this->validate($rules)) {
+                return $this->profile([
+                    'validationChangePassword' => $this->validator->listErrors(),
+                ]);
+            }
+            $model = new UserModel();/*
+            if (! $model->validate($post)) {
+                return $this->profile([
+                    'validationChangePassword' => $model->errors(),
+                ]);
+            }*/
+
+            $user = $model->where('id', $post['id'])->first();
+
+            if ($user && $user->password_verify($post['old_password'], $user->password)) {
+                unset($post['old_password'], $post['confirm_password']);
+                if ($model->save($post)) {
+                    $data['msgChangePassword'] = true;
+                }
+            }
+        } elseif ($this->request->getPost('id') && $this->request->getPost('email')) {
+            $post = [
+                'id'    => $this->request->getPost('id'),
+                'email' => $this->request->getPost('email'),
+            ];
+
+            helper('form');
+
+            $rules = [
+                'id'    => 'is_natural_no_zero|max_length[10]|permit_empty',
+                'email' => 'valid_email|max_length[320]|required',
+            ];
+
+            if (! $this->validate($rules)) {
+                return $this->profile([
+                    'validationChangeEmail' => $this->validator->listErrors(),
+                ]);
+            }
+            $model = new UserModel();/*
+            if (! $model->validate($post)) {
+                return $this->profile([
+                    'validationChangeEmail' => $model->errors(),
+                ]);
+            }*/
+            $post['verifiedEmail'] = 0;
+
+            $user = $model->where('id', $post['id'])->first();
+
+            if ($user) {
+                if ($model->save($post)) {
+                    $this->sendValidationEmail($post['email']);
+                    $data['msgChangeEmail'] = TRUE;
+                }
+            }
+        }
 
         return view('profile', $data);
     }
@@ -261,7 +334,7 @@ class User extends BaseController
     {
         $model = new UserModel();
 
-        $model->where('email', $email_address)->where('md5(CONCAT(email, created_at))', $email_code)->set(['verifiedEmail' => 1])->update();
+        $model->where('email', $email_address)->where('md5(CONCAT(email, created_at, updated_at))', $email_code)->set(['verifiedEmail' => 1])->update();
         $userSession = session()->get('user');
         if (! empty($userSession)) {
             $userSession['verifiedEmail'] = true;
@@ -278,7 +351,7 @@ class User extends BaseController
         $user = $model->where('email', $email_address)->first();
 
         if (! empty($user)) {
-            $email_code = md5($email_address . $user->created_at);
+            $email_code = md5($email_address . $user->created_at . $user->updated_at);
 
             $email = Services::email();
 

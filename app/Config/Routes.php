@@ -54,7 +54,7 @@ $routes->match(['get', 'post'], 'forgotPassword/token/(:hash)', 'User::forgotPas
 $routes->post('forgotPassword', 'User::forgotPassword', ['filter' => 'no-auth']);
 
 $routes->get('sendEmailVerification/(:segment)', 'User::sendValidationEmail/$1', ['filter' => 'auth']);
-$routes->get('profile', 'User::profile', ['filter' => 'auth']);
+$routes->match(['get', 'post'],'profile', 'User::profile', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('users', 'User::index', ['filter' => 'auth:adminOnly']);
 $routes->get('computers_managed', 'Computers::computersManaged', ['filter' => 'auth']);
