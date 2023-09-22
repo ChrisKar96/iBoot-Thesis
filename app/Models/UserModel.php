@@ -44,7 +44,7 @@ class UserModel extends Model
 
     // Validation
     protected $validationRules = [
-        'id'            => 'is_natural_no_zero|max_length[10]|permit_empty|is_unique[users.id,id,{id}]',
+        'id'            => 'is_natural_no_zero|max_length[10]|permit_empty]',
         'name'          => 'min_length[3]|max_length[40]|required',
         'email'         => 'valid_email|max_length[320]|required|is_unique[users.email,id,{id}]',
         'phone'         => 'min_length[3]|max_length[15]|permit_empty',
