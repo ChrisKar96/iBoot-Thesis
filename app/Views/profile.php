@@ -17,7 +17,7 @@
                     <?php if ($user->verifiedEmail) : ?>
                         <span style='color:green;'><?= lang('Text.verified') ?></span>
                     <?php else : ?>
-                        <span style='color:red;'><?= lang('Text.not_verified') ?></span> <a href="<?= base_url('sendEmailVerification/' . $user->email)?>"><?= lang('Text.resend_confirmation_mail') ?></a>
+                        <span style='color:red;'><?= lang('Text.not_verified') ?></span> <a href="<?= base_url('sendEmailVerification/' . $user->email)?>"><?= lang('Text.resend_confirmation_email') ?></a>
                     <?php endif; ?>
                     </p>
                     <p><strong><?= lang('Text.phone') ?>:</strong> <?= $user->phone ?></p>
@@ -33,9 +33,15 @@
                             </div>
                         <?php
                         endif;
-                        if (isset($validationPassword)): ?>
+                        if (isset($msgChangePasswordNoMatchOld) && $msgChangePasswordNoMatchOld): ?>
                             <div class="alert alert-warning">
-                                <?= $validationPassword ?>
+                                <?= lang("Text.old_password_is_incorrect") ?>
+                            </div>
+                        <?php
+                        endif;
+                        if (isset($validationChangePassword)): ?>
+                            <div class="alert alert-warning">
+                                <?= $validationChangePassword ?>
                             </div>
                         <?php
                         endif;
@@ -72,9 +78,9 @@
                             </div>
                         <?php
                         endif;
-                        if (isset($validationEmail)): ?>
+                        if (isset($validationChangeEmail)): ?>
                             <div class="alert alert-warning">
-                                <?= $validationEmail ?>
+                                <?= $validationChangeEmail ?>
                             </div>
                         <?php
                         endif;

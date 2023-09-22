@@ -131,4 +131,5 @@ return [
     'save'                                   => 'Save',
     'password_changed'                       => 'Password Changed',
     'email_changed'                          => 'Email Changed',
+    'old_password_is_incorrect'              => 'Old Password is incorrect',
 ];

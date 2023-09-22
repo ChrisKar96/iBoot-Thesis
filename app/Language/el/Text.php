@@ -131,4 +131,5 @@ return [
     'save'                                   => 'Αποθήκευση',
     'password_changed'                       => 'Ο κωδικός άλλαξε',
     'email_changed'                          => 'Το email άλλαξε',
+    'old_password_is_incorrect'              => 'Ο παλιός κωδικός είναι λανθασμένος',
 ];

@@ -117,7 +117,11 @@ class User extends BaseController
                 ],
             ];
 
+            $username = $this->request->getPost('username');
+
             if (! $this->validate($rules, $errors)) {
+                log_message('info', 'User {username} failed to log in from IP {ip}', ['username' => $username, 'ip' => $this->request->getIPAddress()]);
+
                 return view('login', [
                     'validation' => $this->validator,
                     'title'      => lang('Text.log_in'),
@@ -125,8 +129,6 @@ class User extends BaseController
             }
 
             $model = new UserModel();
-
-            $username = $this->request->getPost('username');
 
             // Support authenticating with email as well
             $user = $model->where('username', $username)->orWhere('email', $username)->first();
@@ -241,7 +243,7 @@ class User extends BaseController
 
         if ($this->request->getPost('id') && $this->request->getPost('password') && $this->request->getPost('old_password') && $this->request->getPost('confirm_password')) {
             $post = [
-                'id'               => $this->request->getPost('id'),
+                'id'               => (int) $this->request->getPost('id'),
                 'old_password'     => $this->request->getPost('old_password'),
                 'password'         => $this->request->getPost('password'),
                 'confirm_password' => $this->request->getPost('confirm_password'),
@@ -257,28 +259,29 @@ class User extends BaseController
             ];
 
             if (! $this->validate($rules)) {
-                return $this->profile([
-                    'validationChangePassword' => $this->validator->listErrors(),
-                ]);
+                $data['validationChangePassword'] = $this->validator->listErrors();
+
+                return view('profile', $data);
             }
-            $model = new UserModel();/*
-            if (! $model->validate($post)) {
-                return $this->profile([
-                    'validationChangePassword' => $model->errors(),
-                ]);
-            }*/
+            $model = new UserModel();
+            $user  = $model->where('id', $post['id'])->first();
 
-            $user = $model->where('id', $post['id'])->first();
-
-            if ($user && $user->password_verify($post['old_password'], $user->password)) {
-                unset($post['old_password'], $post['confirm_password']);
-                if ($model->save($post)) {
+            if ($user && password_verify($post['old_password'], $user->password)) {
+                if ($model->update($post['id'], ['password' => $post['password']])) {
                     $data['msgChangePassword'] = true;
+                    $user                      = $model->where('id', $post['id'])->first();
+                    session()->set('user', $user);
+                    log_message('info', 'User {username} updated their password.', ['username' => $user->username]);
+                } else {
+                    log_message('info', "User {username} failed to update their password with errors:\n{errors}", ['username' => $user->username, 'errors' => $model->errors()]);
                 }
+            } else {
+                $data['msgChangePasswordNoMatchOld'] = true;
+                log_message('info', 'User {username} failed to update their password', ['username' => $user->username]);
             }
         } elseif ($this->request->getPost('id') && $this->request->getPost('email')) {
             $post = [
-                'id'    => $this->request->getPost('id'),
+                'id'    => (int) $this->request->getPost('id'),
                 'email' => $this->request->getPost('email'),
             ];
 
@@ -290,24 +293,22 @@ class User extends BaseController
             ];
 
             if (! $this->validate($rules)) {
-                return $this->profile([
-                    'validationChangeEmail' => $this->validator->listErrors(),
-                ]);
-            }
-            $model = new UserModel();/*
-            if (! $model->validate($post)) {
-                return $this->profile([
-                    'validationChangeEmail' => $model->errors(),
-                ]);
-            }*/
-            $post['verifiedEmail'] = 0;
+                $data['validationChangeEmail'] = $this->validator->listErrors();
 
-            $user = $model->where('id', $post['id'])->first();
+                return view('profile', $data);
+            }
+            $model = new UserModel();
+            $user  = $model->where('id', $post['id'])->first();
 
             if ($user) {
-                if ($model->save($post)) {
+                if ($model->update($post['id'], ['email' => $post['email'], 'verifiedEmail' => 0])) {
                     $this->sendValidationEmail($post['email']);
-                    $data['msgChangeEmail'] = TRUE;
+                    $data['msgChangeEmail'] = true;
+                    $user                   = $model->where('id', $post['id'])->first();
+                    session()->set('user', $user);
+                    log_message('info', 'User {username} updated their email address.', ['username' => $user->username]);
+                } else {
+                    log_message('info', "User {username} failed to update their email address with errors:\n{errors}", ['username' => $user->username, 'errors' => $model->errors()]);
                 }
             }
         }
@@ -334,11 +335,17 @@ class User extends BaseController
     {
         $model = new UserModel();
 
-        $model->where('email', $email_address)->where('md5(CONCAT(email, created_at, updated_at))', $email_code)->set(['verifiedEmail' => 1])->update();
-        $userSession = session()->get('user');
-        if (! empty($userSession)) {
-            $userSession['verifiedEmail'] = true;
-            session()->set('user', $userSession);
+        $user = $model->where('email', $email_address)->where('md5(CONCAT(email, created_at, updated_at))', $email_code)->first();
+        if ($user) {
+            if ($model->update($user->id, ['verifiedEmail' => 1])) {
+                $user = $model->find($user->id);
+                if (session()->has('user')) {
+                    session()->set('user', $user);
+                }
+                log_message('info', 'User {username} verified new email address {email} from {ip}', ['username' => $user->username, 'email' => $email_address, 'ip' => $this->request->getIPAddress()]);
+            } else {
+                log_message('info', "User {username} failed to verify new email address {email} from {ip} with errors\n{errors}", ['username' => $user->username, 'email' => $email_address, 'ip' => $this->request->getIPAddress(), 'errors' => $model->errors()]);
+            }
         }
 
         return redirect()->to('login');
@@ -368,7 +375,16 @@ class User extends BaseController
 
             $email->setMessage($message);
 
-            return $email->send();
+            if ($email->send()) {
+                log_message('info', 'Verification email was sent to {email} for user {username}', ['username' => $user->username, 'email' => $email_address]);
+
+                return true;
+            }
+
+            log_message('info', 'Failed to send verification email to {email} for user {username}', ['username' => $user->username, 'email' => $email_address]);
+
+            return false;
+
         }
 
         return false;
